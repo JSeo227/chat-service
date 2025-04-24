@@ -1,4 +1,3 @@
 채팅 서비스
 
-Spring, JPA, Thymeleaf
-Postman
+Spring, JPA, Thymeleaf, WebSocket(STOMP), WebRTC Postman
