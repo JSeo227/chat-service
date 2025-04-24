@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<th:block layout:fragment="content">
+    <div class="container mt-5">
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-comments me-1"></i>채팅방:
+                <span class="text-primary fw-bold">0</span>개
+                <button type="button" class="btn btn-primary btn-sm float-end ms-2">방 만들기</button>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover align-middle text-center">
+                        <thead class="table-light">
+                        <tr>
+                            <th>방 번호</th>
+                            <th>방 이름</th>
+                            <th>방 인원수</th>
+                            <th>방 종류</th>
+                            <th>방 삭제</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td><a href="#" class="text-decoration-none">채팅방 A</a></td>
+                            <td>2 / 10</td>
+                            <td>일반</td>
+                            <td><button class="btn btn-danger btn-sm">삭제</button></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td><a href="#" class="text-decoration-none">채팅방 B</a></td>
+                            <td>3 / 5</td>
+                            <td>화상</td>
+                            <td><button class="btn btn-danger btn-sm">삭제</button></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+</html>
+

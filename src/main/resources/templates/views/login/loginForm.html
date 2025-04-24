@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/fragment/header :: header">
+</head>
+<body class="bg-light">
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card p-4 shadow" style="width: 100%; max-width: 400px;">
+        <h3 class="mb-4 text-center">로그인</h3>
+        <form method="post" action="/login">
+            <div class="mb-3">
+                <label for="id" class="form-label">Login Id:</label>
+                <input class="form-control" id="id" name="username" type="text" required>
+            </div>
+            <div class="mb-3">
+                <label for="pw" class="form-label">Password:</label>
+                <input class="form-control" id="pw" name="password" type="password" required>
+            </div>
+            <div class="form-check mb-3">
+                <input class="form-check-input" id="rememberId" name="remember-me" type="checkbox">
+                <label for="rememberId" class="form-check-label">아이디 저장</label>
+            </div>
+            <div class="d-grid">
+                <button id="login" class="btn btn-primary" type="submit">Login</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
