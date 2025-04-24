@@ -3,7 +3,7 @@ spring:
     name: chat-service
 
   datasource:
-    url: jdbc:h2:tcp://localhost/~/jpashop
+    url: jdbc:h2:tcp://localhost/~/chat-service
     username: sa
     password:
     driver-class-name: org.h2.Driver

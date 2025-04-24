@@ -3,12 +3,17 @@ package com.example.chat.chat_service.repository.jpa;
 import com.example.chat.chat_service.domain.Member;
 import com.example.chat.chat_service.repository.MemberRepository;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Primary;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
+@Primary
 @Slf4j
 @Repository
 @RequiredArgsConstructor
@@ -25,14 +30,20 @@ public class JpaMemberRepository implements MemberRepository {
         return member;
     }
 
-    public Member findById(Long id) {
-        return em.find(Member.class, id);
+    public Optional<Member> findById(Long id) {
+        Member member = em.find(Member.class, id);
+        return Optional.ofNullable(member);
     }
 
-    public List<Member> findByName(String name) {
-        return em.createQuery("select m from Member m where name = :name", Member.class)
-                .setParameter("name", name)
-                .getResultList();
+    public Optional<Member> findByName(String name) {
+        try {
+            Member member = em.createQuery("select m from Member m where name = :name", Member.class)
+                    .setParameter("name", name)
+                    .getSingleResult();
+            return Optional.ofNullable(member);
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 
     public List<Member> findAll() {
