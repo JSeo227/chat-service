@@ -1,5 +1,6 @@
 package com.example.chat.chat_service.session;
 
+import com.example.chat.chat_service.common.Constants;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpSessionEvent;
@@ -7,7 +8,10 @@ import jakarta.servlet.http.HttpSessionListener;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -15,7 +19,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class SessionManager implements HttpSessionListener {
 
-    public static final String MEMBER_SESSION = "memberSession";
     private static final Map<String, HttpSession> sessionStore = new ConcurrentHashMap<>();
 
     /**
@@ -60,12 +63,17 @@ public class SessionManager implements HttpSessionListener {
      * @param request
      * @return
      */
-    public static SessionMember getMemberSession(HttpServletRequest request) {
+    public static MemberSession getMemberSession(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session == null) {
-            return null;
+            throw new RuntimeException("session is null");
+        } else {
+            MemberSession memberSession = (MemberSession) session.getAttribute(Constants.MEMBER_SESSION);
+            if (memberSession == null) {
+                throw new RuntimeException("memberSession is null");
+            }
+            return memberSession;
         }
-        return (SessionMember) session.getAttribute(MEMBER_SESSION);
     }
 
     /**
@@ -73,8 +81,8 @@ public class SessionManager implements HttpSessionListener {
      * @param request
      * @param memberSession
      */
-    public static void removeMemberSession(HttpServletRequest request, SessionMember memberSession) {
+    public static void removeMemberSession(HttpServletRequest request, MemberSession memberSession) {
         HttpSession session = request.getSession(false);
-        session.setAttribute(MEMBER_SESSION, memberSession);
+        session.setAttribute(Constants.MEMBER_SESSION, memberSession);
     }
 }

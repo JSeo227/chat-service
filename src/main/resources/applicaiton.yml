@@ -3,9 +3,18 @@ spring:
     name: chat-service
 
   thymeleaf:
-    prefix: classpath:/templates/views
+    prefix: classpath:/templates/
     suffix: .html
-    cache: false
+    cache: false  # 개발 중에는 캐시를 비활성화하는 것이 좋습니다.
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+#      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
 
   datasource:
     url: jdbc:h2:tcp://localhost/~/chat-service
@@ -13,14 +22,8 @@ spring:
     password:
     driver-class-name: org.h2.Driver
 
-  jpa:
-    hibernate:
-      ddl-auto: create
-    properties:
-      hibernate:
-        show_sql: true
-        format_sql: true
-
+server:
+  port:8080
 
 logging:
   level:

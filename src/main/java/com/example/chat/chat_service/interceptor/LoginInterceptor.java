@@ -1,5 +1,6 @@
 package com.example.chat.chat_service.interceptor;
 
+import com.example.chat.chat_service.session.MemberSession;
 import com.example.chat.chat_service.session.SessionManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

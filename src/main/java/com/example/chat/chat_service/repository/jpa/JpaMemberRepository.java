@@ -13,7 +13,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-@Primary
 @Slf4j
 @Repository
 @RequiredArgsConstructor
@@ -33,6 +32,17 @@ public class JpaMemberRepository implements MemberRepository {
     public Optional<Member> findById(Long id) {
         Member member = em.find(Member.class, id);
         return Optional.ofNullable(member);
+    }
+
+    public Optional<Member> findByLoginId(String loginId) {
+        try {
+            Member member = em.createQuery("select m from Member m where m.loginId = :loginId", Member.class)
+                    .setParameter("loginId", loginId)
+                    .getSingleResult();
+            return Optional.of(member);
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 
     public Optional<Member> findByName(String name) {
