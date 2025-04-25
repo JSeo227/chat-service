@@ -1,3 +1,5 @@
+[![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=JSeo227)](https://github.com/anuraghazra/github-readme-stats)
+
 💬 채팅 서비스
 실시간 채팅 서비스 구현 프로젝트
 
