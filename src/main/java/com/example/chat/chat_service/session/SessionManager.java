@@ -60,12 +60,12 @@ public class SessionManager implements HttpSessionListener {
      * @param request
      * @return
      */
-    public static MemberSession getMemberSession(HttpServletRequest request) {
+    public static SessionMember getMemberSession(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session == null) {
             return null;
         }
-        return (MemberSession) session.getAttribute(MEMBER_SESSION);
+        return (SessionMember) session.getAttribute(MEMBER_SESSION);
     }
 
     /**
@@ -73,7 +73,7 @@ public class SessionManager implements HttpSessionListener {
      * @param request
      * @param memberSession
      */
-    public static void removeMemberSession(HttpServletRequest request, MemberSession memberSession) {
+    public static void removeMemberSession(HttpServletRequest request, SessionMember memberSession) {
         HttpSession session = request.getSession(false);
         session.setAttribute(MEMBER_SESSION, memberSession);
     }

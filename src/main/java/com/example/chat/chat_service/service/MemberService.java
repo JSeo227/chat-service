@@ -2,8 +2,8 @@ package com.example.chat.chat_service.service;
 
 import com.example.chat.chat_service.domain.Member;
 import com.example.chat.chat_service.repository.MemberRepository;
-import com.example.chat.chat_service.session.MemberSession;
 import com.example.chat.chat_service.session.SessionManager;
+import com.example.chat.chat_service.session.SessionMember;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ public class MemberService {
     @Transactional
     public Long join(Member member) {
         //세션 가져오기
-        MemberSession session = SessionManager.getMemberSession();
+        SessionMember session;
 
         //중복 ID 조회
         validateDuplicateMember(member); //유효성 검사
