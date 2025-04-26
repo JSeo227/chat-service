@@ -2,30 +2,24 @@ package com.example.chat.chat_service.domain.room;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "room_type")
 @Data
-@NoArgsConstructor
 public abstract class Room {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "room_id")
-    private Long id;
+    private Long id; //채팅방 아이디
 
-    @Column(name = "room_name")
-    private String name;
+    private String name; //이름
 
-    private String password;
+    private String password; //비밀번호
 
-    private Integer count;
+    private Integer count; //현재 방 인원 수
 
-    private Integer max;
-
-    @Enumerated(EnumType.STRING)
-    private RoomType type; //TXT(일반채팅), VID(화상채팅)
+    private Integer max; //방 최대 인원 수
 
 }

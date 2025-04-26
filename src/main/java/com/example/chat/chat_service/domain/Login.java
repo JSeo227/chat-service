@@ -1,31 +1,36 @@
 package com.example.chat.chat_service.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import jakarta.validation.constraints.NotEmpty;
+import lombok.Data;
 
 @Entity
-@Getter
+@Data
 public class Login {
 
     @Id
     @Column(name = "login_id")
-    //    @NotEmpty(message = "로그인 Id는 필수 입력 값입니다.")
-    private String loginId;
+    @NotEmpty(message = "로그인 Id는 필수 입력 값입니다.")
+    private String loginId; //로그인 아이디
 
-    //    @NotEmpty(message = "비밀번호는 필수 입력 값입니다.")
-    private String password;
+    @NotEmpty(message = "비밀번호는 필수 입력 값입니다.")
+    private String password; //비밀번호
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "login")
-    private Member member;
+    //양방향
+//    @OneToOne(fetch = FetchType.LAZY, mappedBy = "login")
+//    private Member member; // 회원
 
-    // 생성 메서드
-    public static Login createLogin(String loginId, String password, Member member) {
+    //==생성 메서드==//
+    public static Login createLogin(String loginId, String password) {
         Login login = new Login();
-        login.loginId = loginId;
-        login.password = password;
-        login.member = member;
+        login.setLoginId(loginId);
+        login.setPassword(password);
         return login;
     }
+
+    //==연관관계 메서드==//
+
+    //==로직 메서드==//
 
     // 비밀번호 확인 메서드
     public boolean checkPassword(String inputPassword) {
