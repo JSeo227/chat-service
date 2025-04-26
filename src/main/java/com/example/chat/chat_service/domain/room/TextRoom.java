@@ -15,6 +15,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper=true)
 public class TextRoom extends Room {
 
+    //양방향
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberRoom> memberRooms = new ArrayList<>();
 
@@ -28,17 +29,30 @@ public class TextRoom extends Room {
         return room;
     }
 
-
     //==연관관계 메서드==//
 
     //==로직 메서드==//
-
     //채팅방 인원 +1
+    public void addMember(MemberRoom memberRoom) {
+        memberRooms.add(memberRoom);
+        setCount(getCount() + 1);
+        memberRoom.setRoom(this);
+    }
 
     //채팅방 인원 -1
+    public void removeMember(MemberRoom memberRoom) {
+        memberRooms.remove(memberRoom);
+        setCount(getCount() - 1);
+        memberRoom.setRoom(null);
+    }
 
     //채팅방 인원 초과
+    public boolean isFull() {
+        return memberRooms.size() >= getMax();
+    }
 
     //채팅방 비밀번호 조회
-
+    public boolean isPasswordValid(String password) {
+        return getPassword().equals(password);
+    }
 }

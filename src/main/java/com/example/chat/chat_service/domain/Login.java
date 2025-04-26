@@ -34,6 +34,6 @@ public class Login {
 
     // 비밀번호 확인 메서드
     public boolean checkPassword(String inputPassword) {
-        return this.password.equals(inputPassword);
+        return password.equals(inputPassword);
     }
 }

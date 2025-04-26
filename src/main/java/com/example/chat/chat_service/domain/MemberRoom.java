@@ -40,7 +40,7 @@ public class MemberRoom {
         this.exitedDate = LocalDateTime.now();
     }
 
-    //생성메서드
+    //==생성 메서드==//
     public static MemberRoom createMemberRoom(Member member, Room room) {
         MemberRoom memberRoom = new MemberRoom();
         memberRoom.setMember(member);

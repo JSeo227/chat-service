@@ -39,7 +39,7 @@ public class JpaMemberRepository implements MemberRepository {
     @Override
     public Optional<Member> findByLoginId(String loginId) {
         try {
-            Member member = em.createQuery("select m from Member m where m.loginId = :loginId", Member.class)
+            Member member = em.createQuery("select m from Member m where m.login.loginId = :loginId", Member.class)
                     .setParameter("loginId", loginId)
                     .getSingleResult();
             return Optional.of(member);
