@@ -23,7 +23,7 @@ public abstract class Room {
 
     private Integer count;
 
-    private Integer maxCount;
+    private Integer max;
 
     @Enumerated(EnumType.STRING)
     private RoomType type; //TXT(일반채팅), VID(화상채팅)

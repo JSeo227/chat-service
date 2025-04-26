@@ -3,10 +3,12 @@ package com.example.chat.chat_service.domain;
 import com.example.chat.chat_service.domain.room.Room;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Data
+@Getter @Setter
 @NoArgsConstructor
 public class MemberRoom {
 
@@ -21,5 +23,6 @@ public class MemberRoom {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
     private Room room;
+
 
 }

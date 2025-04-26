@@ -20,6 +20,7 @@ public class JpaMemberRepository implements MemberRepository {
 
     private final EntityManager em;
 
+    @Override
     public Member save(Member member) {
         if (member.getId() == null) {
             em.persist(member);
@@ -29,11 +30,13 @@ public class JpaMemberRepository implements MemberRepository {
         return member;
     }
 
+    @Override
     public Optional<Member> findById(Long id) {
         Member member = em.find(Member.class, id);
         return Optional.ofNullable(member);
     }
 
+    @Override
     public Optional<Member> findByLoginId(String loginId) {
         try {
             Member member = em.createQuery("select m from Member m where m.loginId = :loginId", Member.class)
@@ -45,17 +48,7 @@ public class JpaMemberRepository implements MemberRepository {
         }
     }
 
-    public Optional<Member> findByName(String name) {
-        try {
-            Member member = em.createQuery("select m from Member m where name = :name", Member.class)
-                    .setParameter("name", name)
-                    .getSingleResult();
-            return Optional.ofNullable(member);
-        } catch (NoResultException e) {
-            return Optional.empty();
-        }
-    }
-
+    @Override
     public List<Member> findAll() {
         return em.createQuery("select m from Member m", Member.class)
                 .getResultList();
