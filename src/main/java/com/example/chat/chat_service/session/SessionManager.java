@@ -52,14 +52,8 @@ public class SessionManager implements HttpSessionListener {
         log.info("세션 삭제됨: {}", se.getSession().getId());
     }
 
-    //세션 조회
-
-    //세션 저장
-
-    //세션 삭제
-
     /**
-     * 사용자 세션 조회
+     * 회원 세션 조회
      * @param request
      * @return
      */
@@ -77,12 +71,25 @@ public class SessionManager implements HttpSessionListener {
     }
 
     /**
-     * 사용자 세션 삭제
+     * 회원 세션 저장
+     * @param request
+     * @param memberSession
+     */
+    public static void setMemberSession(HttpServletRequest request, MemberSession memberSession) {
+        HttpSession session = request.getSession(true);
+        session.setAttribute(Constants.MEMBER_SESSION, memberSession);
+    }
+
+    /**
+     * 회원 세션 삭제
      * @param request
      * @param memberSession
      */
     public static void removeMemberSession(HttpServletRequest request, MemberSession memberSession) {
         HttpSession session = request.getSession(false);
-        session.setAttribute(Constants.MEMBER_SESSION, memberSession);
+        if (session != null) {
+            session.setAttribute(Constants.MEMBER_SESSION, memberSession);
+            session.invalidate();
+        }
     }
 }

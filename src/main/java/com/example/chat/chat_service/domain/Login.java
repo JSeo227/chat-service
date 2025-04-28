@@ -14,15 +14,22 @@ public class Login {
 
     private String password; //비밀번호
 
+    private Boolean isLogin;
+
     //==생성 메서드==//
-    public static Login createLogin(String loginId, String password) {
+    public static Login createLogin(String loginId, String password, Boolean isLogin) {
         Login login = new Login();
         login.setLoginId(loginId);
         login.setPassword(password);
+        login.setIsLogin(isLogin);
         return login;
     }
 
     //==로직 메서드==//
+
+    public boolean checkLoginId(String inputLoginId) {
+        return loginId.equals(inputLoginId);
+    }
 
     // 비밀번호 확인
     public boolean checkPassword(String inputPassword) {

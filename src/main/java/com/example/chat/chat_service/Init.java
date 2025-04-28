@@ -19,8 +19,7 @@ public class Init {
 
     @PostConstruct
     public void init() {
-        initService.init1();
-//        initService.init2();
+        initService.init();
     }
 
     @Component
@@ -29,10 +28,13 @@ public class Init {
     public static class InitService {
         private final EntityManager em;
 
-        public void init1() {
+        public void init() {
             // 회원 생성 및 저장
-            Member member = createMember("홍길동", RoleType.MEMBER);
-            em.persist(member);
+            Member member1 = createMember1("홍길동", RoleType.MEMBER);
+            em.persist(member1);
+
+            Member member2 = createMember2("신짱구", RoleType.MEMBER);
+            em.persist(member2);
 
             // 채팅방 1 생성 및 저장
             TextRoom room1 = createRoom("방1", "1234", 10);
@@ -43,20 +45,28 @@ public class Init {
             em.persist(room2);
 
             // 회원이 방1에 참여
-            MemberRoom memberRoom1 = MemberRoom.createMemberRoom(member, room1);
+            MemberRoom memberRoom1 = MemberRoom.createMemberRoom(member1, room1);
             room1.addMember(memberRoom1); // 양방향 연관관계 메서드 호출
             em.persist(memberRoom1);
 
-            // 회원이 방2에 참여
-            MemberRoom memberRoom2 = MemberRoom.createMemberRoom(member, room2);
-            room2.addMember(memberRoom2); // 양방향 연관관계 메서드 호출
+            MemberRoom memberRoom2 = MemberRoom.createMemberRoom(member2, room1);
+            room1.addMember(memberRoom2); // 양방향 연관관계 메서드 호출
             em.persist(memberRoom2);
+
+            // 회원이 방2에 참여
+            MemberRoom memberRoom3 = MemberRoom.createMemberRoom(member1, room2);
+            room2.addMember(memberRoom3); // 양방향 연관관계 메서드 호출
+            em.persist(memberRoom3);
         }
 
-        private Member createMember(String name, RoleType role) {
-            Login login = Login.createLogin("testUser", "password");
-            Member member = Member.createMember(login, name, role);
-            return member;
+        private Member createMember1(String name, RoleType role) {
+            Login login = Login.createLogin("testUser1", "password1", true);
+            return Member.createMember(login, name, role);
+        }
+
+        private Member createMember2(String name, RoleType role) {
+            Login login = Login.createLogin("testUser2", "password2", true);
+            return Member.createMember(login, name, role);
         }
 
         private TextRoom createRoom(String name, String password, Integer max) {

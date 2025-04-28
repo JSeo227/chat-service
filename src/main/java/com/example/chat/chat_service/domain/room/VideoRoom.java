@@ -10,4 +10,8 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class VideoRoom extends Room {
+
+    public static Room createVideoRoom(String name, String password) {
+        return createRoom(name, password, 2, RoomType.VID);
+    }
 }

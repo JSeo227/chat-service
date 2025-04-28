@@ -24,11 +24,17 @@ public abstract class Room {
 
     private String password; //비밀번호
 
-    private Integer max; //방 최대 인원 수
+    private Integer max; //방 최대 인원 수 (일반 채팅만)
+
+    @Enumerated(EnumType.STRING)
+    private RoomType type;
 
     //양방향
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberRoom> memberRooms = new ArrayList<>();
+
+    @Transient
+    private Integer currentMembers;
 
     //==연관관계 메서드==//
     public void addMemberRoom(MemberRoom memberRoom) {
@@ -37,11 +43,12 @@ public abstract class Room {
     }
 
     //==생성 메서드==//
-    public static Room createRoom(String name, String password, Integer max, MemberRoom... memberRooms) {
+    public static Room createRoom(String name, String password, Integer max, RoomType type, MemberRoom... memberRooms) {
         Room room = new TextRoom();
         room.setName(name);
         room.setPassword(password);
         room.setMax(max);
+        room.setType(type);
         for (MemberRoom memberRoom : memberRooms) {
             room.addMemberRoom(memberRoom);
         }

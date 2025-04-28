@@ -33,7 +33,7 @@ public class MemberService {
         validateDuplicateLoginId(member);
 
         // 로그인 정보 등록
-        Login newLogin = Login.createLogin(member.getLogin().getLoginId(), member.getLogin().getPassword());
+        Login newLogin = Login.createLogin(member.getLogin().getLoginId(), member.getLogin().getPassword(), false);
 
         // 회원 정보 등록
         Member newMember = Member.createMember(newLogin, member.getName(), null);

@@ -9,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MemberSession {
     private final String sessionId;
+    private final Long memberId;
     private final String loginId;
+    private final String password;
     private final String name;
     private final Boolean isLogin;
 }
