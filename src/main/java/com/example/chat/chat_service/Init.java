@@ -35,11 +35,11 @@ public class Init {
             em.persist(member);
 
             // 채팅방 1 생성 및 저장
-            TextRoom room1 = createRoom("방1", "1234", 0, 10);
+            TextRoom room1 = createRoom("방1", "1234", 10);
             em.persist(room1);
 
             // 채팅방 2 생성 및 저장
-            TextRoom room2 = createRoom("방2", "5678", 0, 10);
+            TextRoom room2 = createRoom("방2", "5678", 10);
             em.persist(room2);
 
             // 회원이 방1에 참여
@@ -59,8 +59,8 @@ public class Init {
             return member;
         }
 
-        private TextRoom createRoom(String name, String password, Integer count, Integer max) {
-            return (TextRoom) TextRoom.createTextRoom(name, password, count, max);
+        private TextRoom createRoom(String name, String password, Integer max) {
+            return (TextRoom) TextRoom.createTextRoom(name, password, max);
         }
     }
 

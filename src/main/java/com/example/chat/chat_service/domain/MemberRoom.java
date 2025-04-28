@@ -26,6 +26,8 @@ public class MemberRoom {
     @JoinColumn(name = "room_id")
     private Room room; //방 아이디
 
+    private Integer count; // 방 인원 수
+
     private LocalDateTime enteredDate; // 입장 시간
 
     private LocalDateTime exitedDate; // 퇴장 시간
@@ -45,7 +47,10 @@ public class MemberRoom {
         MemberRoom memberRoom = new MemberRoom();
         memberRoom.setMember(member);
         memberRoom.setRoom(room);
+        memberRoom.setCount(1);
         return memberRoom;
     }
+
+    //==로직 메서드==//
 
 }

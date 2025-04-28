@@ -31,6 +31,8 @@ public class Member {
     // PrePersist와 PreUpdate를 사용하여 날짜를 자동으로 설정
     @PrePersist
     public void prePersist() {
+        if (role == null) role = RoleType.MEMBER; // 기본값 설정
+
         createdDate = LocalDateTime.now();
         updatedDate = createdDate;
     }
@@ -49,7 +51,6 @@ public class Member {
         return member;
     }
 
-
-    //==연관관계 메서드==//
+    //==로직 메서드==//
 
 }

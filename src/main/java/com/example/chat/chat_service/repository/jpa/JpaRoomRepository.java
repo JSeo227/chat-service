@@ -5,11 +5,13 @@ import com.example.chat.chat_service.repository.RoomRepository;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Primary
 @Slf4j
 @Repository
 @RequiredArgsConstructor

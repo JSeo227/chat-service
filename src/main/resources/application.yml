@@ -12,23 +12,23 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
-#
-#  kafka:
-#    bootstrap-servers: localhost:9092
-#    consumer:
-#      group-id: chat-group
-#      auto-offset-reset: earliest
-#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-#      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-#    producer:
-#      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-#      value-serializer: org.apache.kafka.common.serialization.StringSerializer
-#
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: chat-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
 
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
-#    cache: false  # 개발 중에는 캐시를 비활성화하는 것이 좋습니다.
+    cache: false  # 개발 중에는 캐시를 비활성화하는 것이 좋습니다.
 
 logging:
   level:
