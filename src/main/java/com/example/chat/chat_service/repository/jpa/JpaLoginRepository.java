@@ -17,12 +17,16 @@ public class JpaLoginRepository implements LoginRepository {
     @Override
     public Boolean findByLoginId(String loginId) {
         Login login = em.find(Login.class, loginId);
+        log.info(String.valueOf(login));
         return login.checkLoginId(loginId);
     }
 
     @Override
     public Boolean findByPassword(String password) {
-        Login login = em.find(Login.class, password);
+        Login login = em.createQuery("select l from Login l where l.password = :password", Login.class)
+                .setParameter("password", password)
+                .getSingleResult();
+        log.info(String.valueOf(login));
         return login.checkPassword(password);
     }
 }

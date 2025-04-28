@@ -6,13 +6,10 @@ import lombok.Data;
 @Data
 public class LoginForm {
 
-    private Long id;
-
+    @NotEmpty(message = "로그인 ID는 필수 입력 값입니다.")
     private String loginId;
 
+    @NotEmpty(message = "비밀번호는 필수 입력 값입니다.")
     private String password;
 
-    private String name;
-
-    private Boolean isLogin;
 }

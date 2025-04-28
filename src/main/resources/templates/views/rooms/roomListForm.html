@@ -8,7 +8,7 @@
         <div class="card mb-4">
             <div class="card-header">
                 <i class="fas fa-comments me-1"></i>채팅방:
-                <span class="text-primary fw-bold" th:text="${rooms.size()}">0</span>개
+                <span class="text-primary fw-bold" th:text="${rooms != null ? rooms.size() : 0}">0</span>개
                 <button type="button" class="btn btn-primary btn-sm float-end ms-2">방 만들기</button>
             </div>
             <div class="card-body">
@@ -24,7 +24,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="rooms : ${rooms}" th:onclick="window.location='@{/room/{id}(id=${rooms.id})}'" style="cursor: pointer;">
+                        <tr th:each="rooms : ${rooms}" th:onclick="|window.location='@{/room/{id}(id=${rooms.id})}'|" style="cursor: pointer;">
                             <td th:text="${rooms.id}"></td>
                             <td th:text="${rooms.name}"></td>
                             <td th:text="${rooms.currentMembers} + '/' + ${rooms.max}"></td>

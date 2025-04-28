@@ -1,6 +1,6 @@
 package com.example.chat.chat_service.controller;
 
-import com.example.chat.chat_service.domain.Login;
+import com.example.chat.chat_service.controller.dto.LoginForm;
 import com.example.chat.chat_service.domain.Member;
 import com.example.chat.chat_service.service.LoginService;
 import com.example.chat.chat_service.service.MemberService;
@@ -8,56 +8,67 @@ import com.example.chat.chat_service.session.MemberSession;
 import com.example.chat.chat_service.session.SessionManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.UUID;
 
 @Slf4j
-@Service
+@Controller
 @RequiredArgsConstructor
 public class LoginController {
 
     private final LoginService loginService;
     private final MemberService memberService;
 
+    @GetMapping("/login")
+    public String loginForm(@ModelAttribute("login") LoginForm form) {
+        return "views/login/loginForm";
+    }
+
     @PostMapping("/login")
-    public String login(@ModelAttribute Login login, BindingResult result,
+    public String login(@Valid @ModelAttribute("login") LoginForm form, BindingResult result,
                         HttpServletRequest request) {
 
+        log.info("login : {}", form);
+
         if (result.hasErrors()) {
-            return "/views/login/loginForm";
+            return "views/login/loginForm";
         }
 
-        Member existingMember = memberService.findByLoginId(login.getLoginId());
+        Member existingMember = memberService.findByLoginId(form.getLoginId());
 
-        if (!loginService.isLoginId(login.getLoginId())) {
+        if (!loginService.isLoginId(form.getLoginId())) {
+            log.info("로그인 아이디가 일치하지 않습니다.");
             result.rejectValue("loginId", "error.loginId", "로그인 아이디가 일치하지 않습니다.");
-            return "/views/login/loginForm";
+            return "views/login/loginForm";
         }
 
-        if (!loginService.isPassword(login.getPassword())) {
+        if (!loginService.isPassword(form.getPassword())) {
+            log.info("비밀번호가 일치하지 않습니다.");
             result.rejectValue("password", "error.password", "비밀번호가 일치하지 않습니다.");
-            return "/views/login/loginForm";
+            return "views/login/loginForm";
         }
 
         //세션 저장
         MemberSession memberSession = new MemberSession(
                 UUID.randomUUID().toString(),
                 existingMember.getId(),
-                login.getLoginId(),
-                login.getPassword(),
+                form.getLoginId(),
+                form.getPassword(),
                 existingMember.getName(),
                 true
         );
 
         SessionManager.setMemberSession(request, memberSession);
 
-        return "/views/rooms/roomListForm";
+        return "redirect:/";
     }
 
     @PostMapping("/logout")
@@ -72,6 +83,5 @@ public class LoginController {
 
         return "redirect:/login";
     }
-
 
 }

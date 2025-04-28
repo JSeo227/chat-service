@@ -15,8 +15,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -25,8 +23,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/members/new")
-    public String createForm(Model model) {
-        model.addAttribute("member", new MemberForm());
+    public String createForm(@ModelAttribute("member") MemberForm form) {
         return "views/members/createMemberForm";
     }
 
@@ -47,7 +44,7 @@ public class MemberController {
 
         memberService.join(member);
 
-        return "views/rooms/roomListForm";
+        return "redirect:/login";
     }
 
     @PutMapping("/members/{id}/edit")
@@ -73,8 +70,9 @@ public class MemberController {
     }
 
     @GetMapping("/members/{id}/info")
-    public String info(@Valid @ModelAttribute("member") MemberForm form, @PathVariable Long id) {
-
+    public String info(HttpServletRequest request, Model model, @PathVariable Long id) {
+        MemberSession session = SessionManager.getMemberSession(request);
+        model.addAttribute("member", session);
         return "views/members/memberInfoForm";
     }
 

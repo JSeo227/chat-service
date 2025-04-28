@@ -60,12 +60,12 @@ public class Init {
         }
 
         private Member createMember1(String name, RoleType role) {
-            Login login = Login.createLogin("testUser1", "password1", true);
+            Login login = Login.createLogin("member1", "password1", true);
             return Member.createMember(login, name, role);
         }
 
         private Member createMember2(String name, RoleType role) {
-            Login login = Login.createLogin("testUser2", "password2", true);
+            Login login = Login.createLogin("member2", "password2", true);
             return Member.createMember(login, name, role);
         }
 

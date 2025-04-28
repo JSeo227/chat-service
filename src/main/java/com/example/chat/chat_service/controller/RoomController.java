@@ -1,11 +1,15 @@
 package com.example.chat.chat_service.controller;
 
+import com.example.chat.chat_service.common.Constants;
 import com.example.chat.chat_service.controller.dto.RoomForm;
 import com.example.chat.chat_service.domain.Member;
 import com.example.chat.chat_service.domain.MemberRoom;
 import com.example.chat.chat_service.domain.room.Room;
 import com.example.chat.chat_service.domain.room.TextRoom;
 import com.example.chat.chat_service.service.RoomService;
+import com.example.chat.chat_service.session.MemberSession;
+import com.example.chat.chat_service.session.SessionManager;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -78,8 +82,12 @@ public class RoomController {
     }
 
     @GetMapping("/room/{id}")
-    public String enter(@ModelAttribute RoomForm form, @PathVariable Long id, @SessionAttribute(name = "loginMember") Member member) {
+    public String enter(@PathVariable Long id, HttpServletRequest request, @SessionAttribute(Constants.MEMBER_SESSION) Member member) {
         Room room = roomService.findRoomById(id);
+        MemberSession session = SessionManager.getMemberSession(request);
+        log.info(room.toString());
+        log.info(session.toString());
+        log.info(member.toString());
         MemberRoom memberRoom = MemberRoom.createMemberRoom(member, room);
         roomService.enterRoom(id, memberRoom);
         return "views/rooms/roomForm";

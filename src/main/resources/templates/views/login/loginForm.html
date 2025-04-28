@@ -6,21 +6,30 @@
 <div class="container d-flex justify-content-center align-items-center min-vh-100">
     <div class="card p-4 shadow" style="width: 100%; max-width: 400px;">
         <h3 class="mb-4 text-center">로그인</h3>
-        <form method="post" action="/login">
-            <div class="mb-3">
-                <label for="id" class="form-label">Login Id:</label>
-                <input class="form-control" id="id" name="username" type="text" required>
+        <form method="post" th:action th:object="${login}">
+            <div th:if="${#fields.hasGlobalErrors()}">
+                <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">전체 오류 메시지</p>
             </div>
             <div class="mb-3">
-                <label for="pw" class="form-label">Password:</label>
-                <input class="form-control" id="pw" name="password" type="password" required>
+                <label for="loginId" class="form-label">Login Id:</label>
+                <input type="text" class="form-control" id="loginId" th:field="*{loginId}" th:errorclass="field-error">
+                <p class="field-error" th:errors="*{loginId}"></p>
             </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password:</label>
+                <input type="password" class="form-control" id="password" th:field="*{password}" th:errorclass="field-error">
+                <p class="field-error" th:errors="*{password}"></p>
+            </div>
+
             <div class="form-check mb-3">
                 <input class="form-check-input" id="rememberId" name="remember-me" type="checkbox">
                 <label for="rememberId" class="form-check-label">아이디 저장</label>
             </div>
             <div class="d-grid">
-                <button id="login" class="btn btn-primary" type="submit">Login</button>
+                <button type="submit" class="btn btn-primary">Sign in</button>
+            </div>
+            <div class="d-grid">
+                <a class="btn btn-primary" th:href="@{/members/new}">Sign up</a>
             </div>
         </form>
     </div>
