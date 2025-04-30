@@ -6,7 +6,7 @@
 ## 🧩 주요 기능
 
 - **WebSocket(STOMP)** 기반 실시간 채팅
-- **WebRtc** 기반 화상 채팅
+- **WebRtc** 기반 영상 채팅
 - **Kafka**를 통한 메시지 비동기 전송 및 처리
 - **MongoDB**에 채팅 메시지 저장
 - **Spring + JPA + MySQL**로 회원 및 채팅방 관리
