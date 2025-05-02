@@ -22,7 +22,7 @@
             </div>
 
             <div class="form-check mb-3">
-                <input class="form-check-input" id="rememberId" name="remember-me" type="checkbox">
+                <input class="form-check-input" id="rememberId" name="rememberId" type="checkbox">
                 <label for="rememberId" class="form-check-label">아이디 저장</label>
             </div>
             <div class="d-grid">
@@ -34,5 +34,23 @@
         </form>
     </div>
 </div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const memberSession = /*[[${memberSession}]]*/ null;
+
+    if (memberSession) {
+        console.log("memberSession is not null");
+        console.log(memberSession);
+        sessionStorage.setItem("memberId", memberSession.memberId);
+        sessionStorage.setItem("loginId", memberSession.loginId);
+        sessionStorage.setItem("name", memberSession.name);
+        sessionStorage.setItem("isLogin", memberSession.isLogin);
+        sessionStorage.setItem("loginDate", memberSession.loginDate);
+    } else {
+        console.warn("memberSession is null");
+    }
+    /*]]>*/
+</script>
 </body>
 </html>

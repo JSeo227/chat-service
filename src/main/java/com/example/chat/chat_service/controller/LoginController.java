@@ -1,5 +1,6 @@
 package com.example.chat.chat_service.controller;
 
+import com.example.chat.chat_service.common.Constants;
 import com.example.chat.chat_service.controller.dto.LoginForm;
 import com.example.chat.chat_service.domain.Member;
 import com.example.chat.chat_service.service.LoginService;
@@ -12,6 +13,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -34,7 +36,7 @@ public class LoginController {
 
     @PostMapping("/login")
     public String login(@Valid @ModelAttribute("login") LoginForm form, BindingResult result,
-                        HttpServletRequest request) {
+                        HttpServletRequest request, Model model) {
 
         log.info("login : {}", form);
 
@@ -58,7 +60,6 @@ public class LoginController {
 
         //세션 저장
         MemberSession memberSession = new MemberSession(
-                UUID.randomUUID().toString(),
                 existingMember.getId(),
                 form.getLoginId(),
                 form.getPassword(),
@@ -67,6 +68,8 @@ public class LoginController {
         );
 
         SessionManager.setMemberSession(request, memberSession);
+
+        model.addAttribute("memberSession", memberSession);
 
         return "redirect:/";
     }

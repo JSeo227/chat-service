@@ -6,6 +6,7 @@ import com.example.chat.chat_service.domain.Member;
 import com.example.chat.chat_service.domain.MemberRoom;
 import com.example.chat.chat_service.domain.room.Room;
 import com.example.chat.chat_service.domain.room.TextRoom;
+import com.example.chat.chat_service.service.MemberService;
 import com.example.chat.chat_service.service.RoomService;
 import com.example.chat.chat_service.session.MemberSession;
 import com.example.chat.chat_service.session.SessionManager;
@@ -25,6 +26,7 @@ import java.util.List;
 public class RoomController {
 
     private final RoomService roomService;
+    private final MemberService memberService;
 
     @GetMapping("/")
     public String home(Model model) {
@@ -82,12 +84,12 @@ public class RoomController {
     }
 
     @GetMapping("/room/{id}")
-    public String enter(@PathVariable Long id, HttpServletRequest request, @SessionAttribute(Constants.MEMBER_SESSION) Member member) {
-        Room room = roomService.findRoomById(id);
+    public String enter(@PathVariable Long id, HttpServletRequest request) {
         MemberSession session = SessionManager.getMemberSession(request);
-        log.info(room.toString());
-        log.info(session.toString());
-        log.info(member.toString());
+        Member member = memberService.findById(session.getMemberId());
+
+        Room room = roomService.findRoomById(id);
+
         MemberRoom memberRoom = MemberRoom.createMemberRoom(member, room);
         roomService.enterRoom(id, memberRoom);
         return "views/rooms/roomForm";

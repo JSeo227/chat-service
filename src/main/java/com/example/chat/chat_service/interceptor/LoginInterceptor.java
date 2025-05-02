@@ -8,9 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Slf4j
 public class LoginInterceptor implements HandlerInterceptor {
 
@@ -18,33 +15,23 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        MemberSession memberSession = SessionManager.getMemberSession(request);
-
-        if (memberSession == null) {
+        try {
+            MemberSession memberSession = SessionManager.getMemberSession(request);
+            log.info("MemberSession is NOT null:{}", memberSession);
+        } catch (Exception e) { //세션이 없으면
             log.info("MemberSession is null");
-            Map<String, Object> param = new HashMap<>();
 
-            String url = request.getRequestURI(); // 요청URL
-            String queryStr = request.getQueryString();
-            String preUrl = "";
+            //401
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json;charset=UTF-8");
 
-            if(url == null) {
-                preUrl = url;
-            } else {
-                preUrl = (queryStr == null) ? url : url+"?"+queryStr;
-            }
-
-            // 직전 URL을 세션에 저장
-            param.put("preUrl", preUrl);
-//            SessionManager.setSession(request, param);
-
-            //세션이 없으면 -> 뒤로가기 방지
+            // 뒤로가기 방지
             response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
             response.setHeader("Pragma", "no-cache");
             response.setDateHeader("Expires", 0);
 
-            //세션이 없으면 -> 로그인 화면으로 이동
-            response.sendRedirect("/login/loginForm");
+            // 로그인 화면으로 이동
+            response.sendRedirect("/login");
             return false;
         }
 
@@ -54,7 +41,8 @@ public class LoginInterceptor implements HandlerInterceptor {
     // Controller 실행 후, View 실행 전 [Controller -> postHandle]
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        log.info("postHandle {}", modelAndView);
+        log.info("Url {}", request.getRequestURI());
+        log.info("Status {}", response.getStatus());
         HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
     }
 

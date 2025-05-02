@@ -70,9 +70,10 @@ public class MemberController {
     }
 
     @GetMapping("/members/{id}/info")
-    public String info(HttpServletRequest request, Model model, @PathVariable Long id) {
+    public String info(HttpServletRequest request, Model model) {
         MemberSession session = SessionManager.getMemberSession(request);
-        model.addAttribute("member", session);
+        Member member = memberService.findById(session.getMemberId());
+        model.addAttribute("member", member);
         return "views/members/memberInfoForm";
     }
 

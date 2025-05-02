@@ -48,7 +48,7 @@ public class SessionManager implements HttpSessionListener {
      */
     @Override
     public void sessionDestroyed(HttpSessionEvent se) {
-        HttpSession session = sessionStore.remove(se.getSession().getId());
+        sessionStore.remove(se.getSession().getId());
         log.info("세션 삭제됨: {}", se.getSession().getId());
     }
 

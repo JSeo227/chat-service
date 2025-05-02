@@ -13,14 +13,19 @@ public class SessionInfoController {
     @GetMapping("/session-info")
     public String sessionInfo(HttpServletRequest request) {
         HttpSession session = request.getSession(false); //null
-        if (session != null) {
+        if (session == null) {
             return "세션이 없습니다.";
         }
 
         //세션 데이터 출력
+        StringBuilder sb = new StringBuilder();
         session.getAttributeNames().asIterator()
-                .forEachRemaining(name -> log.info("session name={}, value={}", name, session.getAttribute(name)));
+                .forEachRemaining(name -> {
+                    Object value = session.getAttribute(name);
+                    sb.append(name).append(" : ").append(value).append("\n");
+                });
 
-        return "세션 출력";
+        return sb.toString();
+
     }
 }
