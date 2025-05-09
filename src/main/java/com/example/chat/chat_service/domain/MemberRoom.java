@@ -26,7 +26,7 @@ public class MemberRoom {
     @JoinColumn(name = "room_id")
     private Room room; //방 아이디
 
-    private Integer count = 0; // 방 인원 수
+    private Boolean isInRoom; // 방에 있는가
 
     private LocalDateTime enteredDate; // 입장 시간
 
@@ -35,7 +35,6 @@ public class MemberRoom {
     @PrePersist
     public void prePersist() {
         enteredDate = LocalDateTime.now();
-        exitedDate = enteredDate;
     }
 
     public void exit() {
@@ -43,11 +42,11 @@ public class MemberRoom {
     }
 
     //==생성 메서드==//
-    public static MemberRoom createMemberRoom(Member member, Room room) {
+    public static MemberRoom createForEnter(Member member, Room room) {
         MemberRoom memberRoom = new MemberRoom();
         memberRoom.setMember(member);
         memberRoom.setRoom(room);
-        memberRoom.setCount(memberRoom.count++);
+        memberRoom.setIsInRoom(true);
         return memberRoom;
     }
 

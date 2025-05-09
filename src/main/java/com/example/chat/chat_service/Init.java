@@ -44,28 +44,28 @@ public class Init {
             TextRoom room2 = createRoom("방2", "5678", 10);
             em.persist(room2);
 
-            // 회원이 방1에 참여
-            MemberRoom memberRoom1 = MemberRoom.createMemberRoom(member1, room1);
-            room1.addMember(memberRoom1); // 양방향 연관관계 메서드 호출
-            em.persist(memberRoom1);
-
-            MemberRoom memberRoom2 = MemberRoom.createMemberRoom(member2, room1);
-            room1.addMember(memberRoom2); // 양방향 연관관계 메서드 호출
-            em.persist(memberRoom2);
-
-            // 회원이 방2에 참여
-            MemberRoom memberRoom3 = MemberRoom.createMemberRoom(member1, room2);
-            room2.addMember(memberRoom3); // 양방향 연관관계 메서드 호출
-            em.persist(memberRoom3);
+//            // 회원이 방1에 참여
+//            MemberRoom memberRoom1 = MemberRoom.createMemberRoom(member1, room1);
+//            room1.addMember(memberRoom1); // 양방향 연관관계 메서드 호출
+//            em.persist(memberRoom1);
+//
+//            MemberRoom memberRoom2 = MemberRoom.createMemberRoom(member2, room1);
+//            room1.addMember(memberRoom2); // 양방향 연관관계 메서드 호출
+//            em.persist(memberRoom2);
+//
+//            // 회원이 방2에 참여
+//            MemberRoom memberRoom3 = MemberRoom.createMemberRoom(member1, room2);
+//            room2.addMember(memberRoom3); // 양방향 연관관계 메서드 호출
+//            em.persist(memberRoom3);
         }
 
         private Member createMember1(String name, RoleType role) {
-            Login login = Login.createLogin("m1", "pw1", true);
+            Login login = Login.createLogin("m1", "pw1", false);
             return Member.createMember(login, name, role);
         }
 
         private Member createMember2(String name, RoleType role) {
-            Login login = Login.createLogin("m2", "pw2", true);
+            Login login = Login.createLogin("m2", "pw2", false);
             return Member.createMember(login, name, role);
         }
 

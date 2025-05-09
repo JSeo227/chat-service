@@ -11,6 +11,7 @@ import com.example.chat.chat_service.service.RoomService;
 import com.example.chat.chat_service.session.MemberSession;
 import com.example.chat.chat_service.session.SessionManager;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -84,20 +85,30 @@ public class RoomController {
     }
 
     @GetMapping("/room/{id}")
-    public String enter(@PathVariable Long id, HttpServletRequest request) {
+    public String enter(@PathVariable Long id, HttpServletRequest request, Model model) {
         MemberSession session = SessionManager.getMemberSession(request);
         Member member = memberService.findById(session.getMemberId());
 
         Room room = roomService.findRoomById(id);
+        model.addAttribute("room", room);
 
-        MemberRoom memberRoom = MemberRoom.createMemberRoom(member, room);
+        MemberRoom memberRoom = MemberRoom.createForEnter(member, room);
         roomService.enterRoom(id, memberRoom);
         return "views/rooms/roomForm";
     }
 
-    @PostMapping("/room/{id}/{password}")
+    @GetMapping("/room/exit/{id}")
+    public String exit(@PathVariable Long id, HttpServletRequest request) {
+        MemberSession session = SessionManager.getMemberSession(request);
+        Member member = memberService.findById(session.getMemberId());
+
+        roomService.exitRoom(id, member);
+        return "redirect:/";
+    }
+
+    @PostMapping("/room/check")
     public boolean checkPassword(@ModelAttribute RoomForm form,
-                                 @PathVariable Long id, @PathVariable String password) {
+                                 @RequestParam Long id, @RequestParam String password) {
         return roomService.isPasswordValid(id, password);
     }
 }

@@ -39,4 +39,15 @@ public class JpaRoomRepository implements RoomRepository {
         return em.createQuery("select r from Room r", Room.class)
                 .getResultList();
     }
+
+    @Override
+    public List<Room> findAllWithMembers() {
+        return em.createQuery(
+                "select distinct r from Room r" +
+                        " join fetch r.memberRooms mr" +
+                        " join fetch mr.member m", Room.class)
+                .getResultList();
+
+    }
+
 }

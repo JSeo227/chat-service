@@ -58,6 +58,9 @@ public class LoginController {
             return "views/login/loginForm";
         }
 
+        //로그인 성공 isLogin : false -> true
+        loginService.setLoginStatusTrue(form.getLoginId(), true);
+
         //세션 저장
         MemberSession memberSession = new MemberSession(
                 existingMember.getId(),
@@ -78,6 +81,7 @@ public class LoginController {
     public String logout(HttpServletRequest request, HttpServletResponse response) {
 
         MemberSession memberSession = SessionManager.getMemberSession(request);
+        loginService.setLoginStatusTrue(memberSession.getLoginId(), false);
         SessionManager.removeMemberSession(request, memberSession);
 
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1

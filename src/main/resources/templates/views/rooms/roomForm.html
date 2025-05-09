@@ -8,7 +8,7 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h3 class="mb-0">채팅방</h3>
-                <button class="btn btn-secondary btn-sm" onclick="location.href='roomlist.html'">
+                <button class="btn btn-secondary btn-sm" th:onclick="|location.href='/room/exit/' + ${room.id}|">
                     나가기
                 </button>
             </div>
@@ -33,5 +33,28 @@
         </div>
     </div>
 
-</th:block>>
+    <script th:inline="javascript">
+        const exitRoom = (roomId) => {
+            fetch(`/room/exit/${roomId}`, {
+                method: "GET"
+            }).then(() => {
+                window.location.href = "/";
+            });
+        }
+
+        const roomId = [[${room.id}]];
+
+        // 창 닫기
+        window.addEventListener("beforeunload", function () {
+            navigator.sendBeacon(`/room/exit/${roomId}`);
+        });
+
+        // 뒤로 가기
+        window.addEventListener("popstate", function () {
+            navigator.sendBeacon(`/room/exit/${roomId}`);
+        });
+
+    </script>
+
+</th:block>
 </html>

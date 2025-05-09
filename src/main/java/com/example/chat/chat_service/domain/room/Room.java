@@ -34,7 +34,7 @@ public abstract class Room {
     private List<MemberRoom> memberRooms = new ArrayList<>();
 
     @Transient
-    private Integer currentMembers;
+    private Integer currentMembers; //현재 방 인원 수
 
     //==연관관계 메서드==//
     public void addMemberRoom(MemberRoom memberRoom) {
@@ -70,17 +70,19 @@ public abstract class Room {
             throw new IllegalStateException("채팅방이 가득 찼습니다.");
         }
         memberRooms.add(memberRoom);
-        memberRoom.setCount(memberRoom.getCount() + 1);
         memberRoom.setRoom(this);
     }
 
     //채팅방 인원 -1
-    public void removeMember(MemberRoom memberRoom) {
-        if (memberRoom.getCount() > 0) {
-            memberRooms.remove(memberRoom);
-            memberRoom.setCount(memberRoom.getCount() - 1);
-            memberRoom.setRoom(null);
-        }
+    public void removeMember(Member member) {
+        MemberRoom memberRoom = memberRooms.stream()
+                .filter(mr -> mr.getMember().equals(member))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("회원이 이 채팅방에 없습니다."));
+
+        memberRoom.exit();
+        memberRoom.setIsInRoom(false); //이거 고민중
+        memberRooms.remove(memberRoom);
     }
 
     //채팅방 정원 여부

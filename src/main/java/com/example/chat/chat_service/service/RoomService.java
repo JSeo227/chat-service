@@ -77,6 +77,7 @@ public class RoomService {
      * @param roomId
      * @param memberRoom
      */
+    @Transactional
     public void enterRoom(Long roomId, MemberRoom memberRoom) {
         Room room = roomRepository.findById(roomId).orElse(null);
         room.addMember(memberRoom);
@@ -85,11 +86,12 @@ public class RoomService {
     /**
      * 채팅방에 회원 삭제
      * @param roomId
-     * @param memberRoom
+     * @param member
      */
-    public void exitRoom(Long roomId, MemberRoom memberRoom) {
+    @Transactional
+    public void exitRoom(Long roomId, Member member) {
         Room room = roomRepository.findById(roomId).orElse(null);
-        room.removeMember(memberRoom);
+        room.removeMember(member);
     }
 
     /**
