@@ -46,11 +46,11 @@ public class RoomController {
     @GetMapping("/room/create")
     public String createRoom(Model model) {
         model.addAttribute("room", new RoomForm());
-        return "views/members/createMemberForm";
+        return "views/rooms/createRoomForm";
     }
 
     @PostMapping("/room/create")
-    public String create(@ModelAttribute RoomForm form, BindingResult result) {
+    public String create(@ModelAttribute("room") RoomForm form, BindingResult result) {
 
         if (result.hasErrors()) {
             return "views/rooms/createRoomForm";
@@ -67,7 +67,7 @@ public class RoomController {
     }
 
     @PutMapping("/room/{id}/edit")
-    public String edit(@ModelAttribute RoomForm form, @PathVariable Long id,
+    public String edit(@ModelAttribute("room") RoomForm form, @PathVariable Long id,
                        BindingResult result) {
 
         if (result.hasErrors()) {
@@ -107,7 +107,7 @@ public class RoomController {
     }
 
     @PostMapping("/room/check")
-    public boolean checkPassword(@ModelAttribute RoomForm form,
+    public boolean checkPassword(@ModelAttribute("room") RoomForm form,
                                  @RequestParam Long id, @RequestParam String password) {
         return roomService.isPasswordValid(id, password);
     }

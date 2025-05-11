@@ -9,7 +9,8 @@
             <div class="card-header">
                 <i class="fas fa-comments me-1"></i>채팅방:
                 <span class="text-primary fw-bold" th:text="${rooms != null ? rooms.size() : 0}">0</span>개
-                <button type="button" class="btn btn-primary btn-sm float-end ms-2">방 만들기</button>
+                <button type="button" class="btn btn-primary btn-sm float-end ms-2"
+                    th:onclick="|location.href='@{/room/create}'|">방 만들기</button>
             </div>
             <div class="card-body">
                 <div class="table-responsive">

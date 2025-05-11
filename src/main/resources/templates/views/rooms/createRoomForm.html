@@ -1,10 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<th:block layout:fragment="content">
+    <div class="container d-flex justify-content-center align-items-center min-vh-100">
+        <div class="card p-4 shadow" style="width: 100%; max-width: 400px;">
+            <h3 class="mb-4 text-center">채팅방 생성</h3>
+            <form th:action th:object="${room}" method="post">
+                <div th:if="${#fields.hasGlobalErrors()}">
+                    <p th:each="err : ${#fields.globalErrors()}" th:text="${err}">전체 오류 메시지</p>
+                </div>
+                <div class="mb-3">
+                    <label for="name" class="form-label">Room Name:</label>
+                    <input th:field="*{name}" class="form-control" id="name" name="name" type="text" required>
+                    <p class="field-error" th:errors="*{name}"></p>
+                </div>
+                <div class="mb-3">
+                    <label for="pw" class="form-label">Password:</label>
+                    <input th:field="*{password}" class="form-control" id="pw" name="password" type="password" required>
+                    <p class="field-error" th:errors="*{password}"></p>
+                </div>
+                <div class="mb-3">
+                    <label for="max" class="form-label">Member Max Count:</label>
+                    <input th:field="*{max}" class="form-control" id="max" name="max" type="text" required>
+                    <p class="field-error" th:errors="*{max}"></p>
+                </div>
+                <div class="d-grid">
+                    <button id="create" class="btn btn-primary" type="submit">Create</button>
+                </div>
+            </form>
+        </div>
+    </div> <!-- /container -->
+</th:block>
 </html>
