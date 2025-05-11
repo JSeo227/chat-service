@@ -12,10 +12,9 @@ public class WebConfig implements WebMvcConfigurer {
     //interceptor
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(new HttpInterceptor())
-//                .order(0)
-//                .addPathPatterns("/**")
-//                .excludePathPatterns("/chat/**");
+        registry.addInterceptor(new HttpInterceptor())
+                .order(0)
+                .addPathPatterns("/*");
 
         registry.addInterceptor(new LoginInterceptor())
                 .order(1)

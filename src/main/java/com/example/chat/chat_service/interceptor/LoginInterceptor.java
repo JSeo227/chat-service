@@ -21,7 +21,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         } catch (Exception e) { //세션이 없으면
             log.info("MemberSession is null");
 
-            //401
+            // 401
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json;charset=UTF-8");
 
@@ -41,8 +41,8 @@ public class LoginInterceptor implements HandlerInterceptor {
     // Controller 실행 후, View 실행 전 [Controller -> postHandle]
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        log.info("Url {}", request.getRequestURI());
-        log.info("Status {}", response.getStatus());
+        log.info("[postHandle] Url: {}", request.getRequestURI());
+        log.info("[postHandle] Status: {}", response.getStatus());
         HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
     }
 
