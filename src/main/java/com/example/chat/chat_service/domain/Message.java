@@ -14,6 +14,8 @@ public class Message {
 
     private Long senderId;
 
+    private String senderName;
+
     private String content;
 
     private String time; // 채팅 발송 시간
