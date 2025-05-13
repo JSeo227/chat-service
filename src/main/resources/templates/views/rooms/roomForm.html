@@ -33,27 +33,39 @@
         </div>
     </div>
 
-    <script th:inline="javascript">
-        const exitRoom = (roomId) => {
-            fetch(`/room/exit/${roomId}`, {
-                method: "GET"
-            }).then(() => {
-                window.location.href = "/";
-            });
-        }
+    <!-- J Query -->
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
 
-        const roomId = [[${room.id}]];
+    <!-- SockJs and StompJS -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
+
+    <!-- Java Script -->
+    <script th:src="@{/js/websocket.js}"></script>
+
+    <!-- Logic -->
+    <script th:inline="javascript">
+        // const exitRoom = (roomId) => {
+        //     fetch(`/room/exit/${roomId}`, {
+        //         method: "GET"
+        //     }).then(() => {
+        //         window.location.href = "/";
+        //     });
+        // }
+        //
+        // const roomId = [[${room.id}]];
 
         // 창 닫기
-        window.addEventListener("beforeunload", function () {
+        window.addEventListener("beforeunload", () => {
             navigator.sendBeacon(`/room/exit/${roomId}`);
         });
 
         // 뒤로 가기
-        window.addEventListener("popstate", function () {
+        window.addEventListener("popstate", () => {
             navigator.sendBeacon(`/room/exit/${roomId}`);
         });
-
     </script>
 
 </th:block>

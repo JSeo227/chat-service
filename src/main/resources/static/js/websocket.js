@@ -1,23 +1,31 @@
-import SockJS from 'sockjs-client';
-import { Client } from '@stomp/stompjs';
+
 
 //connect -> subscribe -> publish -> disconnect
 //클라이언트 연결 -> 구독 -> 발행 -> 연결 종료
 
-let roomId = null;
+const usernamePage = document.querySelector('#username-page');
+const usernameForm = document.querySelector('#usernameForm');
+
+const chatPage = document.querySelector('#chat-page');
+const messageArea = document.querySelector('#messageArea');
+const messageForm = document.querySelector('#messageForm');
+const messageInput = document.querySelector('#messageInput');
+
+const connectingElement = document.querySelector('.connecting');
+
+let roomId = window.location.pathname.split('/').pop();
 let memberName = null;
 
 let stompClient = null;
 
-const connect = (event) => {
+const connect = () => {
     const socket = new SockJS('/ws-chat');
     stompClient = Stomp.over(socket);
 
     //메시지 수신 or 구독
-    //connect(headers, connectCallback, errorCallback)
+    //client.connect(headers, connectCallback, errorCallback)
     stompClient.connect({}, onConnected, onError);
 
-    event.preventDefault();
 }
 
 const onConnected = () => {
@@ -32,10 +40,11 @@ const onConnected = () => {
     }
 
     // send(destination, headers = {}, body = '')
-    stompClient.publish({
-        destination: "/app/chat/enter",  // 서버에서 처리할 주소
-        body: JSON.stringify(message)
-    });
+    stompClient.send("/app/chat/enter", {}, JSON.stringify(message));
+    // stompClient.publish({
+    //     destination: "/app/chat/enter",  // 서버에서 처리할 주소
+    //     body: JSON.stringify(message)
+    // });
 
     document.querySelector('#messageInput').value = '';
 }
@@ -45,6 +54,9 @@ const onError = () => {
 }
 
 const sendMessage = (event) => {
+
+    event.preventDefault(); // form submit 시 새로고침 방지
+
     const message = {
         roomId: roomId,
         sender: memberName,
@@ -52,10 +64,7 @@ const sendMessage = (event) => {
         types: 'TALK'
     }
 
-    stompClient.publish({
-        destination: "/app/chat/send",  // 서버에서 처리할 주소
-        body: JSON.stringify(message)
-    });
+    stompClient.send("/app/chat/send", {}, JSON.stringify(message));
 
     document.querySelector('#messageInput').value = '';
 }
@@ -93,10 +102,5 @@ window.BeforeUnloadEvent = () => {
 }
 
 // usernameForm.addEventListener('submit', connect, true);
-// messageForm.addEventListener('submit', sendMessage, true);
+messageForm.addEventListener('submit', sendMessage, true);
 // true -> capturing, false -> bubbling
-
-// <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
-// <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
-// <script src="/js/socket.js"></script>
-
