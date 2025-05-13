@@ -29,8 +29,8 @@ const connect = () => {
 }
 
 const onConnected = () => {
-    // subscribe(destination, callback, headers = {})
-    stompClient.subscribe("/sub/chat/rooms/" + roomId, onMessageReceived, {});
+    // client.subscribe(destination, callback, headers = {})
+    stompClient.subscribe("/topic/chat/rooms/" + roomId, onMessageReceived, {});
 
     const message = {
         roomId: roomId,
@@ -47,6 +47,26 @@ const onConnected = () => {
     // });
 
     document.querySelector('#messageInput').value = '';
+}
+
+const onMessageReceived = (payload) => {
+    const message = JSON.parse(payload.body);
+    console.log("Message: ", message);
+    console.log("Received payload:", payload);
+
+    switch (message.types) {
+        case 'ENTER':
+            console.log("Enter");
+            break;
+        case 'LEAVE':
+            console.log("Leave");
+            break;
+        case 'TALK':
+            console.log("Talk");
+            break;
+        default:
+            break;
+    }
 }
 
 const onError = () => {
@@ -67,23 +87,6 @@ const sendMessage = (event) => {
     stompClient.send("/app/chat/send", {}, JSON.stringify(message));
 
     document.querySelector('#messageInput').value = '';
-}
-
-const onMessageReceived = (payload) => {
-    const message = JSON.parse(payload.body);
-    console.log("Message: ", message);
-    console.log("Received payload:", payload);
-
-    switch (message.types) {
-        case 'ENTER':
-            break;
-        case 'LEAVE':
-            break;
-        case 'TALK':
-            break;
-        default:
-            break;
-    }
 }
 
 const disconnect = () => {
