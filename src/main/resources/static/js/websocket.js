@@ -30,44 +30,70 @@ const connect = () => {
 
 const onConnected = () => {
     // client.subscribe(destination, callback, headers = {})
-    stompClient.subscribe("/topic/chat/rooms/" + roomId, onMessageReceived, {});
+    stompClient.subscribe("/topic/chat/room/" + roomId, onMessageReceived, {});
 
     const message = {
         roomId: roomId,
-        sender: memberName,
+        senderId: roomId,
+        senderName: memberName,
         content: memberName + "님이 입장하였습니다.",
-        types: 'ENTER'
+        status: 'ENTER'
     }
 
     // send(destination, headers = {}, body = '')
     stompClient.send("/app/chat/enter", {}, JSON.stringify(message));
-    // stompClient.publish({
-    //     destination: "/app/chat/enter",  // 서버에서 처리할 주소
-    //     body: JSON.stringify(message)
-    // });
 
     document.querySelector('#messageInput').value = '';
 }
 
 const onMessageReceived = (payload) => {
     const message = JSON.parse(payload.body);
-    console.log("Message: ", message);
+    console.log("Message:", message);
     console.log("Received payload:", payload);
 
-    switch (message.types) {
+    let usernameElement = document.createElement('span');
+    let usernameText;
+
+    const messageElement = document.createElement('li');
+
+    switch (message.status) {
         case 'ENTER':
             console.log("Enter");
+            messageElement.classList.add('event-message');
+            usernameText = document.createTextNode(message.content);
+            usernameElement.appendChild(usernameText);
+            messageElement.appendChild(usernameElement);
             break;
+
         case 'LEAVE':
             console.log("Leave");
+            messageElement.classList.add('event-message');
+            usernameText = document.createTextNode(message.content);
+            usernameElement.appendChild(usernameText);
+            messageElement.appendChild(usernameElement);
             break;
+
         case 'TALK':
             console.log("Talk");
+            console.log(message.content);
+            messageElement.classList.add('chat-message');
+            usernameText = document.createTextNode(message.sender + ": " + message.content);
+            usernameElement.appendChild(usernameText);
+            messageElement.appendChild(usernameElement);
             break;
+
         default:
-            break;
+            console.warn("Unknown message type:", message.type);
+            return;
     }
-}
+
+    const contentElement = document.createElement('p'); // 필요시 메시지 본문용
+    messageElement.appendChild(contentElement);
+
+    messageArea.appendChild(messageElement);
+    messageArea.scrollTop = messageArea.scrollHeight;
+};
+
 
 const onError = () => {
 
@@ -79,9 +105,10 @@ const sendMessage = (event) => {
 
     const message = {
         roomId: roomId,
-        sender: memberName,
+        senderId: roomId,
+        senderName: memberName,
         content: document.querySelector('#messageInput').value,
-        types: 'TALK'
+        status: 'TALK'
     }
 
     stompClient.send("/app/chat/send", {}, JSON.stringify(message));
@@ -99,6 +126,16 @@ const disconnect = () => {
 window.onload = () => {
     connect();
 }
+
+// window.addEventListener('beforeunload', function (e) {
+//     disconnect(); // 예: 웹소켓 연결 종료 등
+//
+//     // 아래 줄은 사용자에게 확인창을 보여주고 싶을 때만 사용
+//     // e.preventDefault(); // 최신 브라우저는 이걸 생략해도 동작
+//     // e.returnValue = ''; // 표준 방식
+// });
+
+
 
 window.BeforeUnloadEvent = () => {
     disconnect();

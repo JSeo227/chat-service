@@ -18,8 +18,6 @@ public class Message {
 
     private String content;
 
-    private String time; // 채팅 발송 시간
-
     @Enumerated(EnumType.STRING)
     private MessageStatus status; // ENTER, TALK, LEAVE
 }

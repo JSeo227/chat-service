@@ -47,23 +47,17 @@
 
     <!-- Logic -->
     <script th:inline="javascript">
-        // const exitRoom = (roomId) => {
-        //     fetch(`/room/exit/${roomId}`, {
-        //         method: "GET"
-        //     }).then(() => {
-        //         window.location.href = "/";
-        //     });
-        // }
-        //
-        // const roomId = [[${room.id}]];
+        const roomId = [[${room.id}]];
 
         // 창 닫기
         window.addEventListener("beforeunload", () => {
+            console.log("beforeunload");
             navigator.sendBeacon(`/room/exit/${roomId}`);
         });
 
         // 뒤로 가기
         window.addEventListener("popstate", () => {
+            console.log("popstate");
             navigator.sendBeacon(`/room/exit/${roomId}`);
         });
     </script>

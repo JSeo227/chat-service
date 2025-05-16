@@ -42,6 +42,14 @@ public class Member {
         updatedDate = LocalDateTime.now();
     }
 
+    @Override
+    public String toString() {
+        return "Member{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
     //==생성 메서드==//
     public static Member createMember(Login login, String name, RoleType role) {
         Member member = new Member();
@@ -52,5 +60,6 @@ public class Member {
     }
 
     //==로직 메서드==//
+
 
 }
