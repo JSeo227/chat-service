@@ -1,4 +1,4 @@
-package com.example.chat.chat_service.interceptor;
+package com.example.chat.chat_service.global.interceptor;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

@@ -1,4 +1,4 @@
-package com.example.chat.chat_service.common;
+package com.example.chat.chat_service.global.common;
 
 public class Constants {
     // Session

@@ -24,7 +24,6 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
-
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html

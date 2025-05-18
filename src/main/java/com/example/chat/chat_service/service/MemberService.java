@@ -4,8 +4,6 @@ package com.example.chat.chat_service.service;
 import com.example.chat.chat_service.domain.Login;
 import com.example.chat.chat_service.domain.Member;
 import com.example.chat.chat_service.repository.MemberRepository;
-import com.example.chat.chat_service.session.SessionManager;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

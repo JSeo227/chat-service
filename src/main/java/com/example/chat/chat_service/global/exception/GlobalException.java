@@ -1,4 +1,4 @@
-package com.example.chat.chat_service.exception;
+package com.example.chat.chat_service.global.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

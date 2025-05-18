@@ -1,4 +1,4 @@
-package com.example.chat.chat_service.session;
+package com.example.chat.chat_service.global.session;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;

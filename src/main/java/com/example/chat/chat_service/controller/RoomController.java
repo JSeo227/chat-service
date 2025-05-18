@@ -1,6 +1,5 @@
 package com.example.chat.chat_service.controller;
 
-import com.example.chat.chat_service.common.Constants;
 import com.example.chat.chat_service.controller.dto.RoomForm;
 import com.example.chat.chat_service.domain.Member;
 import com.example.chat.chat_service.domain.MemberRoom;
@@ -8,10 +7,9 @@ import com.example.chat.chat_service.domain.room.Room;
 import com.example.chat.chat_service.domain.room.TextRoom;
 import com.example.chat.chat_service.service.MemberService;
 import com.example.chat.chat_service.service.RoomService;
-import com.example.chat.chat_service.session.MemberSession;
-import com.example.chat.chat_service.session.SessionManager;
+import com.example.chat.chat_service.global.session.MemberSession;
+import com.example.chat.chat_service.global.session.SessionManager;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;

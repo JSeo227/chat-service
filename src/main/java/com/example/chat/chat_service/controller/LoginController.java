@@ -1,12 +1,11 @@
 package com.example.chat.chat_service.controller;
 
-import com.example.chat.chat_service.common.Constants;
 import com.example.chat.chat_service.controller.dto.LoginForm;
 import com.example.chat.chat_service.domain.Member;
 import com.example.chat.chat_service.service.LoginService;
 import com.example.chat.chat_service.service.MemberService;
-import com.example.chat.chat_service.session.MemberSession;
-import com.example.chat.chat_service.session.SessionManager;
+import com.example.chat.chat_service.global.session.MemberSession;
+import com.example.chat.chat_service.global.session.SessionManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -18,8 +17,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-
-import java.util.UUID;
 
 @Slf4j
 @Controller

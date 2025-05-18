@@ -1,4 +1,4 @@
-package com.example.chat.chat_service.common;
+package com.example.chat.chat_service.global.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

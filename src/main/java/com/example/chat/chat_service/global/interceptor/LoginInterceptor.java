@@ -1,7 +1,7 @@
-package com.example.chat.chat_service.interceptor;
+package com.example.chat.chat_service.global.interceptor;
 
-import com.example.chat.chat_service.session.MemberSession;
-import com.example.chat.chat_service.session.SessionManager;
+import com.example.chat.chat_service.global.session.MemberSession;
+import com.example.chat.chat_service.global.session.SessionManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
