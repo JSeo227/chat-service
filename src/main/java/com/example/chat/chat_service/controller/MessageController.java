@@ -1,15 +1,14 @@
 package com.example.chat.chat_service.controller;
 
 import com.example.chat.chat_service.domain.Member;
-import com.example.chat.chat_service.domain.Message;
-import com.example.chat.chat_service.domain.MessageStatus;
+import com.example.chat.chat_service.domain.message.Message;
+import com.example.chat.chat_service.domain.message.Status;
 import com.example.chat.chat_service.domain.room.Room;
 //import com.example.chat.chat_service.global.kafka.KafkaProducer;
 import com.example.chat.chat_service.service.MemberService;
 import com.example.chat.chat_service.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.producer.KafkaProducer;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -38,7 +37,7 @@ public class MessageController {
     @MessageMapping("/chat/enter")
     public void enter(@Payload Message message, SimpMessageHeaderAccessor header) {
         log.info("enter message = {}", message);
-        if (message.getStatus() == MessageStatus.ENTER) {
+        if (message.getStatus() == Status.ENTER) {
             message.setContent(message.getSenderName() + "님이 입장하였습니다.");
 
             // WebSocket Session에 데이터 저장
@@ -56,7 +55,7 @@ public class MessageController {
     public void sendMessage(@Payload Message message) {
         log.info("send message = {}", message);
 
-        if (message.getStatus() == MessageStatus.TALK) {
+        if (message.getStatus() == Status.TALK) {
 //            kafkaProducer.send("/topic/chat/room/" + message.getRoomId(), message);
             messagingTemplate.convertAndSend("/topic/chat/room/" + message.getRoomId(), message);
         }
@@ -87,7 +86,7 @@ public class MessageController {
             memberId,
             member.getName(),
             member.getName() + "님이 퇴장하였습니다.",
-            MessageStatus.LEAVE
+            Status.LEAVE
         );
 
         log.info("exit message = roomId={}, memberId={}, memberName={}, message={}",

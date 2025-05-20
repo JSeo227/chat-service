@@ -1,4 +1,4 @@
-package com.example.chat.chat_service.domain;
+package com.example.chat.chat_service.domain.message;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,12 +12,12 @@ public class Message {
 
     private Long roomId;
 
-    private Long senderId;
+    private Long senderId; // member id
 
-    private String senderName;
+    private String senderName; // member name
 
-    private String content;
+    private String content; // 메시지 내용
 
     @Enumerated(EnumType.STRING)
-    private MessageStatus status; // ENTER, TALK, LEAVE
+    private Status status; // ENTER, TALK, LEAVE
 }
