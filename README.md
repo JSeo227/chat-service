@@ -6,7 +6,6 @@
 ## 🧩 주요 기능
 
 - **WebSocket(STOMP)** 기반 실시간 채팅
-- **WebRtc** 기반 영상 채팅
 - **Kafka**를 통한 메시지 비동기 전송 및 처리
 - **MongoDB**에 채팅 메시지 저장
 - **Spring + JPA + MySQL**로 회원 및 채팅방 관리
@@ -21,7 +20,7 @@
 | 백엔드       | Spring Boot, JPA, MySQL               |
 | 메시징       | Kafka, Spring Kafka Consumer, MongoDB |
 | 프론트엔드   | Thymeleaf                             |
-| 통신         | WebSocket(STOMP), WebRTC              |
+| 통신         | WebSocket(STOMP)                      |
 | 개발 도구    | IntelliJ, Docker, Postman             |
 
 ---
