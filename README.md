@@ -30,4 +30,3 @@
 - **회원 및 방 관리**: RDB(MySQL) + JPA
 - **메시지 처리**: Kafka Producer → Kafka Consumer → MongoDB 저장
 - **UI/UX**: 서버 사이드 렌더링 방식의 Thymeleaf 템플릿  
-
