@@ -1,10 +1,12 @@
 package com.example.chat.chat_service.controller;
 
+import com.example.chat.chat_service.controller.dto.MessageForm;
 import com.example.chat.chat_service.domain.Member;
 import com.example.chat.chat_service.domain.message.Message;
 import com.example.chat.chat_service.domain.message.Status;
 import com.example.chat.chat_service.domain.room.Room;
 //import com.example.chat.chat_service.global.kafka.KafkaProducer;
+import com.example.chat.chat_service.global.kafka.KafkaProducer;
 import com.example.chat.chat_service.service.MemberService;
 import com.example.chat.chat_service.service.RoomService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +24,7 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 @RequiredArgsConstructor
 public class MessageController {
 
-//    private final KafkaProducer kafkaProducer;
+    private final KafkaProducer kafkaProducer;
     private final SimpMessagingTemplate messagingTemplate;
     private final RoomService roomService;
     private final MemberService memberService;
@@ -35,7 +37,7 @@ public class MessageController {
      * SimpMessageHeaderAccessor를 사용해 직접 session에 값을 저장해야함
      */
     @MessageMapping("/chat/enter")
-    public void enter(@Payload Message message, SimpMessageHeaderAccessor header) {
+    public void enter(@Payload MessageForm message, SimpMessageHeaderAccessor header) {
         log.info("enter message = {}", message);
         if (message.getStatus() == Status.ENTER) {
             message.setContent(message.getSenderName() + "님이 입장하였습니다.");
@@ -44,7 +46,8 @@ public class MessageController {
             header.getSessionAttributes().put("roomId", message.getRoomId());
             header.getSessionAttributes().put("memberId", message.getSenderId());
         }
-//        kafkaProducer.send("/topic/chat/room/" + message.getRoomId(), message);
+
+//        kafkaProducer.sendMessage(createMessage(message));
         messagingTemplate.convertAndSend("/topic/chat/room/" + message.getRoomId(), message);
     }
 
@@ -52,11 +55,11 @@ public class MessageController {
      * 채팅 메시지 전송 처리
      */
     @MessageMapping("/chat/send")
-    public void sendMessage(@Payload Message message) {
+    public void sendMessage(@Payload MessageForm message) {
         log.info("send message = {}", message);
 
         if (message.getStatus() == Status.TALK) {
-//            kafkaProducer.send("/topic/chat/room/" + message.getRoomId(), message);
+//            kafkaProducer.sendMessage(createMessage(message));
             messagingTemplate.convertAndSend("/topic/chat/room/" + message.getRoomId(), message);
         }
     }
@@ -81,17 +84,25 @@ public class MessageController {
 
         roomService.exitRoom(roomId, member);
 
-        Message message = new Message(
-            roomId,
-            memberId,
-            member.getName(),
-            member.getName() + "님이 퇴장하였습니다.",
-            Status.LEAVE
-        );
+        MessageForm message = new MessageForm();
+        message.setRoomId(roomId);
+        message.setSenderId(memberId);
+        message.setSenderName(member.getName());
+        message.setContent(member.getName() + "님이 퇴장하였습니다.");
+        message.setStatus(Status.LEAVE);
 
-        log.info("exit message = roomId={}, memberId={}, memberName={}, message={}",
-                roomId, memberId, member.getName(), message.getContent());
-//        kafkaProducer.send("/topic/chat/room/" + roomId, message);
+//        kafkaProducer.sendMessage(createMessage(message));
         messagingTemplate.convertAndSend("/topic/chat/room/" + roomId, message);
+    }
+
+    private Message createMessage(MessageForm form) {
+        return new Message(
+               null,
+                form.getRoomId(),
+                form.getSenderId(),
+                form.getSenderName(),
+                form.getContent(),
+                form.getStatus()
+        );
     }
 }

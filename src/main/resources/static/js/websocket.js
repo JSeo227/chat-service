@@ -1,20 +1,14 @@
-
-
 //connect -> subscribe -> publish -> disconnect
 //클라이언트 연결 -> 구독 -> 발행 -> 연결 종료
 
-const usernamePage = document.querySelector('#username-page');
-const usernameForm = document.querySelector('#usernameForm');
-
-const chatPage = document.querySelector('#chat-page');
 const messageArea = document.querySelector('#messageArea');
 const messageForm = document.querySelector('#messageForm');
-const messageInput = document.querySelector('#messageInput');
 
-const connectingElement = document.querySelector('.connecting');
+let webSocketRoomId = window.location.pathname.split('/').pop();
+const { memberId: id, name } = JSON.parse(localStorage.getItem("memberSession"));
 
-let roomId = window.location.pathname.split('/').pop();
-let memberName = null;
+let memberId = id;
+let memberName = name;
 
 let stompClient = null;
 
@@ -30,11 +24,11 @@ const connect = () => {
 
 const onConnected = () => {
     // client.subscribe(destination, callback, headers = {})
-    stompClient.subscribe("/topic/chat/room/" + roomId, onMessageReceived, {});
+    stompClient.subscribe("/topic/chat/room/" + webSocketRoomId, onMessageReceived, {});
 
     const message = {
         roomId: roomId,
-        senderId: roomId,
+        senderId: memberId,
         senderName: memberName,
         content: memberName + "님이 입장하였습니다.",
         status: 'ENTER'
@@ -75,9 +69,8 @@ const onMessageReceived = (payload) => {
 
         case 'TALK':
             console.log("Talk");
-            console.log(message.content);
             messageElement.classList.add('chat-message');
-            usernameText = document.createTextNode(message.sender + ": " + message.content);
+            usernameText = document.createTextNode(message.senderName + ": " + message.content);
             usernameElement.appendChild(usernameText);
             messageElement.appendChild(usernameElement);
             break;
@@ -104,12 +97,14 @@ const sendMessage = (event) => {
     event.preventDefault(); // form submit 시 새로고침 방지
 
     const message = {
-        roomId: roomId,
-        senderId: roomId,
+        roomId: webSocketRoomId,
+        senderId: memberId,
         senderName: memberName,
         content: document.querySelector('#messageInput').value,
         status: 'TALK'
     }
+
+    console.log(message);
 
     stompClient.send("/app/chat/send", {}, JSON.stringify(message));
 

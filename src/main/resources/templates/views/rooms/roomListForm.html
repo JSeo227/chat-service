@@ -41,6 +41,14 @@
             </div>
         </div>
     </div>
+
+    <script th:inline="javascript">
+
+        const memberSession = [[${memberSession}]];
+        console.log(memberSession);
+        localStorage.setItem('memberSession', JSON.stringify(memberSession));
+    </script>
+
 </th:block>
 </html>
 

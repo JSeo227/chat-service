@@ -1,4 +1,3 @@
-/*
 package com.example.chat.chat_service.global.kafka;
 
 import com.example.chat.chat_service.domain.message.Message;
@@ -13,11 +12,10 @@ import org.springframework.stereotype.Service;
 public class KafkaProducer {
 
     private final KafkaTemplate<String, Message> kafkaTemplate;
+    private static final String TOPIC = "chat-messages";
 
-    public void send(String topic, Message message) {
-        log.info("전송할 주소: {}", topic);
-        log.info("전송할 메시지: {}", message);
-        kafkaTemplate.send(topic, message);
-    }
+//    public void sendMessage(Message message) {
+//        log.info("Kafka에 메시지 전송: {}", message);
+//        kafkaTemplate.send(TOPIC, message);
+//    }
 }
-*/

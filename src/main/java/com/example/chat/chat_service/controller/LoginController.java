@@ -8,6 +8,7 @@ import com.example.chat.chat_service.global.session.MemberSession;
 import com.example.chat.chat_service.global.session.SessionManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -62,14 +63,11 @@ public class LoginController {
         MemberSession memberSession = new MemberSession(
                 existingMember.getId(),
                 form.getLoginId(),
-                form.getPassword(),
                 existingMember.getName(),
                 true
         );
 
         SessionManager.setMemberSession(request, memberSession);
-
-        model.addAttribute("memberSession", memberSession);
 
         return "redirect:/";
     }
