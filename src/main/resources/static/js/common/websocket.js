@@ -1,11 +1,11 @@
 //connect -> subscribe -> publish -> disconnect
 //클라이언트 연결 -> 구독 -> 발행 -> 연결 종료
-
 const messageArea = document.querySelector('#messageArea');
 const messageForm = document.querySelector('#messageForm');
 
 let webSocketRoomId = window.location.pathname.split('/').pop();
 const { memberId: id, name } = JSON.parse(localStorage.getItem("memberSession"));
+// const { memberId: id, name } = cookieUtils().getCookie("memberSession");
 
 let memberId = id;
 let memberName = name;
@@ -103,8 +103,6 @@ const sendMessage = (event) => {
         content: document.querySelector('#messageInput').value,
         status: 'TALK'
     }
-
-    console.log(message);
 
     stompClient.send("/app/chat/send", {}, JSON.stringify(message));
 

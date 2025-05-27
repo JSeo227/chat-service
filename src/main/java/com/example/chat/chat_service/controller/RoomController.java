@@ -11,7 +11,6 @@ import com.example.chat.chat_service.service.MemberService;
 import com.example.chat.chat_service.service.RoomService;
 import com.example.chat.chat_service.global.session.MemberSession;
 import com.example.chat.chat_service.global.session.SessionManager;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -113,8 +112,10 @@ public class RoomController {
     }
 
     @PostMapping("/room/check")
-    public boolean checkPassword(@ModelAttribute("room") RoomForm form,
-                                 @RequestParam Long id, @RequestParam String password) {
+    @ResponseBody
+    public Boolean checkPassword(@ModelAttribute("room") RoomForm form,
+                                 @RequestParam("id") Long id, @RequestParam("password") String password) {
+        log.info("checkPassword id = {}, password = {}", id, password);
         return roomService.isPasswordValid(id, password);
     }
 }

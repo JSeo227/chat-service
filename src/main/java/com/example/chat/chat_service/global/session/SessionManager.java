@@ -61,8 +61,9 @@ public class SessionManager implements HttpSessionListener {
                 (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 
         if (attributes == null) {
-            throw new IllegalStateException("No request bound to current thread");
+            throw new IllegalStateException("현재 스레드에서 HttpServletRequest가 존재하지 않습니다");
         }
+
         return attributes.getRequest();
     }
 
