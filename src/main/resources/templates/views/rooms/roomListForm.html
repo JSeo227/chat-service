@@ -25,7 +25,8 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="rooms : ${rooms}" th:onclick="|window.location='@{/room/{id}(id=${rooms.id})}'|" style="cursor: pointer;">
+<!--                        <tr th:each="rooms : ${rooms}" th:onclick="|window.location='@{/room/{id}(id=${rooms.id})}'|" style="cursor: pointer;">-->
+                        <tr th:each="rooms : ${rooms}" th:onclick="|checkPassword('${rooms.id}')|" style="cursor: pointer;">
                             <td th:text="${rooms.id}"></td>
                             <td th:text="${rooms.name}"></td>
                             <td th:text="${rooms.currentMembers} + '/' + ${rooms.max}"></td>
@@ -42,12 +43,16 @@
         </div>
     </div>
 
+    <!-- 1) Thymeleaf 변수를 전역 JS 변수로 선언 -->
     <script th:inline="javascript">
-
-        const memberSession = [[${memberSession}]];
-        console.log(memberSession);
-        localStorage.setItem('memberSession', JSON.stringify(memberSession));
+        window.memberSession = /*[[${memberSession}]]*/ null;
+        window.roomInfo = /*[[${rooms}]]*/ [];
     </script>
+
+    <!-- localStorage 세션 저장 로직 -->
+    <script th:src="@{/js/setCookie.js}"></script>
+    <!-- 방 비밀번호 체크 로직 -->
+    <script th:src="@{/js/chkPw.js}"></script>
 
 </th:block>
 </html>
