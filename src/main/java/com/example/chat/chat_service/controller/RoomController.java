@@ -91,8 +91,8 @@ public class RoomController {
     }
 
     @GetMapping("/room/{id}")
-    public String enter(@PathVariable Long id, HttpServletRequest request, Model model) {
-        MemberSession session = SessionManager.getMemberSession(request);
+    public String enter(@PathVariable Long id, Model model) {
+        MemberSession session = SessionManager.getMemberSession();
         Member member = memberService.findById(session.getMemberId());
 
         Room room = roomService.findRoomById(id);
@@ -104,8 +104,8 @@ public class RoomController {
     }
 
     @GetMapping("/room/exit/{id}")
-    public String exit(@PathVariable Long id, HttpServletRequest request) {
-        MemberSession session = SessionManager.getMemberSession(request);
+    public String exit(@PathVariable Long id) {
+        MemberSession session = SessionManager.getMemberSession();
         Member member = memberService.findById(session.getMemberId());
 
         roomService.exitRoom(id, member);

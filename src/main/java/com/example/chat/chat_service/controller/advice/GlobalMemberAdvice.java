@@ -16,10 +16,10 @@ public class GlobalMemberAdvice {
     private final MemberService memberService;
 
     @ModelAttribute("member")
-    public Member member(HttpServletRequest request) {
+    public Member member() {
 
         try {
-            MemberSession memberSession = SessionManager.getMemberSession(request);
+            MemberSession memberSession = SessionManager.getMemberSession();
             return memberService.findById(memberSession.getMemberId());
         } catch (Exception e) {
             e.printStackTrace();

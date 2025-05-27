@@ -67,7 +67,7 @@ public class LoginController {
                 true
         );
 
-        SessionManager.setMemberSession(request, memberSession);
+        SessionManager.setMemberSession(memberSession);
 
         return "redirect:/";
     }
@@ -75,9 +75,9 @@ public class LoginController {
     @PostMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
 
-        MemberSession memberSession = SessionManager.getMemberSession(request);
+        MemberSession memberSession = SessionManager.getMemberSession();
         loginService.setLoginStatusTrue(memberSession.getLoginId(), false);
-        SessionManager.removeMemberSession(request, memberSession);
+        SessionManager.removeMemberSession(memberSession);
 
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
         response.setHeader("Pragma", "no-cache"); // HTTP 1.0

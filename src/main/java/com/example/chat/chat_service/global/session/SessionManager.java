@@ -8,6 +8,8 @@ import jakarta.servlet.http.HttpSessionListener;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -50,12 +52,26 @@ public class SessionManager implements HttpSessionListener {
     }
 
     /**
-     * 회원 세션 조회
-     * @param request
+     * [HttpServletRequest 공용 메소드]
+     * HttpServletRequest를 RequestContextHolder를 통해 전역적으로 접근
      * @return
      */
-    public static MemberSession getMemberSession(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
+    private static HttpServletRequest getRequest() {
+        ServletRequestAttributes attributes =
+                (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+
+        if (attributes == null) {
+            throw new IllegalStateException("No request bound to current thread");
+        }
+        return attributes.getRequest();
+    }
+
+    /**
+     * 회원 세션 조회
+     * @return
+     */
+    public static MemberSession getMemberSession() {
+        HttpSession session = getRequest().getSession(false);
         if (session == null) {
             throw new RuntimeException("session is null");
         } else {
@@ -69,21 +85,19 @@ public class SessionManager implements HttpSessionListener {
 
     /**
      * 회원 세션 저장
-     * @param request
      * @param memberSession
      */
-    public static void setMemberSession(HttpServletRequest request, MemberSession memberSession) {
-        HttpSession session = request.getSession(true);
+    public static void setMemberSession(MemberSession memberSession) {
+        HttpSession session = getRequest().getSession(true);
         session.setAttribute(Constants.MEMBER_SESSION, memberSession);
     }
 
     /**
      * 회원 세션 삭제
-     * @param request
      * @param memberSession
      */
-    public static void removeMemberSession(HttpServletRequest request, MemberSession memberSession) {
-        HttpSession session = request.getSession(false);
+    public static void removeMemberSession(MemberSession memberSession) {
+        HttpSession session = getRequest().getSession(false);
         if (session != null) {
             session.setAttribute(Constants.MEMBER_SESSION, memberSession);
             session.invalidate();

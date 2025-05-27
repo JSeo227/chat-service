@@ -70,8 +70,8 @@ public class MemberController {
     }
 
     @GetMapping("/members/{id}/info")
-    public String info(HttpServletRequest request, Model model) {
-        MemberSession session = SessionManager.getMemberSession(request);
+    public String info(Model model) {
+        MemberSession session = SessionManager.getMemberSession();
         Member member = memberService.findById(session.getMemberId());
         model.addAttribute("member", member);
         return "views/members/memberInfoForm";
