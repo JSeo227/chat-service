@@ -5,10 +5,9 @@ const messageForm = document.querySelector('#messageForm');
 
 let webSocketRoomId = window.location.pathname.split('/').pop();
 const { memberId: id, name } = JSON.parse(localStorage.getItem("memberSession"));
-// const { memberId: id, name } = cookieUtils().getCookie("memberSession");
 
-let memberId = id;
-let memberName = name;
+const memberId = id;
+const memberName = name;
 
 let stompClient = null;
 

@@ -3,6 +3,8 @@ package com.example.chat.chat_service.domain.room;
 import com.example.chat.chat_service.domain.Member;
 import com.example.chat.chat_service.domain.MemberRoom;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -24,6 +26,8 @@ public abstract class Room {
 
     private String password; //비밀번호
 
+    @Max(99)
+    @Min(1)
     private Integer max; //방 최대 인원 수 (일반 채팅만)
 
     @Enumerated(EnumType.STRING)

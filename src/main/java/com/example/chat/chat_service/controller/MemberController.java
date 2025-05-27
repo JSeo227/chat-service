@@ -48,8 +48,8 @@ public class MemberController {
     }
 
     @PutMapping("/members/{id}/edit")
-    public String update(@Valid @ModelAttribute("member") MemberForm form, BindingResult result,
-                         @PathVariable Long id) {
+    public String update(@Valid @ModelAttribute("member") MemberForm form, @PathVariable Long id,
+                         BindingResult result) {
 
         if (result.hasErrors()) {
             return "views/members/modifyMemberForm";
@@ -70,10 +70,17 @@ public class MemberController {
     }
 
     @GetMapping("/members/{id}/info")
-    public String info(Model model) {
+    public String info(@ModelAttribute("member") MemberForm form) {
         MemberSession session = SessionManager.getMemberSession();
         Member member = memberService.findById(session.getMemberId());
-        model.addAttribute("member", member);
+
+        form.setId(member.getId());
+        form.setLoginId(member.getLogin().getLoginId());
+        form.setName(member.getName());
+        form.setPassword(member.getLogin().getPassword());
+
+        log.info("info form = {}", form);
+
         return "views/members/memberInfoForm";
     }
 

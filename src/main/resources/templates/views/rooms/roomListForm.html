@@ -43,16 +43,19 @@
         </div>
     </div>
 
-    <!-- 1) Thymeleaf 변수를 전역 JS 변수로 선언 -->
     <script th:inline="javascript">
-        window.memberSession = /*[[${memberSession}]]*/ null;
-        window.roomInfo = /*[[${rooms}]]*/ [];
+        import {POST} from "../../../static/js/common/fetch";
+
+        <!-- Thymeleaf 변수를 전역 JS 변수로 선언 -->
+        const memberSession = /*[[${memberSession}]]*/ null;
+        const roomInfo = /*[[${rooms}]]*/ [];
+
+        <!-- localStorage 세션 저장 로직 -->
+        localStorage.setItem('memberSession', JSON.stringify(window.memberSession));
     </script>
 
-    <!-- localStorage 세션 저장 로직 -->
-    <script th:src="@{/js/setCookie.js}"></script>
-    <!-- 방 비밀번호 체크 로직 -->
-    <script th:src="@{/js/chkPw.js}"></script>
+
+    <script type="module" th:src="@{/js/password.js}"></script>
 
 </th:block>
 </html>

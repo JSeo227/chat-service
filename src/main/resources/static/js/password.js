@@ -1,3 +1,5 @@
+import {POST} from "./common/fetch.js";
+
 window.checkPassword = async (roomId) => {
     const findRoom = roomInfo.find(room => room.id === parseInt(roomId));
 
@@ -18,18 +20,7 @@ window.checkPassword = async (roomId) => {
         return;
     }
 
-    const response = await fetch('http://localhost:8080/room/check', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: new URLSearchParams({
-            id: roomId,
-            password: password
-        })
-    });
-
-    const result = await response.json();
+    const result = await POST('/room/check', {id: roomId, password: password})
 
     if (result) window.location.href = `/room/${roomId}`;
     else window.alert("비밀번호가 틀렸습니다.");
