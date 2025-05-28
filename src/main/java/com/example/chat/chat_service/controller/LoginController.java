@@ -63,6 +63,7 @@ public class LoginController {
         MemberSession memberSession = new MemberSession(
                 existingMember.getId(),
                 form.getLoginId(),
+                form.getPassword(),
                 existingMember.getName(),
                 true
         );

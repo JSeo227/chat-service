@@ -12,19 +12,19 @@
                     <p th:each="err : ${#fields.globalErrors()}" th:text="${err}">전체 오류 메시지</p>
                 </div>
                 <div class="mb-3">
-                    <label for="id" class="form-label" disabled>Login Id:</label>
-                    <input th:field="*{loginId}" class="form-control" id="id" name="username" type="text" required>
+                    <label for="loginId" class="form-label" disabled>Login Id:</label>
+                    <input th:field="*{loginId}" class="form-control" id="loginId" name="loginId" type="text" required disabled>
                 </div>
                 <div class="mb-3">
-                    <label for="pw" class="form-label" >Password:</label>
-                    <input th:field="*{password}" class="form-control" id="pw" name="password" type="password" required>
+                    <label for="password" class="form-label" >Password:</label>
+                    <input th:field="*{password}" class="form-control" id="password" name="password" type="password" required disabled>
                 </div>
                 <div class="mb-3">
                     <label for="name" class="form-label" >Name:</label>
-                    <input th:field="*{name}" class="form-control" id="name" name="name" type="text" required>
+                    <input th:field="*{name}" class="form-control" id="name" name="name" type="text" required disabled>
                 </div>
                 <div class="d-grid">
-                    <button id="login" class="btn btn-primary" type="submit">Modify</button>
+                    <button class="btn btn-primary" id="update" th:onclick="|location.href='@{/member/{id}/edit(id=${session.id})}'|">Modify</button>
                 </div>
             </form>
         </div>

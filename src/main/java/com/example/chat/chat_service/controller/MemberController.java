@@ -6,12 +6,10 @@ import com.example.chat.chat_service.domain.Member;
 import com.example.chat.chat_service.service.MemberService;
 import com.example.chat.chat_service.global.session.MemberSession;
 import com.example.chat.chat_service.global.session.SessionManager;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,6 +45,33 @@ public class MemberController {
         return "redirect:/login";
     }
 
+    @GetMapping("/members/{id}/info")
+    public String info(@ModelAttribute("member") MemberForm form) {
+        MemberSession session = SessionManager.getMemberSession();
+
+        form.setId(session.getMemberId());
+        form.setLoginId(session.getLoginId());
+        form.setPassword(session.getPassword());
+        form.setName(session.getName());
+
+        log.info("info form = {}", form);
+
+        return "views/members/memberInfoForm";
+    }
+
+    @GetMapping("/members/{id}/edit")
+    public String updateForm(@ModelAttribute("member") MemberForm form) {
+        MemberSession session = SessionManager.getMemberSession();
+
+        form.setId(session.getMemberId());
+        form.setLoginId(session.getLoginId());
+        form.setPassword(session.getPassword());
+        form.setName(session.getName());
+
+        log.info("update form = {}", form);
+        return "views/members/modifyMemberForm";
+    }
+
     @PutMapping("/members/{id}/edit")
     public String update(@Valid @ModelAttribute("member") MemberForm form, @PathVariable Long id,
                          BindingResult result) {
@@ -67,21 +92,6 @@ public class MemberController {
         memberService.update(member);
 
         return "views/rooms/roomListForm";
-    }
-
-    @GetMapping("/members/{id}/info")
-    public String info(@ModelAttribute("member") MemberForm form) {
-        MemberSession session = SessionManager.getMemberSession();
-        Member member = memberService.findById(session.getMemberId());
-
-        form.setId(member.getId());
-        form.setLoginId(member.getLogin().getLoginId());
-        form.setName(member.getName());
-        form.setPassword(member.getLogin().getPassword());
-
-        log.info("info form = {}", form);
-
-        return "views/members/memberInfoForm";
     }
 
 }

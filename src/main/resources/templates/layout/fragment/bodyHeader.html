@@ -18,10 +18,8 @@
                     <i class="bi bi-person-fill"></i>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li>
-                        <form>
-                            <button type="button" class="dropdown-item" th:onclick="|goMemberInfo|">회원정보</button>
-                        </form>
+                    <li th:if="${session != null}">
+                        <a class="dropdown-item" th:href="@{/members/{id}/info(id=${session.id})}">회원정보</a>
                     </li>
                     <li><hr class="dropdown-divider" /></li>
                     <li>
