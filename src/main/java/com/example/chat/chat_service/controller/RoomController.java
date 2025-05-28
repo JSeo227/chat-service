@@ -50,7 +50,7 @@ public class RoomController {
 
     @GetMapping("/room/create")
     public String createRoom(Model model) {
-        model.addAttribute("room", new RoomForm());
+        model.addAttribute("room", RoomForm.builder().build());
         return "views/rooms/createRoomForm";
     }
 

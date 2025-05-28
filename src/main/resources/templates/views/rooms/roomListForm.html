@@ -44,8 +44,6 @@
     </div>
 
     <script th:inline="javascript">
-        import {POST} from "../../../static/js/common/fetch";
-
         <!-- Thymeleaf 변수를 전역 JS 변수로 선언 -->
         const memberSession = /*[[${memberSession}]]*/ null;
         const roomInfo = /*[[${rooms}]]*/ [];
@@ -53,7 +51,6 @@
         <!-- localStorage 세션 저장 로직 -->
         localStorage.setItem('memberSession', JSON.stringify(window.memberSession));
     </script>
-
 
     <script type="module" th:src="@{/js/password.js}"></script>
 

@@ -32,7 +32,6 @@ public class MessageController {
     /**
      * 채팅방 입장 처리
      * 클라이언트가 /chat/enter로 메시지 전송 시 호출
-     *
      * MessageController는 WebSocket용 컨트롤러, 따라서 HttpServletRequest 사용 X
      * SimpMessageHeaderAccessor를 사용해 직접 session에 값을 저장해야함
      */
@@ -84,12 +83,13 @@ public class MessageController {
 
         roomService.exitRoom(roomId, member);
 
-        MessageForm message = new MessageForm();
-        message.setRoomId(roomId);
-        message.setSenderId(memberId);
-        message.setSenderName(member.getName());
-        message.setContent(member.getName() + "님이 퇴장하였습니다.");
-        message.setStatus(Status.LEAVE);
+        MessageForm message = MessageForm.builder()
+                .roomId(roomId)
+                .senderId(memberId)
+                .senderName(member.getName())
+                .content(member.getName() + "님이 퇴장하였습니다.")
+                .status(Status.LEAVE)
+                .build();
 
 //        kafkaProducer.sendMessage(createMessage(message));
         messagingTemplate.convertAndSend("/topic/chat/room/" + roomId, message);

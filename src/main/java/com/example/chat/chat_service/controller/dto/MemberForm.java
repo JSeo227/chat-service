@@ -1,9 +1,13 @@
 package com.example.chat.chat_service.controller.dto;
 
 import jakarta.validation.constraints.NotEmpty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 public class MemberForm {
 
     private Long id;

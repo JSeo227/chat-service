@@ -2,11 +2,11 @@ package com.example.chat.chat_service.controller.dto;
 
 import com.example.chat.chat_service.domain.message.Message;
 import com.example.chat.chat_service.domain.message.Status;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class MessageForm {
 
     private Long roomId;
