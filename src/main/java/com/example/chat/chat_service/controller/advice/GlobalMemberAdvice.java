@@ -7,17 +7,18 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 @ControllerAdvice
-public class GlobalSessionAdvice {
+public class GlobalMemberAdvice {
 
-    @ModelAttribute("session")
+    @ModelAttribute("memberSession")
     public MemberForm member() {
 
         try {
             MemberSession memberSession = SessionManager.getMemberSession();
+
             return MemberForm.builder()
                     .id(memberSession.getMemberId())
                     .loginId(memberSession.getLoginId())
-                    .password(memberSession.getPassword())
+                    .password(memberSession.getName())
                     .name(memberSession.getName())
                     .build();
         } catch (Exception e) {
