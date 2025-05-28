@@ -37,7 +37,7 @@ public class Init {
             em.persist(member2);
 
             // 채팅방 1 생성 및 저장
-            TextRoom room1 = createRoom("방1", "1234", 10);
+            TextRoom room1 = createRoom("방1", "", 10);
             em.persist(room1);
 
             // 채팅방 2 생성 및 저장

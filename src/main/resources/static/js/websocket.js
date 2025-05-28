@@ -3,7 +3,7 @@
 const messageArea = document.querySelector('#messageArea');
 const messageForm = document.querySelector('#messageForm');
 
-let webSocketRoomId = window.location.pathname.split('/').pop();
+const roomId = window.location.pathname.split('/').pop();
 const { memberId: id, name } = JSON.parse(localStorage.getItem("memberSession"));
 
 const memberId = id;
@@ -23,7 +23,7 @@ const connect = () => {
 
 const onConnected = () => {
     // client.subscribe(destination, callback, headers = {})
-    stompClient.subscribe("/topic/chat/room/" + webSocketRoomId, onMessageReceived, {});
+    stompClient.subscribe("/topic/chat/room/" + roomId, onMessageReceived, {});
 
     const message = {
         roomId: roomId,
@@ -96,7 +96,7 @@ const sendMessage = (event) => {
     event.preventDefault(); // form submit 시 새로고침 방지
 
     const message = {
-        roomId: webSocketRoomId,
+        roomId: roomId,
         senderId: memberId,
         senderName: memberName,
         content: document.querySelector('#messageInput').value,
