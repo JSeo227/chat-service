@@ -50,8 +50,8 @@ server:
   ssl:
     enabled: true
     key-store: classpath:ssl-server.jks
-    key-store-type: JKS
     key-store-password: test1234
+    key-store-type: JKS
     key-alias: selfsigned_localhost_sslserver
 
 logging:

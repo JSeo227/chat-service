@@ -32,7 +32,8 @@ export const PUT = async (url, data) => {
 }
 
 export const fetchAction = async (url, method, data) => {
-    const baseUrl = "http://localhost:8080";
+    // const baseUrl = "http://localhost:8080";
+    const baseUrl = "https://localhost:8443";
 
     const options = {
         method: method,
