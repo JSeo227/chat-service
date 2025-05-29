@@ -33,6 +33,23 @@
         </div>
     </div>
 
+    <!-- Logic -->
+    <script th:inline="javascript">
+        const roomId = /*[[${room.id}]]*/ null;
+
+        // 창 닫기
+        window.addEventListener("beforeunload", () => {
+            console.log("beforeunload");
+            navigator.sendBeacon(`/room/exit/${roomId}`);
+        });
+
+        // 뒤로 가기
+        window.addEventListener("popstate", () => {
+            console.log("popstate");
+            navigator.sendBeacon(`/room/exit/${roomId}`);
+        });
+    </script>
+
     <!-- J Query -->
     <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
 
@@ -45,22 +62,7 @@
     <!-- Java Script -->
     <script th:src="@{/js/websocket.js}"></script>
 
-    <!-- Logic -->
-    <script th:inline="javascript">
-        const id = /*[[${room.id}]]*/ null;
-
-        // 창 닫기
-        window.addEventListener("beforeunload", () => {
-            console.log("beforeunload");
-            navigator.sendBeacon(`/room/exit/${id}`);
-        });
-
-        // 뒤로 가기
-        window.addEventListener("popstate", () => {
-            console.log("popstate");
-            navigator.sendBeacon(`/room/exit/${id}`);
-        });
-    </script>
+    <script type="module" th:src="@{/js/memberList.js}"></script>
 
 </th:block>
 </html>

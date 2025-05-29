@@ -3,7 +3,6 @@
 const messageArea = document.querySelector('#messageArea');
 const messageForm = document.querySelector('#messageForm');
 
-const roomId = window.location.pathname.split('/').pop();
 const { memberId: id, name } = JSON.parse(localStorage.getItem("memberSession"));
 
 const memberId = id;
