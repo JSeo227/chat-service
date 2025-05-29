@@ -6,12 +6,10 @@ import com.example.chat.chat_service.domain.Member;
 import com.example.chat.chat_service.service.MemberService;
 import com.example.chat.chat_service.global.session.MemberSession;
 import com.example.chat.chat_service.global.session.SessionManager;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 

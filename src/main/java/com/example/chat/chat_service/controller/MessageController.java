@@ -5,7 +5,6 @@ import com.example.chat.chat_service.domain.Member;
 import com.example.chat.chat_service.domain.chat.Message;
 import com.example.chat.chat_service.domain.chat.Status;
 import com.example.chat.chat_service.domain.room.Room;
-//import com.example.chat.chat_service.global.kafka.KafkaProducer;
 import com.example.chat.chat_service.global.kafka.KafkaProducer;
 import com.example.chat.chat_service.service.MemberService;
 import com.example.chat.chat_service.service.RoomService;
