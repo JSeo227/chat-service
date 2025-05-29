@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 @ControllerAdvice
-public class GlobalMemberAdvice {
+public class GlobalSessionAdvice {
 
     @ModelAttribute("memberSession")
     public MemberForm member() {

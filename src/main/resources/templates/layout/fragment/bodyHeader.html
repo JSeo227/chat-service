@@ -19,12 +19,6 @@
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                     <li>
-                        <form>
-                            <button type="button" class="dropdown-item" th:onclick="|goMemberInfo|">회원정보</button>
-                        </form>
-                    </li>
-                    <li><hr class="dropdown-divider" /></li>
-                    <li>
                         <form th:action="@{/logout}" method="post">
                             <button type="submit" class="dropdown-item" style="background: none; border: none; color: inherit;">
                                 로그아웃

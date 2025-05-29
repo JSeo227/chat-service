@@ -18,6 +18,7 @@ export const GET = async (url) => {
 export const POST = async (url, data) => {
     return await fetchAction(url, "POST", data);
 }
+
 /**
  * POST - API 통신
  * @param url

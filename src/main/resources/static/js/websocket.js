@@ -88,7 +88,7 @@ const onMessageReceived = (payload) => {
 
 
 const onError = () => {
-
+    alert("Could not connect to server.");
 }
 
 const sendMessage = (event) => {
