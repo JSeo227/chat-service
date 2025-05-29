@@ -118,4 +118,11 @@ public class RoomController {
         log.info("checkPassword id = {}, password = {}", id, password);
         return roomService.isPasswordValid(id, password);
     }
+
+    @GetMapping("/room/{id}/list")
+    @ResponseBody
+    public List<Member> membersByRoom(@PathVariable("id") Long id) {
+        Room room = roomService.findRoomById(id);
+        return roomService.getMembersByRoom(room);
+    }
 }
