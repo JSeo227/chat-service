@@ -9,8 +9,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.socket.WebSocketSession;
 
 import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Slf4j
@@ -79,7 +82,7 @@ public class RoomService {
      */
     @Transactional
     public void enterRoom(Long roomId, MemberRoom memberRoom) {
-        Room room = roomRepository.findById(roomId).orElse(null);
+        Room room = roomRepository.findById(roomId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 방"));
         room.addMember(memberRoom);
     }
 

@@ -21,7 +21,7 @@ spring:
     consumer:
       # consumer가 속할 그룹
       group-id: chat-group
-      # 처음부터 읽는다
+      # 처음부터 읽기
       auto-offset-reset: earliest
       # kafka consumer key 역직렬화 방식
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -41,6 +41,18 @@ spring:
     prefix: classpath:/templates/
     suffix: .html
     cache: false  # 개발 중에는 캐시를 비활성화하는 것이 좋습니다.
+
+server:
+  # https 포트 번호: 8443
+  # Tomcat, SSL
+  port: 8443
+
+  ssl:
+    enabled: true
+    key-store: classpath:ssl-server.jks
+    key-store-type: JKS
+    key-store-password: test1234
+    key-alias: selfsigned_localhost_sslserver
 
 logging:
   level:

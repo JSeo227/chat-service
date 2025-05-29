@@ -1,7 +1,7 @@
 package com.example.chat.chat_service.controller.dto;
 
-import com.example.chat.chat_service.domain.message.Message;
-import com.example.chat.chat_service.domain.message.Status;
+import com.example.chat.chat_service.domain.chat.Message;
+import com.example.chat.chat_service.domain.chat.Status;
 import lombok.Builder;
 import lombok.Data;
 

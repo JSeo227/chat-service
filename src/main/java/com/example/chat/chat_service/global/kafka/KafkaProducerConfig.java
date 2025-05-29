@@ -1,6 +1,6 @@
 package com.example.chat.chat_service.global.kafka;
 
-import com.example.chat.chat_service.domain.message.Message;
+import com.example.chat.chat_service.domain.chat.Message;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.context.annotation.Bean;

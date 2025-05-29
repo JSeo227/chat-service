@@ -2,8 +2,8 @@ package com.example.chat.chat_service.controller;
 
 import com.example.chat.chat_service.controller.dto.MessageForm;
 import com.example.chat.chat_service.domain.Member;
-import com.example.chat.chat_service.domain.message.Message;
-import com.example.chat.chat_service.domain.message.Status;
+import com.example.chat.chat_service.domain.chat.Message;
+import com.example.chat.chat_service.domain.chat.Status;
 import com.example.chat.chat_service.domain.room.Room;
 //import com.example.chat.chat_service.global.kafka.KafkaProducer;
 import com.example.chat.chat_service.global.kafka.KafkaProducer;

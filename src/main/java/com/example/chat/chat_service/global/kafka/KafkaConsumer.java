@@ -1,10 +1,8 @@
 package com.example.chat.chat_service.global.kafka;
 
-import com.example.chat.chat_service.domain.message.Message;
 import com.example.chat.chat_service.repository.mongo.MessageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.kafka.annotation.KafkaListener;
 
 import org.springframework.stereotype.Component;
 

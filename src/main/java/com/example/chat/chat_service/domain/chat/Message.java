@@ -1,6 +1,5 @@
-package com.example.chat.chat_service.domain.message;
+package com.example.chat.chat_service.domain.chat;
 
-import com.example.chat.chat_service.controller.dto.MessageForm;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
