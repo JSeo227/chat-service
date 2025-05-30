@@ -38,12 +38,34 @@
                         </div>
                     </div>
                 </div>
-
+                <div id="videoNotice" class="text-danger mb-3" style="display: none;">
+                    화상채팅은 2명이 최대입니다.
+                </div>
                 <div class="d-grid">
                     <button id="create" class="btn btn-primary" type="submit">Create</button>
                 </div>
             </form>
         </div>
     </div> <!-- /container -->
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', () => {
+            const typeText = document.getElementById('typeText');
+            const typeVideo = document.getElementById('typeVideo');
+            const notice = document.getElementById('videoNotice');
+
+            const updateNotice = () => {
+                if (typeVideo.checked) {
+                    notice.style.display = 'block';
+                } else {
+                    notice.style.display = 'none';
+                }
+            }
+
+            updateNotice();
+
+            typeText.addEventListener('change', updateNotice);
+            typeVideo.addEventListener('change', updateNotice);
+        });
+    </script>
 </th:block>
 </html>
