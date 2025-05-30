@@ -3,18 +3,17 @@ package com.example.chat.chat_service.service;
 import com.example.chat.chat_service.domain.Member;
 import com.example.chat.chat_service.domain.MemberRoom;
 import com.example.chat.chat_service.domain.room.Room;
+import com.example.chat.chat_service.domain.room.RoomType;
 import com.example.chat.chat_service.domain.room.TextRoom;
+import com.example.chat.chat_service.domain.room.VideoRoom;
 import com.example.chat.chat_service.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.socket.WebSocketSession;
 
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -26,13 +25,19 @@ public class RoomService {
 
     /**
      * 채팅방 생성
+     *
      * @param room
-     * @return
      */
     @Transactional
-    public Room createRoom(Room room) {
-        Room newTextRoom = TextRoom.createTextRoom(room.getName(), room.getPassword(), room.getMax());
-        return roomRepository.save(newTextRoom);
+    public void createRoom(Room room) {
+        Room newRoom = null;
+
+        if (room.getType() == RoomType.TXT)
+            newRoom = TextRoom.createTextRoom(room.getName(), room.getPassword(), room.getMax());
+        else if (room.getType() == RoomType.VID)
+            newRoom = VideoRoom.createVideoRoom(room.getName(), room.getPassword());
+
+        roomRepository.save(newRoom);
     }
 
     /**

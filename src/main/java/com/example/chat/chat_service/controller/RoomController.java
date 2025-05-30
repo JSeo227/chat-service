@@ -4,6 +4,7 @@ import com.example.chat.chat_service.controller.dto.RoomForm;
 import com.example.chat.chat_service.domain.Member;
 import com.example.chat.chat_service.domain.MemberRoom;
 import com.example.chat.chat_service.domain.room.Room;
+import com.example.chat.chat_service.domain.room.RoomType;
 import com.example.chat.chat_service.domain.room.TextRoom;
 import com.example.chat.chat_service.global.common.Constants;
 import com.example.chat.chat_service.global.session.ClientSession;
@@ -65,7 +66,9 @@ public class RoomController {
         room.setName(form.getName());
         room.setPassword(form.getPassword());
         room.setMax(form.getMax());
+        room.setType(form.getType());
 
+        log.info("create room = {}", room);
         roomService.createRoom(room);
 
         return "redirect:/";
@@ -99,7 +102,13 @@ public class RoomController {
 
         MemberRoom memberRoom = MemberRoom.createForEnter(member, room);
         roomService.enterRoom(id, memberRoom);
-        return "views/rooms/roomForm";
+
+        if (room.getType() == RoomType.TXT)
+            return "views/rooms/textRoomForm";
+        else if (room.getType() == RoomType.VID)
+            return "views/rooms/videoRoomForm";
+        else
+            return "redirect:/";
     }
 
     @GetMapping("/room/exit/{id}")
