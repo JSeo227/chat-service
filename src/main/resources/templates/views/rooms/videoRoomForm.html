@@ -1,10 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<th:block layout:fragment="content">
+    <h1>ChatForYOU with WebRTC</h1>
+    <div>
+        <div id="buttons" class="row">
+            <div class="btn-group mr-2" role="group">
+                <div class="mr-2" data-toggle="buttons">
+                    <label class="btn btn-outline-success" id="video_off">
+                        <input type="radio" name="options" style="display:none" autocomplete="off">Video On
+                    </label>
+                    <label class="btn btn-outline-warning active" id="video_on">
+                        <input type="radio" name="options" style="display:none" autocomplete="off" checked>Video Off
+                    </label>
+                </div>
+                <div class="mr-2" data-toggle="buttons">
+                    <label class="btn btn-outline-success" id="audio_off">
+                        <input type="radio" name="options" style="display:none" autocomplete="off">Audio On
+                    </label>
+                    <label class="btn btn-outline-warning active" id="audio_on">
+                        <input type="radio" name="options" style="display:none" autocomplete="off" checked>Audio Off
+                    </label>
+                </div>
+                <div class="mr-2" data-toggle="buttons">
+                    <label class="btn btn-outline-success" id="view_on">
+                        <input type="radio" name="options" style="display:none" autocomplete="off">view On
+                    </label>
+                    <label class="btn btn-outline-warning active" id="view_off">
+                        <input type="radio" name="options" style="display:none" autocomplete="off">view Off
+                    </label>
+                </div>
+            </div>
+            <a>
+                <button type="button" class="btn btn-outline-danger" id="exit" name="exit" th:onclick="|location.href='/room/exit/' + ${room.id}|">
+                    Exit Room
+                </button>
+            </a>
+        </div>
+    </div>
+    <div>
+        <div>
+            <video id="local_video" autoplay playsinline></video>
+        </div>
+        <div>
+            <video id="remote_video" autoplay playsinline></video>
+        </div>
+        <div>
+            <video id="share-video" autoplay=""></video>
+        </div>
+    </div>
 
-</body>
+    <!-- Logic -->
+    <script th:inline="javascript">
+        const roomId = /*[[${room.id}]]*/ null;
+
+        // 창 닫기
+        window.addEventListener("beforeunload", () => {
+            console.log("beforeunload");
+            navigator.sendBeacon(`/room/exit/${roomId}`);
+        });
+
+        // 뒤로 가기
+        window.addEventListener("popstate", () => {
+            console.log("popstate");
+            navigator.sendBeacon(`/room/exit/${roomId}`);
+        });
+    </script>
+
+    <!-- Java Script -->
+    <script th:src="@{/js/webrtc.js}"></script>
+
+</th:block>
 </html>
