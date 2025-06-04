@@ -51,14 +51,20 @@ public abstract class Room {
 
     //==생성 메서드==//
     public static Room createRoom(String name, String password, Integer max, RoomType type, MemberRoom... memberRooms) {
-        Room room = new TextRoom();
+        Room room = switch (type) {
+            case TXT -> new TextRoom();
+            case VID -> new VideoRoom();
+            default -> throw new IllegalArgumentException("지원하지 않는 RoomType: " + type);
+        };
         room.setName(name);
         room.setPassword(password);
         room.setMax(max);
         room.setType(type);
+
         for (MemberRoom memberRoom : memberRooms) {
             room.addMemberRoom(memberRoom);
         }
+
         return room;
     }
 
