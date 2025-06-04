@@ -1,27 +1,25 @@
-// UI elements
+// UI Elements
 const messageArea = document.querySelector('#messageArea');
 const messageForm = document.querySelector('#messageForm');
 
 // Member Session Info
 const { memberId: id, name } = JSON.parse(localStorage.getItem("memberSession"));
-
 const memberId = id;
 const memberName = name;
 
 let stompClient = null;
 
+// WebSocket Connect
 const connect = () => {
     const socket = new SockJS('/ws-chat');
     stompClient = Stomp.over(socket);
 
-    //메시지 수신 or 구독
-    //client.connect(headers, connectCallback, errorCallback)
+    //  메시지 수신 or 구독
     stompClient.connect({}, onConnected, onError);
 
 }
 
 const onConnected = () => {
-    // client.subscribe(destination, callback, headers = {})
     stompClient.subscribe("/topic/chat/room/" + roomId, onMessageReceived, {});
 
     const message = {
@@ -32,7 +30,6 @@ const onConnected = () => {
         status: 'ENTER'
     }
 
-    // send(destination, headers = {}, body = '')
     stompClient.send("/app/chat/enter", {}, JSON.stringify(message));
 
     document.querySelector('#messageInput').value = '';
@@ -43,10 +40,12 @@ const onMessageReceived = (payload) => {
     console.log("Message:", message);
     console.log("Received payload:", payload);
 
-    let usernameElement = document.createElement('span');
+    const messageElement = document.createElement('li');
+    const usernameElement = document.createElement('span');
     let usernameText;
 
-    const messageElement = document.createElement('li');
+    if (message.senderId === memberId) messageElement.classList.add('mine');
+    else messageElement.classList.add('theirs');
 
     switch (message.status) {
         case 'ENTER':
@@ -107,6 +106,7 @@ const sendMessage = (event) => {
     document.querySelector('#messageInput').value = '';
 }
 
+// WebSocket Disconnect
 const disconnect = () => {
     if (stompClient !== null) {
         stompClient.disconnect();
@@ -114,24 +114,21 @@ const disconnect = () => {
     console.log("Disconnected from server");
 }
 
+// 모든 리소스가 로딩된 후 실행
+// -> 텍스트기반이라서 무거운 리소스가 없음
 window.onload = () => {
     connect();
 }
 
-// window.addEventListener('beforeunload', function (e) {
-//     disconnect(); // 예: 웹소켓 연결 종료 등
-//
-//     // 아래 줄은 사용자에게 확인창을 보여주고 싶을 때만 사용
-//     // e.preventDefault(); // 최신 브라우저는 이걸 생략해도 동작
-//     // e.returnValue = ''; // 표준 방식
-// });
+// 사용자가 페이지를 닫거나 새로고침시 실행
+window.addEventListener('beforeunload', () => {
+    disconnect();
+});
 
-
-
-window.BeforeUnloadEvent = () => {
+// URL 해시(#)가 변경될 때 실행 (뒤로가기)
+window.onhashchange = () => {
     disconnect();
 }
 
-// usernameForm.addEventListener('submit', connect, true);
 messageForm.addEventListener('submit', sendMessage, true);
 // true -> capturing, false -> bubbling

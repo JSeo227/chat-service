@@ -1,9 +1,19 @@
-import {GET} from "./common/fetch";
+import {GET} from "./common/fetch.js";
 
-window.getMemberList = async (roomId) => {
-    const result = await GET(`/member/${roomId}/list`);
-    console.log(result);
-    return result;
+const getMemberList = async (roomId) => {
+    return await GET(`/room/${roomId}/list`);
 }
 
-getMemberList();
+getMemberList(roomId)
+    .then(members => {
+    const memberListDiv = document.getElementById('memberList');
+    memberListDiv.innerHTML = '';
+
+    members.forEach(name => {
+        const li = document.createElement('li');
+        li.textContent = name;
+        li.classList.add('dropdown-item');
+
+        memberListDiv.appendChild(li);
+    });
+});
