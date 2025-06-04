@@ -1,8 +1,8 @@
-//connect -> subscribe -> publish -> disconnect
-//클라이언트 연결 -> 구독 -> 발행 -> 연결 종료
+// UI elements
 const messageArea = document.querySelector('#messageArea');
 const messageForm = document.querySelector('#messageForm');
 
+// Member Session Info
 const { memberId: id, name } = JSON.parse(localStorage.getItem("memberSession"));
 
 const memberId = id;
