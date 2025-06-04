@@ -38,6 +38,13 @@ public class LoginController {
 
         log.info("login : {}", form);
 
+        if (form.getLoginId() == null || form.getLoginId().isEmpty()) {
+            result.rejectValue("loginId", "empty", "로그인 아이디를 입력하지 않았습니다.");
+        }
+        if (form.getPassword() == null || form.getPassword().isEmpty()) {
+            result.rejectValue("password", "empty", "비밀번호를 입력하지 않았습니다.");
+        }
+
         if (result.hasErrors()) {
             return "views/login/loginForm";
         }
