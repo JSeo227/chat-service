@@ -1,5 +1,6 @@
 package com.example.chat.chat_service.controller;
 
+import com.example.chat.chat_service.controller.dto.MemberForm;
 import com.example.chat.chat_service.controller.dto.RoomForm;
 import com.example.chat.chat_service.domain.Member;
 import com.example.chat.chat_service.domain.MemberRoom;
@@ -20,6 +21,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -130,8 +132,15 @@ public class RoomController {
 
     @GetMapping("/room/{id}/list")
     @ResponseBody
-    public List<Member> membersByRoom(@PathVariable("id") Long id) {
+    public List<String> membersByRoom(@PathVariable Long id) {
         Room room = roomService.findRoomById(id);
-        return roomService.getMembersByRoom(room);
+        List<MemberForm> result = roomService.getMembersByRoom(room).stream()
+                .map(MemberForm::new)
+                .toList();
+        List<String> names = result.stream()
+                .map(MemberForm::getName)
+                .toList();
+        return names;
     }
+
 }

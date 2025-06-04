@@ -93,15 +93,4 @@ public class MessageController {
 //        kafkaProducer.sendMessage(createMessage(message));
         messagingTemplate.convertAndSend("/topic/chat/room/" + roomId, message);
     }
-
-    private Message createMessage(MessageForm form) {
-        return new Message(
-               null,
-                form.getRoomId(),
-                form.getSenderId(),
-                form.getSenderName(),
-                form.getContent(),
-                form.getStatus()
-        );
-    }
 }
