@@ -33,10 +33,6 @@ public class SignalHandler extends TextWebSocketHandler { // json이여서 Text
     private final RoomSessionManager roomSessionManager;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @PostConstruct
-    public void init() {
-    }
-
     // SDP Offer message
     private static final String MSG_TYPE_OFFER = "offer";
     // SDP Answer message
@@ -53,7 +49,7 @@ public class SignalHandler extends TextWebSocketHandler { // json이여서 Text
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         log.info("[ws] Session has been connect with status [{}]", session);
         MemberSession memberSession = SessionManager.getMemberSession();
-        sendMessage(session, new Signal(1L, memberSession.getMemberId(), memberSession.getName(), null, null, null, MSG_TYPE_ENTER));
+        sendMessage(session, new Signal(1L, memberSession.getMemberId(), memberSession.getName(), null, null, MSG_TYPE_ENTER));
     }
 
     private void sendMessage(WebSocketSession session, Signal signal) {
@@ -108,7 +104,6 @@ public class SignalHandler extends TextWebSocketHandler { // json이여서 Text
                                     roomId,
                                     memberId,
                                     memberName,
-                                    signal.getContent(),
                                     signal.getCandidate(),
                                     signal.getSdp(),
                                     signal.getType()
