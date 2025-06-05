@@ -51,6 +51,23 @@
     <script th:inline="javascript">
         const roomId = /*[[${room.id}]]*/ null;
 
+        // 채팅방 인원에 회원 추가 로직
+        (async (roomId) => {
+            return await GET(`/room/${roomId}/list`);
+        })(roomId)
+            .then(members => {
+                const memberListDiv = document.getElementById('memberList');
+                memberListDiv.innerHTML = '';
+
+                members.forEach(name => {
+                    const li = document.createElement('li');
+                    li.textContent = name;
+                    li.classList.add('dropdown-item');
+
+                    memberListDiv.appendChild(li);
+                });
+            });
+
         // 창 닫기
         window.addEventListener("beforeunload", () => {
             console.log("beforeunload");
@@ -71,8 +88,6 @@
 
     <!-- Java Script -->
     <script th:src="@{/js/websocket.js}"></script>
-
-    <script type="module" th:src="@{/js/memberList.js}"></script>
 
 </th:block>
 </html>
