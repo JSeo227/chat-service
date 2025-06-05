@@ -32,7 +32,7 @@ public class RoomController {
     private final MemberService memberService;
 
     @GetMapping("/")
-    public String home(@SessionAttribute(name = Constants.MEMBER_SESSION, required = false) MemberSession memberSession, Model model) {
+    public String home(@SessionAttribute(name = "memberSession", required = false) MemberSession memberSession, Model model) {
         List<Room> rooms = roomService.findAll();
 
         rooms.forEach(room -> {

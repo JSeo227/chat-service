@@ -76,7 +76,7 @@ public class SessionManager implements HttpSessionListener {
         if (session == null) {
             throw new RuntimeException("session is null");
         } else {
-            MemberSession memberSession = (MemberSession) session.getAttribute(Constants.MEMBER_SESSION);
+            MemberSession memberSession = (MemberSession) session.getAttribute(Constants.MEMBER_SESSION.getName());
             if (memberSession == null) {
                 throw new RuntimeException("memberSession is null");
             }
@@ -90,7 +90,7 @@ public class SessionManager implements HttpSessionListener {
      */
     public static void setMemberSession(MemberSession memberSession) {
         HttpSession session = getRequest().getSession(true);
-        session.setAttribute(Constants.MEMBER_SESSION, memberSession);
+        session.setAttribute(Constants.MEMBER_SESSION.getName(), memberSession);
     }
 
     /**
@@ -100,7 +100,7 @@ public class SessionManager implements HttpSessionListener {
     public static void removeMemberSession(MemberSession memberSession) {
         HttpSession session = getRequest().getSession(false);
         if (session != null) {
-            session.setAttribute(Constants.MEMBER_SESSION, memberSession);
+            session.setAttribute(Constants.MEMBER_SESSION.getName(), memberSession);
             session.invalidate();
         }
     }
