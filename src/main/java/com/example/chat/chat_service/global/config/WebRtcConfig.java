@@ -1,6 +1,6 @@
 package com.example.chat.chat_service.global.config;
 
-import com.example.chat.chat_service.global.interceptor.SessionInterceptor;
+import com.example.chat.chat_service.global.interceptor.WebSocketSessionInterceptor;
 import com.example.chat.chat_service.global.websocket.SignalHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +24,7 @@ public class WebRtcConfig implements WebSocketConfigurer {
         registry.addHandler(signalHandler, "/signal")
                 .setAllowedOrigins("*")
                 // WebSocketSession에 HttpSession의 attribute 복사
-                .addInterceptors(new SessionInterceptor());
+                .addInterceptors(new WebSocketSessionInterceptor());
     }
 
     @Bean

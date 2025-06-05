@@ -47,7 +47,7 @@ public class SignalHandler extends TextWebSocketHandler { // json이여서 Text
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         log.info("[ws] Session has been connect with status [{}]", session);
-        MemberSession memberSession = (MemberSession) session.getAttributes().get(Constants.MEMBER_SESSION);
+        MemberSession memberSession = (MemberSession) session.getAttributes().get(Constants.MEMBER_SESSION.getName());
         if (memberSession == null) {
             session.close();
             return;
@@ -60,9 +60,10 @@ public class SignalHandler extends TextWebSocketHandler { // json이여서 Text
         log.info("message={}", signal);
         try {
             String json = objectMapper.writeValueAsString(signal);
+            log.info("json={}", json);
             session.sendMessage(new TextMessage(json));
         } catch (IOException e) {
-            log.debug("An error occurred: {}", e.getMessage());
+            log.debug("error occurred: {}", e.getMessage());
         }
     }
 
@@ -79,6 +80,7 @@ public class SignalHandler extends TextWebSocketHandler { // json이여서 Text
 
         try {
             Signal signal = objectMapper.readValue(message.getPayload(), Signal.class);
+            log.info("signal={}", signal);
 
             Long roomId = signal.getRoomId();
             Long memberId = signal.getSenderId();
@@ -86,6 +88,7 @@ public class SignalHandler extends TextWebSocketHandler { // json이여서 Text
 
             switch (signal.getType()) {
                 case MSG_TYPE_ENTER -> {
+                    log.info("enter the room");
                     Member member = memberService.findById(memberId);
                     Room room = roomService.findRoomById(roomId);
                     MemberRoom memberRoom = MemberRoom.createForEnter(member, room);
@@ -95,6 +98,7 @@ public class SignalHandler extends TextWebSocketHandler { // json이여서 Text
                 }
 
                 case MSG_TYPE_LEAVE -> {
+                    log.info("leave the room");
                     roomSessionManager.removeClients(roomId, memberId);
                     roomService.exitRoom(roomId, memberService.findById(memberId));
                 }
@@ -117,7 +121,7 @@ public class SignalHandler extends TextWebSocketHandler { // json이여서 Text
                 }
             }
         } catch (Exception e) {
-            log.debug("An error occurred: {}", e.getMessage());
+            log.debug("error occurred: {}", e.getMessage());
         }
     }
 }

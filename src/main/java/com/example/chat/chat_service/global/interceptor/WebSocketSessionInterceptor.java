@@ -11,7 +11,7 @@ import org.springframework.web.socket.server.HandshakeInterceptor;
 
 import java.util.Map;
 
-public class SessionInterceptor implements HandshakeInterceptor {
+public class WebSocketSessionInterceptor implements HandshakeInterceptor {
 
     // WebSocket 연결 전
     @Override
