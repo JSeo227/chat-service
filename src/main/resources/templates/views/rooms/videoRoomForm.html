@@ -4,7 +4,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/main}">
 <th:block layout:fragment="content">
-    <h1>ChatForYOU with WebRTC</h1>
+    <h3 class="mb-0" th:text="${room.name} ?: ''">채팅방</h3>
     <div>
         <div id="buttons" class="row">
             <div class="btn-group mr-2" role="group">
@@ -70,6 +70,8 @@
     </script>
 
     <!-- Java Script -->
+    <script th:src="@{/js/screen.js}"></script>
+
     <script th:src="@{/js/webrtc.js}"></script>
 
 </th:block>
