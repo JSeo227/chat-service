@@ -40,12 +40,23 @@ public class RoomController {
             room.setCurrentMembers(currentMembers);
         });
 
+        List<RoomForm> roomForms = rooms.stream()
+                .map(room -> RoomForm.builder()
+                        .id(room.getId())
+                        .name(room.getName())
+                        .password(room.getPassword())
+                        .max(room.getMax())
+                        .currentMembers(room.getCurrentMembers())
+                        .type(room.getType())
+                        .build())
+                .toList();
+
         ClientSession session = new ClientSession(
                 memberSession.getMemberId(),
                 memberSession.getName()
         );
 
-        model.addAttribute("rooms", rooms);
+        model.addAttribute("rooms", roomForms);
         model.addAttribute("memberSession", session);
 
         return "views/rooms/roomListForm";
@@ -100,7 +111,17 @@ public class RoomController {
         Member member = memberService.findById(session.getMemberId());
 
         Room room = roomService.findRoomById(id);
-        model.addAttribute("room", room);
+
+        RoomForm form = RoomForm.builder()
+                .id(room.getId())
+                .name(room.getName())
+                .password(room.getPassword())
+                .max(room.getMax())
+                .currentMembers(room.getCurrentMembers())
+                .type(room.getType())
+                .build();
+
+        model.addAttribute("room", form);
 
         MemberRoom memberRoom = MemberRoom.createForEnter(member, room);
         roomService.enterRoom(id, memberRoom);

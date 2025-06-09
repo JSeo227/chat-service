@@ -11,8 +11,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RoomForm {
+    private Long id;
     private String name;
     private String password;
+    private Integer currentMembers;
     private Integer max;
     private RoomType type;
 }
