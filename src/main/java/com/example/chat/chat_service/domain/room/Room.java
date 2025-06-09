@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "room_type")
@@ -94,8 +96,8 @@ public abstract class Room {
                 .orElseThrow(() -> new IllegalArgumentException("회원이 이 채팅방에 없습니다."));
 
         memberRoom.exit();
-        memberRoom.setIsInRoom(false); //이거 고민중
-        memberRooms.remove(memberRoom);
+//        memberRoom.setIsInRoom(false); // 소프트 삭제 <- 이거 고민중
+        memberRooms.remove(memberRoom); // 하드 삭제
     }
 
     //채팅방 정원 여부
