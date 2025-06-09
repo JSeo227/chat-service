@@ -4,51 +4,53 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/main}">
 <th:block layout:fragment="content">
-    <h3 class="mb-0" th:text="${room.name} ?: ''">채팅방</h3>
-    <div>
-        <div id="buttons" class="row">
-            <div class="btn-group mr-2" role="group">
-                <div class="mr-2" data-toggle="buttons">
-                    <label class="btn btn-outline-success" id="video_off">
-                        <input type="radio" name="options" style="display:none" autocomplete="off">Video On
-                    </label>
-                    <label class="btn btn-outline-warning active" id="video_on">
-                        <input type="radio" name="options" style="display:none" autocomplete="off" checked>Video Off
-                    </label>
+    <div class="container mt-5" style="max-width: 1000px; min-height: 800px">
+        <h3 class="mb-0" th:text="${room.name} ?: ''">채팅방</h3>
+        <div>
+            <div id="buttons" class="row">
+                <div class="btn-group mr-2" role="group">
+                    <div class="mr-2" data-toggle="buttons">
+                        <label class="btn btn-outline-success" id="video_off">
+                            <input type="radio" name="options" style="display:none" autocomplete="off">Video On
+                        </label>
+                        <label class="btn btn-outline-warning active" id="video_on">
+                            <input type="radio" name="options" style="display:none" autocomplete="off" checked>Video Off
+                        </label>
+                    </div>
+                    <div class="mr-2" data-toggle="buttons">
+                        <label class="btn btn-outline-success" id="audio_off">
+                            <input type="radio" name="options" style="display:none" autocomplete="off">Audio On
+                        </label>
+                        <label class="btn btn-outline-warning active" id="audio_on">
+                            <input type="radio" name="options" style="display:none" autocomplete="off" checked>Audio Off
+                        </label>
+                    </div>
+                    <div class="mr-2" data-toggle="buttons">
+                        <label class="btn btn-outline-success" id="view_on">
+                            <input type="radio" name="options" style="display:none" autocomplete="off">view On
+                        </label>
+                        <label class="btn btn-outline-warning active" id="view_off">
+                            <input type="radio" name="options" style="display:none" autocomplete="off">view Off
+                        </label>
+                    </div>
                 </div>
-                <div class="mr-2" data-toggle="buttons">
-                    <label class="btn btn-outline-success" id="audio_off">
-                        <input type="radio" name="options" style="display:none" autocomplete="off">Audio On
-                    </label>
-                    <label class="btn btn-outline-warning active" id="audio_on">
-                        <input type="radio" name="options" style="display:none" autocomplete="off" checked>Audio Off
-                    </label>
-                </div>
-                <div class="mr-2" data-toggle="buttons">
-                    <label class="btn btn-outline-success" id="view_on">
-                        <input type="radio" name="options" style="display:none" autocomplete="off">view On
-                    </label>
-                    <label class="btn btn-outline-warning active" id="view_off">
-                        <input type="radio" name="options" style="display:none" autocomplete="off">view Off
-                    </label>
-                </div>
+                <a>
+                    <button class="btn btn-secondary btn-sm" th:onclick="|location.href='/room/exit/${room.id}'|">
+                        Exit Room
+                    </button>
+                </a>
             </div>
-            <a>
-                <button type="button" class="btn btn-outline-danger" id="exit" name="exit" th:onclick="|location.href='/room/exit/' + ${room.id}|">
-                    Exit Room
-                </button>
-            </a>
-        </div>
-    </div>
-    <div>
-        <div>
-            <video id="local_video" autoplay playsinline></video>
         </div>
         <div>
-            <video id="remote_video" autoplay playsinline></video>
-        </div>
-        <div>
-            <video id="share-video" autoplay=""></video>
+            <div>
+                <video id="local_video" autoplay playsinline></video>
+            </div>
+            <div>
+                <video id="remote_video" autoplay playsinline></video>
+            </div>
+            <div>
+                <video id="share-video" autoplay=""></video>
+            </div>
         </div>
     </div>
 

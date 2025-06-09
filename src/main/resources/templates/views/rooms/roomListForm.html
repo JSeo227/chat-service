@@ -4,7 +4,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/main}">
 <th:block layout:fragment="content">
-    <div class="container mt-5">
+    <div class="container mt-5" style="max-width: 1000px; min-height: 800px">
         <div class="card mb-4">
             <div class="card-header">
                 <i class="fas fa-comments me-1"></i>채팅방:
@@ -12,7 +12,7 @@
                 <button type="button" class="btn btn-primary btn-sm float-end ms-2"
                     th:onclick="|location.href='@{/room/create}'|">방 만들기</button>
             </div>
-            <div class="card-body">
+            <div class="card-body" style="max-width: 1000px; min-height: 600px">
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover align-middle text-center">
                         <thead class="table-light">
@@ -51,7 +51,7 @@
         localStorage.setItem('memberSession', JSON.stringify(memberSession));
 
         // password check 로직
-        window.checkPassword = async (roomId) => {
+        const checkPassword = async (roomId) => {
             console.log(roomId)
             const findRoom = roomInfo.find(room => room.id === parseInt(roomId));
             console.log(findRoom)
@@ -61,8 +61,13 @@
                 return;
             }
 
+            if (roomInfo.currentMembers >= roomInfo.max) {
+                alert("채팅방이 가득 찼습니다.")
+                return;
+            }
+
+            // 비밀번호 없는 방이면 바로 이동
             if (!findRoom.password) {
-                // 비밀번호 없는 방이면 바로 이동
                 window.location.href = `/room/${roomId}`;
                 return;
             }

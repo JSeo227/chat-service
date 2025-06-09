@@ -5,11 +5,11 @@
       layout:decorate="~{layout/main}">
 
 <th:block layout:fragment="content">
-    <div class="container mt-5" style="max-width: 1000px;">
-        <div class="card">
+    <div class="container mt-5" style="max-width: 1000px; min-height: 800px">
+        <div class="card" style="min-height: 600px; max-height: 600px">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h3 class="mb-0" th:text="${room.name} ?: ''">채팅방</h3>
-                <button class="btn btn-secondary btn-sm" th:onclick="|location.href='/room/exit/' + ${room.id}|">
+                <button class="btn btn-secondary btn-sm" th:onclick="|location.href='/room/exit/${room.id}'|">
                     나가기
                 </button>
             </div>
@@ -19,10 +19,10 @@
                 <div class="row g-4">
                     <!-- 좌측: 채팅방 인원 -->
                     <div class="col-md-4">
-                        <h5 class="fw-bold">채팅방 인원</h5>
+                        <h5 class="fw-bold mb-3">채팅방 인원</h5>
                         <div id="memberList"
                              class="border rounded p-2"
-                             style="max-height: 400px; overflow-y: auto;">
+                             style="padding: 0.5rem; max-height: 400px; overflow-y: auto;">
                         </div>
                     </div>
 
@@ -33,7 +33,7 @@
                         <!-- 메시지 목록 -->
                         <ul id="messageArea"
                             class="list-group flex-grow-1 mb-3"
-                            style="display: flex; flex-direction: column; max-height: 300px; overflow-y: auto; padding-left: 0;">
+                            style="display: flex; flex-direction: column; min-height: 400px; max-height: 400px; overflow-y: auto; padding-left: 0;">
                         </ul>
 
                         <!-- 메시지 입력 -->
@@ -53,8 +53,17 @@
 
         // 채팅방 인원에 회원 추가 로직
         (async (roomId) => {
-            return await GET(`/room/${roomId}/list`);
+            return await fetch(`/room/${roomId}/list`,{
+                method: "GET",
+                headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                credentials: "include",
+            });
         })(roomId)
+            .then(response => {
+                if (!response.ok)
+                    throw new Error("HTTP error " + response.status);
+                return response.json()
+            })
             .then(members => {
                 const memberListDiv = document.getElementById('memberList');
                 memberListDiv.innerHTML = '';
