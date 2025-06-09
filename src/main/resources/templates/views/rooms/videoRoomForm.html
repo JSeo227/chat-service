@@ -4,7 +4,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/main}">
 <th:block layout:fragment="content">
-    <div class="container mt-5" style="max-width: 1000px; min-height: 800px">
+    <div class="container mt-5" style="max-width: 1000px; min-height: 800px;">
         <h3 class="mb-0" th:text="${room.name} ?: ''">채팅방</h3>
         <div>
             <div id="buttons" class="row">
@@ -42,15 +42,32 @@
             </div>
         </div>
         <div>
-            <div>
-                <video id="local_video" autoplay playsinline></video>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="card">
+                        <div class="card-header text-center">
+                            내 비디오 (Local)
+                        </div>
+                        <video id="local_video" autoplay playsinline class="card-img-top"></video>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="card">
+                        <div class="card-header text-center">
+                            상대방 비디오 (Remote)
+                        </div>
+                        <video id="remote_video" autoplay playsinline class="card-img-top"></video>
+                    </div>
+                </div>
             </div>
-            <div>
-                <video id="remote_video" autoplay playsinline></video>
-            </div>
-            <div>
-                <video id="share-video" autoplay=""></video>
-            </div>
+<!--            <div class="col-md-6 mb-3">-->
+<!--                <div class="card">-->
+<!--                    <div class="card-header text-center">-->
+<!--                        공유 비디오 (Remote)-->
+<!--                    </div>-->
+<!--                    <video id="share" autoplay playsinline class="card-img-top"></video>-->
+<!--                </div>-->
+<!--            </div>-->
         </div>
     </div>
 

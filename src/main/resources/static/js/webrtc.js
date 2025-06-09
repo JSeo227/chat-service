@@ -299,7 +299,7 @@ audioButtonOn.onclick = () => {
 // room exit button handler
 exitButton.onclick = () => {
     disconnect();
-    location.href = '/chat';
+    location.href = '/';
 };
 
 // DOM만 준비되면 바로 실행
