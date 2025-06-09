@@ -1,4 +1,4 @@
-// UI elements
+// UI Elements
 const videoButtonOff = document.querySelector('#video_off');
 const videoButtonOn = document.querySelector('#video_on');
 const audioButtonOff = document.querySelector('#audio_off');
@@ -7,8 +7,8 @@ const exitButton = document.querySelector('#exit');
 const localVideo = document.getElementById('local_video');
 const remoteVideo = document.getElementById('remote_video');
 
-// document.querySelector('#view_on').addEventListener('click', startScreenShare);
-// document.querySelector('#view_off').addEventListener('click', stopScreenShare);
+document.querySelector('#view_on').addEventListener('click', startScreenShare);
+document.querySelector('#view_off').addEventListener('click', stopScreenShare);
 
 // Member Session Info
 const { memberId: id, name } = JSON.parse(localStorage.getItem("memberSession"));
@@ -47,21 +47,27 @@ const connect = () => {
         const message = JSON.parse(signal.data);
         switch (message.type) {
             case "offer":
+                console.log('Signal OFFER received');
                 handleOfferMessage(message); break;
             case "answer":
+                console.log('Signal ANSWER received');
                 handleAnswerMessage(message); break;
             case "ice":
+                console.log('Signal ICE Candidate received');
                 handleIceMessage(message); break;
             case "enter":
+                console.log('Client is starting to ' + (message.data === "true)" ? 'negotiate' : 'wait for a peer'));
                 handleEnterMessage(message); break;
             case "leave":
+                console.log("disconnect")
                 disconnect(); break;
             default:
-
+                handleErrorMessage("Wrong type message received from server");
         }
     }
 
     socket.onopen = () => {
+        console.log("Socket connected room: " + roomId);
         sendToServer({
             roomId: roomId,
             senderId: memberId,
@@ -76,43 +82,6 @@ const connect = () => {
 
     socket.onerror = (message) => {
         handleErrorMessage(message);
-    }
-}
-
-const disconnect = () => {
-    sendToServer({
-        roomId: roomId,
-        senderId: memberId,
-        senderName: memberName,
-        type: "leave"
-    });
-
-    if (myPeerConnection) {
-        // event handler 제거
-        myPeerConnection.onicecandidate = null;
-        myPeerConnection.ontrack = null;
-        myPeerConnection.onnegotiationneeded = null;
-        myPeerConnection.oniceconnectionstatechange = null;
-        myPeerConnection.onsignalingstatechange = null;
-        myPeerConnection.onicegatheringstatechange = null;
-        myPeerConnection.onnotificationneeded = null;
-        myPeerConnection.onremovetrack = null;
-
-        // media stream 중지
-        if (remoteVideo.srcObject) {
-            remoteVideo.srcObject.getTracks().forEach(track => track.stop());
-        }
-
-        remoteVideo.src = null;
-        localVideo.src = null;
-
-        myPeerConnection.close();
-        myPeerConnection = null;
-
-        if (socket !== null) {
-            console.log("close socket")
-            socket.close();
-        }
     }
 }
 
@@ -168,9 +137,23 @@ const handleEnterMessage = (message) => {
     myPeerConnection = new RTCPeerConnection(peerConnectionConfig);
 
     // browser가 ice 후보(ip, port)를 만날 때, 상대방에서 후보 정보를 전달
-    myPeerConnection.onicecandidate = handleICECandidateEvent;
+    myPeerConnection.onicecandidate =  (event) => {
+        if (event.candidate) {
+            sendToServer({
+                roomId: roomId,
+                senderId: memberId,
+                senderName: memberName,
+                candidate: event.candidate,
+                type: "ice",
+            });
+            console.log('ICE Candidate Event: ICE candidate sent');
+        }
+    };
     // media stream(audio, video) 수신될때, 호출
-    myPeerConnection.ontrack = handleTrackEvent;
+    myPeerConnection.ontrack = (event) => {
+        console.log('Track Event: set stream to remote video element');
+        remoteVideo.srcObject = event.streams[0];
+    };
 
     // 트랙 제거 감지
     // myPeerConnection.onremovetrack = handleRemoveTrackEvent;
@@ -181,8 +164,28 @@ const handleEnterMessage = (message) => {
     // Signaling 상태 변경 감지
     // myPeerConnection.onsignalingstatechange = handleSignalingStateChangeEvent;
 
-    // media(mediaConstraints, localStream);
     getMedia(mediaConstraints);
+
+    if (message.data === "true") {
+        myPeerConnection.onnegotiationneeded = () => {
+            myPeerConnection.createOffer()
+                .then((offer) => {
+                    return myPeerConnection.setLocalDescription(offer);
+                })
+                .then(() => {
+                    sendToServer({
+                        roomId: roomId,
+                        senderId: memberId,
+                        senderName: memberName,
+                        sdp: myPeerConnection.localDescription,
+                        type: "offer"
+                    })
+                })
+                .catch((error) => {
+                    handleErrorMessage(error);
+                })
+        };
+    }
 }
 
 const getMedia = (constraints) => {
@@ -218,34 +221,98 @@ const getMedia = (constraints) => {
     });
 }
 
-// send ICE candidate to the peer through the server
-function handleICECandidateEvent(event) {
-    if (event.candidate) {
-        sendToServer({
-            roomId: roomId,
-            senderId: memberId,
-            senderName: memberName,
-            candidate: event.candidate,
-            type: "ice",
-        });
-        console.log('ICE Candidate Event: ICE candidate sent');
-    }
-}
-
-function handleTrackEvent(event) {
-
-    console.log('Track Event: set stream to remote video element');
-    remoteVideo.srcObject = event.streams[0];
-}
-
-
 const sendToServer = (signal) => {
     const message = JSON.stringify(signal);
     console.log(message);
     socket.send(message);
 }
 
-function handleErrorMessage(message) {
+const handleErrorMessage = (message) => {
     console.error(message);
 }
 
+const disconnect = () => {
+    sendToServer({
+        roomId: roomId,
+        senderId: memberId,
+        senderName: memberName,
+        type: "leave"
+    });
+
+    if (myPeerConnection) {
+        // event handler 제거
+        myPeerConnection.onicecandidate = null;
+        myPeerConnection.ontrack = null;
+        myPeerConnection.onnegotiationneeded = null;
+        myPeerConnection.oniceconnectionstatechange = null;
+        myPeerConnection.onsignalingstatechange = null;
+        myPeerConnection.onicegatheringstatechange = null;
+        myPeerConnection.onnotificationneeded = null;
+        myPeerConnection.onremovetrack = null;
+
+        // media stream 중지
+        if (remoteVideo.srcObject) {
+            remoteVideo.srcObject.getTracks().forEach(track => track.stop());
+        }
+
+        remoteVideo.src = null;
+        localVideo.src = null;
+
+        myPeerConnection.close();
+        myPeerConnection = null;
+
+        if (socket !== null) {
+            console.log("close socket")
+            socket.close();
+        }
+    }
+}
+
+/*
+ UI Handlers
+  */
+// mute video buttons handler
+videoButtonOff.onclick = () => {
+    localVideoTracks = localStream.getVideoTracks();
+    localVideoTracks.forEach(track => localStream.removeTrack(track));
+    localVideo.style.display = 'none';
+    console.log('Video Off');
+};
+
+videoButtonOn.onclick = () => {
+    localVideoTracks.forEach(track => localStream.addTrack(track));
+    localVideo.style.display = 'inline';
+    console.log('Video On');
+};
+
+// mute audio buttons handler
+audioButtonOff.onclick = () => {
+    localVideo.muted = true;
+    console.log('Audio Off');
+};
+
+audioButtonOn.onclick = () => {
+    localVideo.muted = false;
+    console.log('Audio On');
+};
+
+// room exit button handler
+exitButton.onclick = () => {
+    disconnect();
+    location.href = '/chat';
+};
+
+// DOM만 준비되면 바로 실행
+document.addEventListener("DOMContentLoaded", () => {
+    connect(); // 빠르게 실행됨
+});
+
+// 사용자가 페이지를 닫거나 새로고침시 실행
+window.addEventListener('beforeunload', () => {
+    disconnect();
+});
+
+// URL 해시(#)가 변경될 때 실행 (뒤로가기)
+window.onhashchange = () => {
+    disconnect();
+}
