@@ -9,7 +9,7 @@
         <div class="card" style="min-height: 600px; max-height: 600px">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h3 class="mb-0" th:text="${room.name} ?: ''">채팅방</h3>
-                <button class="btn btn-secondary btn-sm" th:onclick="|location.href='/room/exit/${room.id}'|">
+                <button class="btn btn-secondary btn-sm" onclick="handleExit()">
                     나가기
                 </button>
             </div>
@@ -50,6 +50,7 @@
     <!-- Logic -->
     <script th:inline="javascript">
         const roomId = /*[[${room.id}]]*/ null;
+        let isExiting = false;
 
         // 채팅방 인원에 회원 추가 로직
         (async (roomId) => {
@@ -76,6 +77,17 @@
                     memberListDiv.appendChild(li);
                 });
             });
+
+        // 나가기 버튼 클릭 시
+        const handleExit = async () => {
+            console.log("exit");
+            await fetch(`/room/exit/${roomId}`, {
+                method: "POST",
+                headers: {"Content-Type": "application/x-www-form-urlencoded"},
+            })
+
+            window.location.href = "/"
+        }
 
         // 창 닫기
         window.addEventListener("beforeunload", () => {

@@ -134,7 +134,7 @@ public class RoomController {
             return "redirect:/";
     }
 
-    @GetMapping("/room/exit/{id}")
+    @PostMapping("/room/exit/{id}")
     public String exit(@PathVariable Long id) {
         MemberSession session = SessionManager.getMemberSession();
         Member member = memberService.findById(session.getMemberId());
