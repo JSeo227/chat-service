@@ -25,11 +25,11 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="rooms : ${rooms}" th:onclick="|checkPassword('${rooms.id}')|" style="cursor: pointer;">
-                            <td th:text="${rooms.id}"></td>
-                            <td th:text="${rooms.name}"></td>
-                            <td th:text="${rooms.currentMembers} + '/' + ${rooms.max}"></td>
-                            <td th:text="${rooms.type}"></td>
+                        <tr th:each="room : ${rooms}" th:onclick="|checkPassword('${room.id}')|" style="cursor: pointer;">
+                            <td th:text="${room.id}"></td>
+                            <td th:text="${room.name}"></td>
+                            <td th:text="${room.currentMembers} + '/' + ${room.max}"></td>
+                            <td th:text="${room.type}"></td>
                             <td>
                                 <a>방 삭제</a>
                             </td>
@@ -45,29 +45,27 @@
     <script th:inline="javascript">
         // Thymeleaf 변수를 전역 JS 변수로 선언
         const memberSession = /*[[${memberSession}]]*/ null;
-        const roomInfo = /*[[${rooms}]]*/ [];
+        const rooms = /*[[${rooms}]]*/ [];
 
         // localStorage 세션 저장 로직
         localStorage.setItem('memberSession', JSON.stringify(memberSession));
 
         // password check 로직
         const checkPassword = async (roomId) => {
-            console.log(roomId)
-            const findRoom = roomInfo.find(room => room.id === parseInt(roomId));
-            console.log(findRoom)
+            const room = rooms.find(room => room.id === parseInt(roomId));
 
-            if (!findRoom) {
+            if (!room) {
                 alert("방 정보를 찾을 수 없습니다.");
                 return;
             }
 
-            if (roomInfo.currentMembers >= roomInfo.max) {
+            if (room.currentMembers >= room.max) {
                 alert("채팅방이 가득 찼습니다.")
                 return;
             }
 
             // 비밀번호 없는 방이면 바로 이동
-            if (!findRoom.password) {
+            if (!room.password) {
                 window.location.href = `/room/${roomId}`;
                 return;
             }
