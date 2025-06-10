@@ -25,10 +25,8 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 //시그널 서버 역할을 담당하는 클래스
-public class SignalHandler extends TextWebSocketHandler { // json이여서 Text
+public class SignalHandler extends TextWebSocketHandler { // json 이여서 Text
 
-    private final MemberService memberService;
-    private final RoomService roomService;
     private final RoomSessionManager roomSessionManager;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -52,19 +50,7 @@ public class SignalHandler extends TextWebSocketHandler { // json이여서 Text
             session.close();
             return;
         }
-//        MemberSession memberSession = SessionManager.getMemberSession();
         sendMessage(session, new Signal(1L, memberSession.getMemberId(), memberSession.getName(), null, null, MSG_TYPE_ENTER));
-    }
-
-    private void sendMessage(WebSocketSession session, Signal signal) {
-        log.info("message={}", signal);
-        try {
-            String json = objectMapper.writeValueAsString(signal);
-            log.info("json={}", json);
-            session.sendMessage(new TextMessage(json));
-        } catch (IOException e) {
-            log.debug("error occurred: {}", e.getMessage());
-        }
     }
 
     // 연결 끊김
@@ -89,18 +75,12 @@ public class SignalHandler extends TextWebSocketHandler { // json이여서 Text
             switch (signal.getType()) {
                 case MSG_TYPE_ENTER -> {
                     log.info("enter the room");
-                    Member member = memberService.findById(memberId);
-                    Room room = roomService.findRoomById(roomId);
-                    MemberRoom memberRoom = MemberRoom.createForEnter(member, room);
-
                     roomSessionManager.setClients(roomId, memberId, session);
-                    roomService.enterRoom(roomId, memberRoom);
                 }
 
                 case MSG_TYPE_LEAVE -> {
                     log.info("leave the room");
                     roomSessionManager.removeClients(roomId, memberId);
-                    roomService.exitRoom(roomId, memberService.findById(memberId));
                 }
 
                 case MSG_TYPE_OFFER, MSG_TYPE_ANSWER, MSG_TYPE_ICE -> {
@@ -121,7 +101,18 @@ public class SignalHandler extends TextWebSocketHandler { // json이여서 Text
                 }
             }
         } catch (Exception e) {
-            log.debug("error occurred: {}", e.getMessage());
+            log.debug("An error occurred during message processing: {}", e.getMessage());
+        }
+    }
+
+    private void sendMessage(WebSocketSession session, Signal signal) {
+        log.info("message={}", signal);
+        try {
+            String json = objectMapper.writeValueAsString(signal);
+            log.info("json={}", json);
+            session.sendMessage(new TextMessage(json));
+        } catch (IOException e) {
+            log.debug("An error occurred during message sending: {}", e.getMessage());
         }
     }
 }
