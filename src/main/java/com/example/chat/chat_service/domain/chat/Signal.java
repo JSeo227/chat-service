@@ -12,9 +12,7 @@ public class Signal {
     private Long roomId;
     private Long senderId;
     private String senderName;
-
     private Object candidate;
     private Object sdp; // Session Description Protocol
-
     private String type;
 }

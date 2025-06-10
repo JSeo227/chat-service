@@ -1,13 +1,8 @@
 package com.example.chat.chat_service.global.websocket;
 
-import com.example.chat.chat_service.domain.Member;
-import com.example.chat.chat_service.domain.MemberRoom;
 import com.example.chat.chat_service.domain.chat.Signal;
-import com.example.chat.chat_service.domain.room.Room;
 import com.example.chat.chat_service.global.common.Constants;
 import com.example.chat.chat_service.global.session.MemberSession;
-import com.example.chat.chat_service.service.MemberService;
-import com.example.chat.chat_service.service.RoomService;
 import com.example.chat.chat_service.service.RoomSessionManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -31,15 +26,15 @@ public class SignalHandler extends TextWebSocketHandler { // json 이여서 Text
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     // SDP Offer message
-    private static final String MSG_TYPE_OFFER = "offer";
+    private static final String MSG_TYPE_OFFER = "OFFER";
     // SDP Answer message
-    private static final String MSG_TYPE_ANSWER = "answer";
-    // New ICE(Interactive Connectivity Establishment) Candidate message
-    private static final String MSG_TYPE_ICE = "ice";
-    // join room data message
-    private static final String MSG_TYPE_ENTER = "enter";
-    // leave room data message
-    private static final String MSG_TYPE_LEAVE = "leave";
+    private static final String MSG_TYPE_ANSWER = "ANSWER";
+    // New ICE (Interactive Connectivity Establishment) Candidate message
+    private static final String MSG_TYPE_ICE = "ICE";
+    // join a room data message
+    private static final String MSG_TYPE_ENTER = "ENTER";
+    // leave a room data message
+    private static final String MSG_TYPE_LEAVE = "LEAVE";
 
     // 연결 성공
     @Override
