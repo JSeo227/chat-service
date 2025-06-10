@@ -1,3 +1,6 @@
+import { ScreenShareHandler } from './rtc/screen.js';
+import { getMedia } from "./rtc/media.js";
+
 // UI Elements
 const videoButtonOff = document.querySelector("#video_off");
 const videoButtonOn = document.querySelector("#video_on");
@@ -6,9 +9,6 @@ const audioButtonOn = document.querySelector("#audio_on");
 const exitButton = document.querySelector("#exit");
 const localVideo = document.getElementById("local_video");
 const remoteVideo = document.getElementById("remote_video");
-
-document.querySelector("#view_on").addEventListener("click", startScreenShare);
-document.querySelector("#view_off").addEventListener("click", stopScreenShare);
 
 // Member Session Info
 const { memberId: id, name } = JSON.parse(localStorage.getItem("memberSession"));
@@ -36,10 +36,6 @@ const mediaConstraints = {
         sampleRate: 44100         // 오디오 샘플레이트
     }
 };
-
-// WebRTC 변수
-let localStream;
-let myPeerConnection;
 
 // WebRTC Connect
 const connect = () => {
@@ -139,7 +135,7 @@ const handleOfferMessage = (message) => {
     const description = new RTCSessionDescription(message.sdp);
 
     if (description !== null && message.sdp !== null) {
-        // 	상대방의 연결 요청 정보를 내 PeerConnection에 등록
+        // 상대방의 연결 요청 정보를 내 PeerConnection에 등록
         myPeerConnection.setRemoteDescription(description)
             .then(() => { // 카메라/마이크 stream 확보
                 return navigator.mediaDevices.getUserMedia(mediaConstraints);
@@ -217,7 +213,12 @@ const handleEnterMessage = (message) => {
     // myPeerConnection.onsignalingstatechange = handleSignalingStateChangeEvent;
 
     // media 정보 설정
-    getMedia(mediaConstraints);
+    getMedia({
+        constraints: mediaConstraints,
+        videoElement: localVideo,
+        peerConnection: myPeerConnection,
+        onError: () => disconnect()
+    });
 
     // 내가 연결 시작자라면 Offer 생성
     if (message.senderId === memberId) {
@@ -242,40 +243,6 @@ const handleEnterMessage = (message) => {
     }
 }
 
-const getMedia = (constraints) => {
-    // 기존 스트림 종료 (재호출 대비)
-    if (localStream) {
-        localStream.getTracks().forEach(track => {
-            track.stop();
-        });
-    }
-
-    // 새 미디어 스트림 요청
-    navigator.mediaDevices.getUserMedia(constraints)
-        .then((mediaStream) => { // 스트림 설정
-            localStream = mediaStream;
-            localVideo.srcObject = mediaStream;
-            localStream.getTracks().forEach(track => myPeerConnection.addTrack(track, localStream));
-        })
-        .catch((error) => {
-            console.error("getUserMedia error:", error);
-
-            const errorMessages = {
-                NotFoundError: "카메라나 마이크를 찾을 수 없습니다.",
-                SecurityError: "보안 설정으로 인해 장치에 접근할 수 없습니다.",
-                PermissionDeniedError: "권한이 거부되었습니다.",
-            };
-
-            const message = errorMessages[error.name] || `카메라 또는 마이크에 접근하는 중 오류가 발생했습니다: ${error.message}`;
-
-            if (error.name !== "PermissionDeniedError" && error.name !== "SecurityError") {
-                alert(message);
-            }
-
-            disconnect();
-        });
-}
-
 const sendToServer = (signal) => {
     const message = JSON.stringify(signal);
     console.log(message);
@@ -284,6 +251,46 @@ const sendToServer = (signal) => {
 
 const handleErrorMessage = (message) => {
     console.error(message);
+}
+
+// 화면 공유 시작
+const startScreenShare = async () => {
+    // 화면 공유 시작 & stream 생성
+    const screenStream = await ScreenShareHandler.start();
+
+    if (!screenStream) return;
+
+    // 모든 전송 트랙 중 video 트랙을 화면 공유 트랙으로 교체
+    const videoTrack = screenStream.getVideoTracks()[0];
+    myPeerConnection.getSenders().forEach(sender => {
+        if (sender.track.kind === "video") {
+            sender.replaceTrack(videoTrack);
+        }
+    });
+
+    // 공유 화면이 수동 종료될 경우, 기존 웹캠 영상으로 자동 복구
+    videoTrack.addEventListener("ended", () => {
+        const camTrack = localStream.getVideoTracks()[0];
+        myPeerConnection.getSenders().forEach(sender => {
+            if (sender.track.kind === "video") {
+                sender.replaceTrack(camTrack);
+            }
+        });
+    });
+}
+
+// 화면 공유 중지
+const stopScreenShare = () => {
+    // 화면 공유 중지
+    ScreenShareHandler.stop();
+
+    // 공유 트랙을 웹캠 비디오 트랙으로 복구
+    const camTrack = localStream.getVideoTracks()[0];
+    myPeerConnection.getSenders().forEach(sender => {
+        if (sender.track.kind === "video") {
+            sender.replaceTrack(camTrack);
+        }
+    });
 }
 
 /*
@@ -323,3 +330,6 @@ exitButton.onclick = () => {
 document.addEventListener("DOMContentLoaded", connect);     // DOM만 준비되면 바로 실행
 window.addEventListener("beforeunload", disconnect);        // 사용자가 페이지를 닫거나 새로고침시 실행
 window.onhashchange = disconnect;                                // URL 해시(#)가 변경될 때 실행 (뒤로가기)
+
+document.querySelector("#view_on").addEventListener("click", startScreenShare);
+document.querySelector("#view_off").addEventListener("click", stopScreenShare);

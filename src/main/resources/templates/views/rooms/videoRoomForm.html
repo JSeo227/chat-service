@@ -75,6 +75,11 @@
     <script th:inline="javascript">
         const roomId = /*[[${room.id}]]*/ null;
 
+        // WebRTC 변수
+        let localStream;        // media stream -> [0] - audio track, [1] - video track
+        let shareView;          // shared stream -> [0] - shared video track
+        let myPeerConnection;   // RTCPeerConnection instance
+
         // 나가기 버튼 클릭 시
         const handleExit = async () => {
             console.log("exit");
@@ -101,9 +106,8 @@
     </script>
 
     <!-- Java Script -->
-    <script th:src="@{/js/screen.js}"></script>
 
-    <script th:src="@{/js/webrtc.js}"></script>
+    <script type="module" th:src="@{/js/webrtc.js}"></script>
 
 </th:block>
 </html>
