@@ -1,11 +1,13 @@
-package com.example.chat.chat_service.controller.advice;
+package com.example.chat.chat_service.global.advice;
 
 import com.example.chat.chat_service.controller.dto.MemberForm;
 import com.example.chat.chat_service.global.session.MemberSession;
 import com.example.chat.chat_service.global.session.SessionManager;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+@Slf4j
 @ControllerAdvice
 public class GlobalSessionAdvice {
 
