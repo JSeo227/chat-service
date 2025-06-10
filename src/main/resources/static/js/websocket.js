@@ -105,7 +105,7 @@ const createMessageElement = (message) => {
         messageElement.classList.add("theirs");
     }
 
-    const messageTypeHandlers = {
+    const messageHandlers = {
         ENTER: () => {
             messageElement.classList.add("event-message");
             usernameElement.textContent = message.content;
@@ -124,7 +124,7 @@ const createMessageElement = (message) => {
         }
     };
 
-    const handler = messageTypeHandlers[message.status] || messageTypeHandlers.DEFAULT;
+    const handler = messageHandlers[message.status] || messageHandlers.DEFAULT;
     handler();
 
     messageElement.appendChild(usernameElement);
