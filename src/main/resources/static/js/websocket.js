@@ -106,8 +106,8 @@ const createMessageElement = (message) => {
 };
 
 // 이벤트 핸들링
-window.onload = connect;                                    // 모든 리소스가 로딩된 후 실행 -> 텍스트기반이라서 무거운 리소스가 없음
+window.onload = connect;                                        // 모든 리소스가 로딩된 후 실행 -> 텍스트기반이라서 무거운 리소스가 없음
 window.addEventListener("beforeunload", disconnect);       // 사용자가 페이지를 닫거나 새로고침시 실행
-window.onhashchange = disconnect;                           // URL 해시(#)가 변경될 때 실행 (뒤로가기)
+window.onhashchange = disconnect;                               // URL 해시(#)가 변경될 때 실행 (뒤로가기)
 
 messageForm.addEventListener("submit", sendMessage, true);
