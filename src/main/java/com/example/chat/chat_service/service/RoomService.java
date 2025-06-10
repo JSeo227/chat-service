@@ -87,8 +87,13 @@ public class RoomService {
      */
     @Transactional
     public void enterRoom(Long roomId, MemberRoom memberRoom) {
-        Room room = roomRepository.findById(roomId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 방"));
-        room.addMember(memberRoom);
+        // 중복 입장 체크 추가
+        if (!isMemberInRoom(roomId, memberRoom.getMember().getId())) {
+            Room room = roomRepository.findById(roomId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 방"));
+            log.info("enterRoom = {}", room);
+            log.info("enterMemberRoom = {}", memberRoom);
+            room.addMember(memberRoom);
+        }
     }
 
     /**
@@ -113,5 +118,17 @@ public class RoomService {
         return room.isPasswordValid(password);
     }
 
+    /**
+     * 채팅방 중복 여부 확인
+     * @param roomId
+     * @param memberId
+     * @return
+     */
+    public boolean isMemberInRoom(Long roomId, Long memberId) {
+        Room room = roomRepository.findById(roomId).orElse(null);
+        if (room == null) return false;
+        return room.getMembers().stream()
+                        .anyMatch(member -> member.getId().equals(memberId));
+    }
 
 }
