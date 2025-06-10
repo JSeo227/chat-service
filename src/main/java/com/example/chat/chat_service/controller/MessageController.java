@@ -2,7 +2,6 @@ package com.example.chat.chat_service.controller;
 
 import com.example.chat.chat_service.controller.dto.MessageForm;
 import com.example.chat.chat_service.domain.Member;
-import com.example.chat.chat_service.domain.chat.Message;
 import com.example.chat.chat_service.domain.chat.Status;
 import com.example.chat.chat_service.domain.room.Room;
 import com.example.chat.chat_service.global.kafka.KafkaProducer;
@@ -63,13 +62,21 @@ public class MessageController {
     }
 
     /**
+     * 채팅방 퇴장 처리 (나가기 버튼)
+     */
+    @MessageMapping("/chat/leave")
+    public void leave(@Payload MessageForm message) {
+        Long roomId = message.getRoomId();
+        Long memberId = message.getSenderId();
+
+        handleLeave(roomId, memberId);
+    }
+    /**
      * 채팅방 퇴장 처리 (창 닫기, 뒤로가기 등)
      * HttpServletRequest를 통해 현재 세션의 회원정보와 참여중인 방 ID를 조회하여 퇴장 처리
      */
     @EventListener
     public void exit(SessionDisconnectEvent event) {
-        log.info("exit event = {}", event);
-
         // WebSocket Session에서 데이터 불러오기
         SimpMessageHeaderAccessor header = SimpMessageHeaderAccessor.wrap(event.getMessage());
         Long roomId = (Long) header.getSessionAttributes().get("roomId");
@@ -77,7 +84,10 @@ public class MessageController {
 
         log.info("roomId = {}, memberId = {}", roomId, memberId);
 
-        Room room = roomService.findRoomById(roomId);
+        handleLeave(roomId, memberId);
+    }
+
+    private void handleLeave(Long roomId, Long memberId) {
         Member member = memberService.findById(memberId);
 
         roomService.exitRoom(roomId, member);
@@ -89,6 +99,8 @@ public class MessageController {
                 .content(member.getName() + "님이 퇴장하였습니다.")
                 .status(Status.LEAVE)
                 .build();
+
+        log.info("leave message = {}", message);
 
 //        kafkaProducer.sendMessage(createMessage(message));
         messagingTemplate.convertAndSend("/topic/chat/room/" + roomId, message);
