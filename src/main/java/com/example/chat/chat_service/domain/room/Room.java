@@ -7,13 +7,9 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.socket.WebSocketSession;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Entity
@@ -76,14 +72,11 @@ public abstract class Room {
     public List<Member> getMembers() {
         return memberRooms.stream()
                 .map(MemberRoom::getMember)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     //채팅방 인원 +1
     public void addMember(MemberRoom memberRoom) {
-        if (isFull()) {
-            throw new IllegalStateException("채팅방이 가득 찼습니다.");
-        }
         memberRooms.add(memberRoom);
         memberRoom.setRoom(this);
     }
@@ -98,11 +91,6 @@ public abstract class Room {
         memberRoom.exit();
 //        memberRoom.setIsInRoom(false); // 소프트 삭제 <- 이거 고민중
         memberRooms.remove(memberRoom); // 하드 삭제
-    }
-
-    //채팅방 정원 여부
-    public boolean isFull() {
-        return memberRooms.size() >= getMax();
     }
 
     //채팅방 비밀번호 조회
