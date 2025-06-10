@@ -1,7 +1,6 @@
 package com.example.chat.chat_service.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 import java.util.Objects;

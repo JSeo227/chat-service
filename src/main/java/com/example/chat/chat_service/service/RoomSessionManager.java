@@ -1,7 +1,5 @@
 package com.example.chat.chat_service.service;
 
-import com.example.chat.chat_service.domain.room.Room;
-import jakarta.persistence.Transient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
