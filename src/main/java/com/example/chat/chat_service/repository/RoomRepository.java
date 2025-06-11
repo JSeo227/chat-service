@@ -9,8 +9,7 @@ import java.util.Optional;
 @Repository
 public interface RoomRepository {
     Room save(Room room);
+    void delete(Room room);
     Optional<Room> findById(Long id);
     List<Room> findAll();
-
-    List<Room> findAllWithMembers();
 }

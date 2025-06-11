@@ -7,6 +7,7 @@ import com.example.chat.chat_service.domain.room.RoomType;
 import com.example.chat.chat_service.domain.room.TextRoom;
 import com.example.chat.chat_service.domain.room.VideoRoom;
 import com.example.chat.chat_service.repository.RoomRepository;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,11 +22,11 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class RoomService {
 
+    private final EntityManager em;
     private final RoomRepository roomRepository;
 
     /**
      * 채팅방 생성
-     *
      * @param room
      */
     @Transactional
@@ -38,6 +39,18 @@ public class RoomService {
             newRoom = VideoRoom.createVideoRoom(room.getName(), room.getPassword());
 
         roomRepository.save(newRoom);
+    }
+
+    /**
+     * 채팅방 삭제 + 회원 홈 화면 이동
+     */
+    @Transactional
+    public void deleteRoom(Room room, List<Member> members) {
+        for (Member member : members) {
+            room.removeMember(member);
+        }
+        em.flush();
+        roomRepository.delete(room);
     }
 
     /**
@@ -98,12 +111,11 @@ public class RoomService {
 
     /**
      * 채팅방에 회원 삭제
-     * @param roomId
+     * @param room
      * @param member
      */
     @Transactional
-    public void exitRoom(Long roomId, Member member) {
-        Room room = roomRepository.findById(roomId).orElse(null);
+    public void exitRoom(Room room, Member member) {
         room.removeMember(member);
     }
 

@@ -16,25 +16,20 @@
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover align-middle text-center">
                         <thead class="table-light">
-                        <tr>
-                            <th>방 번호</th>
-                            <th>방 이름</th>
-                            <th>방 인원수</th>
-                            <th>방 종류</th>
-                            <th>방 삭제</th>
-                        </tr>
+                            <tr>
+                                <th>방 번호</th>
+                                <th>방 이름</th>
+                                <th>방 인원수</th>
+                                <th>방 종류</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="room : ${rooms}" th:onclick="|checkPassword('${room.id}')|" style="cursor: pointer;">
-                            <td th:text="${room.id}"></td>
-                            <td th:text="${room.name}"></td>
-                            <td th:text="${room.currentMembers} + '/' + ${room.max}"></td>
-                            <td th:text="${room.type}"></td>
-                            <td>
-                                <a>방 삭제</a>
-                            </td>
-                        </tr>
-
+                            <tr th:each="room : ${rooms}" th:onclick="|checkPassword('${room.id}')|" style="cursor: pointer;">
+                                <td th:text="${room.id}"></td>
+                                <td th:text="${room.name}"></td>
+                                <td th:text="${room.currentMembers} + '/' + ${room.max}"></td>
+                                <td th:text="${room.type}"></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -66,7 +61,7 @@
 
             // 비밀번호 없는 방이면 바로 이동
             if (!room.password) {
-                window.location.href = `/room/${roomId}`;
+                window.location.href = `/room/${room.id}`;
                 return;
             }
 
@@ -80,7 +75,7 @@
                 const result = await fetch("/room/check", {
                     method: "POST",
                     headers: {"Content-Type": "application/x-www-form-urlencoded"},
-                    body: new URLSearchParams({id: roomId, password: password}),
+                    body: new URLSearchParams({id: room.id, password: password}),
                     credentials: "include",
                 }).then(response => {
                     if (!response.ok)
@@ -95,7 +90,6 @@
                 alert("요청 중 오류가 발생했습니다.");
             }
         }
-
     </script>
 </th:block>
 </html>

@@ -30,6 +30,14 @@ public class JpaRoomRepository implements RoomRepository {
     }
 
     @Override
+    public void delete(Room room) {
+        Long roomId = room.getId();
+        em.createQuery("delete from Room r where r.id = :roomId")
+                .setParameter("roomId", roomId)
+                .executeUpdate();
+    }
+
+    @Override
     public Optional<Room> findById(Long id) {
         return Optional.ofNullable(em.find(Room.class, id));
     }
@@ -38,16 +46,6 @@ public class JpaRoomRepository implements RoomRepository {
     public List<Room> findAll() {
         return em.createQuery("select r from Room r", Room.class)
                 .getResultList();
-    }
-
-    @Override
-    public List<Room> findAllWithMembers() {
-        return em.createQuery(
-                "select distinct r from Room r" +
-                        " join fetch r.memberRooms mr" +
-                        " join fetch mr.member m", Room.class)
-                .getResultList();
-
     }
 
 }
