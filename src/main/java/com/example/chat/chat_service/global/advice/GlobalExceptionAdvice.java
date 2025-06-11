@@ -34,7 +34,7 @@ public class GlobalExceptionAdvice {
     // 500 Internal Server Error
     @ExceptionHandler(HttpServerErrorException.InternalServerError.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public String handle500Exceptions(Exception ex, Model model) {
+    public String handle500Exception(Exception ex, Model model) {
         log.error("500 error occurred: {}", ex.getMessage());
         if (isSessionPresent()) {
             model.addAttribute("errorCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
