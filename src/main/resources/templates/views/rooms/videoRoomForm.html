@@ -18,34 +18,8 @@
                     <div class="btn-group mb-3" role="group">
                         <button type="button" id="videoToggle" class="btn btn-outline-success">Video On</button>
                         <button type="button" id="audioToggle" class="btn btn-outline-success">Audio On</button>
-                        <button type="button" id="viewToggle" class="btn btn-outline-success">View On</button>
+                        <button type="button" id="shareToggle" class="btn btn-outline-success">Share On</button>
                     </div>
-                    <!--                <div class="btn-group mr-2" role="group">-->
-                    <!--                    <div class="mr-2" data-toggle="buttons">-->
-                    <!--                        <label class="btn btn-outline-success" id="video_off">-->
-                    <!--                            <input type="radio" name="options" style="display:none" autocomplete="off">Video On-->
-                    <!--                        </label>-->
-                    <!--                        <label class="btn btn-outline-warning active" id="video_on">-->
-                    <!--                            <input type="radio" name="options" style="display:none" autocomplete="off" checked>Video Off-->
-                    <!--                        </label>-->
-                    <!--                    </div>-->
-                    <!--                    <div class="mr-2" data-toggle="buttons">-->
-                    <!--                        <label class="btn btn-outline-success" id="audio_off">-->
-                    <!--                            <input type="radio" name="options" style="display:none" autocomplete="off">Audio On-->
-                    <!--                        </label>-->
-                    <!--                        <label class="btn btn-outline-warning active" id="audio_on">-->
-                    <!--                            <input type="radio" name="options" style="display:none" autocomplete="off" checked>Audio Off-->
-                    <!--                        </label>-->
-                    <!--                    </div>-->
-                    <!--                    <div class="mr-2" data-toggle="buttons">-->
-                    <!--                        <label class="btn btn-outline-success" id="view_on">-->
-                    <!--                            <input type="radio" name="options" style="display:none" autocomplete="off">view On-->
-                    <!--                        </label>-->
-                    <!--                        <label class="btn btn-outline-warning active" id="view_off">-->
-                    <!--                            <input type="radio" name="options" style="display:none" autocomplete="off">view Off-->
-                    <!--                        </label>-->
-                    <!--                    </div>-->
-                    <!--                </div>-->
                 </div>
             </div>
             <div>
@@ -55,9 +29,18 @@
                             <div class="card-header text-center">
                                 내 화면 (Local)
                             </div>
-<!--                            <div class="ratio ratio-16x9">-->
                             <div class="ratio ratio-4x3">
                                 <video id="local_video" autoplay playsinline muted style="width: 100%; height: 100%; object-fit: cover;"></video>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3" style="display: none;">
+                        <div class="card h-100">
+                            <div class="card-header text-center">
+                                내 공유 화면 (Shared)
+                            </div>
+                            <div class="ratio ratio-4x3">
+                                <video id="share_video" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
                             </div>
                         </div>
                     </div>
@@ -66,27 +49,30 @@
                             <div class="card-header text-center">
                                 상대방 화면 (Remote)
                             </div>
-<!--                            <div class="ratio ratio-16x9">-->
                             <div class="ratio ratio-4x3">
                                 <video id="remote_video" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!--            <div class="col-md-6 mb-3">-->
-                <!--                <div class="card">-->
-                <!--                    <div class="card-header text-center">-->
-                <!--                        공유 비디오 (Remote)-->
-                <!--                    </div>-->
-                <!--                    <video id="share" autoplay playsinline class="card-img-top"></video>-->
-                <!--                </div>-->
-                <!--            </div>-->
             </div>
         </div>
-        </div>
+    </div>
 
     <!-- Logic -->
     <script th:inline="javascript">
+        // UI Elements
+        const videoToggle = document.getElementById("videoToggle");
+        const audioToggle = document.getElementById("audioToggle");
+        const shareToggle = document.getElementById("shareToggle");
+
+        const localVideo = document.getElementById("local_video");
+        const remoteVideo = document.getElementById("remote_video");
+        const shareVideo = document.getElementById("share_video");
+
+        const exitButton = document.getElementById("exit");
+
+        // Room Info
         const roomId = /*[[${room.id}]]*/ null;
 
         // WebRTC 변수

@@ -1,22 +1,7 @@
 import { ScreenShareHandler } from "./rtc/screen.js";
 import { getMedia } from "./rtc/media.js";
 
-// UI Elements
-const videoButtonOff = document.querySelector("#video_off");
-const videoButtonOn = document.querySelector("#video_on");
-const audioButtonOff = document.querySelector("#audio_off");
-const audioButtonOn = document.querySelector("#audio_on");
-const localVideo = document.getElementById("local_video");
-const remoteVideo = document.getElementById("remote_video");
-
-const videoToggle = document.getElementById("videoToggle");
-const audioToggle = document.getElementById("audioToggle");
-const viewToggle = document.getElementById("viewToggle");
-
-
-const exitButton = document.querySelector("#exit");
-
-// Member Session Info
+// Member Info
 const { memberId: id, name } = JSON.parse(localStorage.getItem("memberSession"));
 
 const memberId = id;
@@ -259,39 +244,6 @@ const sendToServer = (signal) => {
     socket.send(message);
 }
 
-// /*
-//  UI Handlers
-//   */
-// // mute video buttons handler
-// videoButtonOff.onclick = () => {
-//     localStream.getVideoTracks().forEach(track => track.enabled = false);
-//     localVideo.style.display = "none";
-//     console.log("Video Off");
-// };
-//
-// videoButtonOn.onclick = () => {
-//     localStream.getVideoTracks().forEach(track => track.enabled = true);
-//     localVideo.style.display = "inline";
-//     console.log("Video On");
-// };
-//
-// // mute audio buttons handler
-// audioButtonOff.onclick = () => {
-//     localVideo.muted = true;
-//     console.log("Audio Off");
-// };
-//
-// audioButtonOn.onclick = () => {
-//     localVideo.muted = false;
-//     console.log("Audio On");
-// };
-//
-// // room exit button handler
-// exitButton.onclick = () => {
-//     disconnect();
-//     location.href = "/";
-// };
-
 // 화면 공유 시작
 const startScreenShare = async () => {
     // 화면 공유 시작 & stream 생성
@@ -332,6 +284,55 @@ const stopScreenShare = () => {
     });
 }
 
+// 이벤트 핸들링
+document.addEventListener("DOMContentLoaded", connect);     // DOM만 준비되면 바로 실행
+window.addEventListener("beforeunload", disconnect);        // 사용자가 페이지를 닫거나 새로고침시 실행
+window.onhashchange = disconnect;                                // URL 해시(#)가 변경될 때 실행 (뒤로가기)
+
+// 비디오 토글 핸들러
+videoToggle.addEventListener("click", () => {
+    const isOn = localStream.getVideoTracks().some(track => track.enabled);
+    localStream.getVideoTracks().forEach(track => track.enabled = !isOn);
+    localVideo.style.display = isOn ? "none" : "inline";
+    toggleState(videoToggle,"Video On", "Video Off");
+    console.log(`Video ${isOn ? "Off" : "On"}`);
+});
+
+// 오디오 토글 핸들러
+audioToggle.addEventListener("click", () => {
+    const isMuted = localVideo.muted;
+    localVideo.muted = !isMuted;
+    toggleState(audioToggle,"Audio On", "Audio Off");
+    console.log(`Audio ${isMuted ? "On" : "Off"}`);
+});
+
+// 화면 공유 토글 핸들러
+let isSharing = false;
+shareToggle.addEventListener("click", async () => {
+    const localWrapper = localVideo.closest(".col-md-6.mb-3");
+    const shareWrapper = shareVideo.closest(".col-md-6.mb-3");
+
+    if (!isSharing) {
+        await startScreenShare();
+        toggleState(shareToggle, "Share On", "Share Off");
+
+        // 공유 화면 card 표시, 내 화면 card 숨김
+        shareWrapper.style.display = "block";
+        localWrapper.style.display = "none";
+        console.log("Screen Sharing Started");
+    } else {
+        stopScreenShare();
+        toggleState(shareToggle, "Share On", "Share Off");
+
+        // 내 화면 card 표시, 공유 화면 card 숨김
+        shareWrapper.style.display = "none";
+        localWrapper.style.display = "block";
+        console.log("Screen Sharing Stopped");
+    }
+    isSharing = !isSharing;
+});
+
+// 버튼 텍스트 및 색상 업데이트 함수
 const toggleState = (button, labelOn, labelOff) => {
     const isOff = button.classList.contains("btn-outline-warning");
     if (isOff) {
@@ -343,51 +344,4 @@ const toggleState = (button, labelOn, labelOff) => {
         button.classList.add("btn-outline-warning");
         button.textContent = labelOff;
     }
-}
-
-// 이벤트 핸들링
-document.addEventListener("DOMContentLoaded", connect);     // DOM만 준비되면 바로 실행
-window.addEventListener("beforeunload", disconnect);        // 사용자가 페이지를 닫거나 새로고침시 실행
-window.onhashchange = disconnect;                                // URL 해시(#)가 변경될 때 실행 (뒤로가기)
-
-document.querySelector("#view_on").addEventListener("click", startScreenShare);
-document.querySelector("#view_off").addEventListener("click", stopScreenShare);
-
-// 비디오 토글 핸들러
-videoToggle.addEventListener("click", () => {
-    const isOn = localStream.getVideoTracks().some(track => track.enabled);
-    localStream.getVideoTracks().forEach(track => track.enabled = !isOn);
-    localVideo.style.display = isOn ? "none" : "inline";
-    updateToggleButton(videoToggle, !isOn, "Video On", "Video Off");
-    console.log(`Video ${isOn ? "Off" : "On"}`);
-});
-
-// 오디오 토글 핸들러
-audioToggle.addEventListener("click", () => {
-    const isMuted = localVideo.muted;
-    localVideo.muted = !isMuted;
-    updateToggleButton(audioToggle, !isMuted, "Audio On", "Audio Off");
-    console.log(`Audio ${isMuted ? "On" : "Off"}`);
-});
-
-// 화면 공유 토글 핸들러
-let isSharing = false;
-viewToggle.addEventListener("click", async () => {
-    if (!isSharing) {
-        await startScreenShare();
-        updateToggleButton(viewToggle, true, "View On", "View Off");
-        console.log("Screen Sharing Started");
-    } else {
-        stopScreenShare();
-        updateToggleButton(viewToggle, false, "View On", "View Off");
-        console.log("Screen Sharing Stopped");
-    }
-    isSharing = !isSharing;
-});
-
-// 버튼 텍스트 및 색상 업데이트 함수
-function updateToggleButton(button, isOn, labelOn, labelOff) {
-    button.textContent = isOn ? labelOn : labelOff;
-    button.classList.toggle("btn-outline-success", isOn);
-    button.classList.toggle("btn-outline-warning", !isOn);
 }
