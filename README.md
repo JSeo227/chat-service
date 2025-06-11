@@ -19,7 +19,7 @@
 | **영역**  | **사용 기술**                     |
 |----------|-------------------------------|
 | 백엔드     | Spring Boot, JPA, MySQL       |
-| 메시징     | Kafka, Spring Kafka, MongoDB  |
+| 메시징     | Kafka, MongoDB            |
 | 프론트엔드   | Thymeleaf                     |
 | 통신      | WebSocket(STOMP), WebRTC      |
 | 개발 도구   | IntelliJ, Postman, Docker     |
