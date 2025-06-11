@@ -3,6 +3,7 @@ package com.example.chat.chat_service.controller;
 import com.example.chat.chat_service.controller.dto.MessageForm;
 import com.example.chat.chat_service.domain.Member;
 import com.example.chat.chat_service.domain.chat.Status;
+import com.example.chat.chat_service.domain.room.Room;
 import com.example.chat.chat_service.global.kafka.KafkaProducer;
 import com.example.chat.chat_service.service.MemberService;
 import com.example.chat.chat_service.service.RoomService;
@@ -87,9 +88,10 @@ public class MessageController {
     }
 
     private void handleLeave(Long roomId, Long memberId) {
+        Room room = roomService.findRoomById(roomId);
         Member member = memberService.findById(memberId);
 
-        roomService.exitRoom(roomId, member);
+        roomService.exitRoom(room, member);
 
         MessageForm message = MessageForm.builder()
                 .roomId(roomId)

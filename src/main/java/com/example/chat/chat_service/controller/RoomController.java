@@ -85,6 +85,12 @@ public class RoomController {
         return "redirect:/";
     }
 
+    @DeleteMapping("/room/delete")
+    public void delete(@RequestParam("id") Long roomId) {
+        Room room = roomService.findRoomById(roomId);
+        roomService.deleteRoom(room, room.getMembers());
+    }
+
     @PutMapping("/room/{id}/edit")
     public String edit(@ModelAttribute("room") RoomForm form, @PathVariable Long id,
                        BindingResult result) {
@@ -134,19 +140,21 @@ public class RoomController {
 
     @PostMapping("/room/exit/{id}")
     public String exit(@PathVariable Long id) {
+        Room room = roomService.findRoomById(id);
+
         MemberSession session = SessionManager.getMemberSession();
         Member member = memberService.findById(session.getMemberId());
 
-        roomService.exitRoom(id, member);
+        roomService.exitRoom(room, member);
         return "redirect:/";
     }
 
     @PostMapping("/room/check")
     @ResponseBody
     public Boolean checkPassword(@ModelAttribute("room") RoomForm form,
-                                 @RequestParam("id") Long id, @RequestParam("password") String password) {
-        log.info("checkPassword id = {}, password = {}", id, password);
-        return roomService.isPasswordValid(id, password);
+                                 @RequestParam("id") Long roomId, @RequestParam("password") String password) {
+        log.info("checkPassword id = {}, password = {}", roomId, password);
+        return roomService.isPasswordValid(roomId, password);
     }
 
     @GetMapping("/room/{id}/list")
