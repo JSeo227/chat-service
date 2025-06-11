@@ -89,7 +89,7 @@
                     memberListDiv.appendChild(li);
                 });
             });
-
+        
         // 방 삭제
         const deleteRoom = async () => {
             if (!confirm("정말로 이 방을 삭제하시겠습니까?")) return;
@@ -103,6 +103,17 @@
 
             window.location.href = "/"
         };
+
+        // 나가기 버튼 클릭 시
+        const handleExit = async () => {
+            console.log("exit");
+            await fetch(`/room/exit/${roomId}`, {
+                method: "POST",
+                headers: {"Content-Type": "application/x-www-form-urlencoded"},
+            })
+
+            window.location.href = "/"
+        }
 
         // 창 닫기
         window.addEventListener("beforeunload", () => {

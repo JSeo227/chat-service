@@ -86,9 +86,10 @@ public class RoomController {
     }
 
     @DeleteMapping("/room/delete")
-    public void delete(@RequestParam("id") Long roomId) {
+    public String delete(@RequestParam("id") Long roomId) {
         Room room = roomService.findRoomById(roomId);
         roomService.deleteRoom(room, room.getMembers());
+        return "redirect:/";
     }
 
     @PutMapping("/room/{id}/edit")
