@@ -1,4 +1,4 @@
-import { ScreenShareHandler } from './rtc/screen.js';
+import { ScreenShareHandler } from "./rtc/screen.js";
 import { getMedia } from "./rtc/media.js";
 
 // UI Elements
@@ -6,9 +6,15 @@ const videoButtonOff = document.querySelector("#video_off");
 const videoButtonOn = document.querySelector("#video_on");
 const audioButtonOff = document.querySelector("#audio_off");
 const audioButtonOn = document.querySelector("#audio_on");
-const exitButton = document.querySelector("#exit");
 const localVideo = document.getElementById("local_video");
 const remoteVideo = document.getElementById("remote_video");
+
+const videoToggle = document.getElementById("videoToggle");
+const audioToggle = document.getElementById("audioToggle");
+const viewToggle = document.getElementById("viewToggle");
+
+
+const exitButton = document.querySelector("#exit");
 
 // Member Session Info
 const { memberId: id, name } = JSON.parse(localStorage.getItem("memberSession"));
@@ -243,15 +249,48 @@ const handleEnterMessage = (message) => {
     }
 }
 
+const handleErrorMessage = (message) => {
+    console.error(message);
+}
+
 const sendToServer = (signal) => {
     const message = JSON.stringify(signal);
     console.log(message);
     socket.send(message);
 }
 
-const handleErrorMessage = (message) => {
-    console.error(message);
-}
+// /*
+//  UI Handlers
+//   */
+// // mute video buttons handler
+// videoButtonOff.onclick = () => {
+//     localStream.getVideoTracks().forEach(track => track.enabled = false);
+//     localVideo.style.display = "none";
+//     console.log("Video Off");
+// };
+//
+// videoButtonOn.onclick = () => {
+//     localStream.getVideoTracks().forEach(track => track.enabled = true);
+//     localVideo.style.display = "inline";
+//     console.log("Video On");
+// };
+//
+// // mute audio buttons handler
+// audioButtonOff.onclick = () => {
+//     localVideo.muted = true;
+//     console.log("Audio Off");
+// };
+//
+// audioButtonOn.onclick = () => {
+//     localVideo.muted = false;
+//     console.log("Audio On");
+// };
+//
+// // room exit button handler
+// exitButton.onclick = () => {
+//     disconnect();
+//     location.href = "/";
+// };
 
 // 화면 공유 시작
 const startScreenShare = async () => {
@@ -293,38 +332,18 @@ const stopScreenShare = () => {
     });
 }
 
-/*
- UI Handlers
-  */
-// mute video buttons handler
-videoButtonOff.onclick = () => {
-    localStream.getVideoTracks().forEach(track => track.enabled = false);
-    localVideo.style.display = "none";
-    console.log("Video Off");
-};
-
-videoButtonOn.onclick = () => {
-    localStream.getVideoTracks().forEach(track => track.enabled = true);
-    localVideo.style.display = "inline";
-    console.log("Video On");
-};
-
-// mute audio buttons handler
-audioButtonOff.onclick = () => {
-    localVideo.muted = true;
-    console.log("Audio Off");
-};
-
-audioButtonOn.onclick = () => {
-    localVideo.muted = false;
-    console.log("Audio On");
-};
-
-// room exit button handler
-exitButton.onclick = () => {
-    disconnect();
-    location.href = "/";
-};
+const toggleState = (button, labelOn, labelOff) => {
+    const isOff = button.classList.contains("btn-outline-warning");
+    if (isOff) {
+        button.classList.remove("btn-outline-warning");
+        button.classList.add("btn-outline-success");
+        button.textContent = labelOn;
+    } else {
+        button.classList.remove("btn-outline-success");
+        button.classList.add("btn-outline-warning");
+        button.textContent = labelOff;
+    }
+}
 
 // 이벤트 핸들링
 document.addEventListener("DOMContentLoaded", connect);     // DOM만 준비되면 바로 실행
@@ -333,3 +352,42 @@ window.onhashchange = disconnect;                                // URL 해시(#
 
 document.querySelector("#view_on").addEventListener("click", startScreenShare);
 document.querySelector("#view_off").addEventListener("click", stopScreenShare);
+
+// 비디오 토글 핸들러
+videoToggle.addEventListener("click", () => {
+    const isOn = localStream.getVideoTracks().some(track => track.enabled);
+    localStream.getVideoTracks().forEach(track => track.enabled = !isOn);
+    localVideo.style.display = isOn ? "none" : "inline";
+    updateToggleButton(videoToggle, !isOn, "Video On", "Video Off");
+    console.log(`Video ${isOn ? "Off" : "On"}`);
+});
+
+// 오디오 토글 핸들러
+audioToggle.addEventListener("click", () => {
+    const isMuted = localVideo.muted;
+    localVideo.muted = !isMuted;
+    updateToggleButton(audioToggle, !isMuted, "Audio On", "Audio Off");
+    console.log(`Audio ${isMuted ? "On" : "Off"}`);
+});
+
+// 화면 공유 토글 핸들러
+let isSharing = false;
+viewToggle.addEventListener("click", async () => {
+    if (!isSharing) {
+        await startScreenShare();
+        updateToggleButton(viewToggle, true, "View On", "View Off");
+        console.log("Screen Sharing Started");
+    } else {
+        stopScreenShare();
+        updateToggleButton(viewToggle, false, "View On", "View Off");
+        console.log("Screen Sharing Stopped");
+    }
+    isSharing = !isSharing;
+});
+
+// 버튼 텍스트 및 색상 업데이트 함수
+function updateToggleButton(button, isOn, labelOn, labelOff) {
+    button.textContent = isOn ? labelOn : labelOff;
+    button.classList.toggle("btn-outline-success", isOn);
+    button.classList.toggle("btn-outline-warning", !isOn);
+}
