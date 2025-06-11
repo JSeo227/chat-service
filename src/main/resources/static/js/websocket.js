@@ -1,11 +1,4 @@
-// UI Elements
-const messageArea = document.querySelector("#messageArea");
-const messageForm = document.querySelector("#messageForm");
-const messageInput = document.querySelector("#messageInput");
-
-const exitButton = document.querySelector("#exit");
-
-// Member Session Info
+// Member Info
 const { memberId: id, name } = JSON.parse(localStorage.getItem("memberSession"));
 const memberId = id;
 const memberName = name;
