@@ -8,9 +8,14 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h3 class="mb-0" th:text="${room.name} ?: ''">채팅방</h3>
-                <button class="btn btn-secondary btn-sm" id="exit" onclick="handleExit()">
-                    나가기
-                </button>
+                <div>
+                    <button class="btn btn-danger btn-sm" id="delete" onclick="deleteRoom()">
+                        삭제
+                    </button>
+                    <button class="btn btn-secondary btn-sm" id="exit" onclick="handleExit()">
+                        나가기
+                    </button>
+                </div>
             </div>
 
             <div class="card-body">
@@ -79,6 +84,20 @@
         let localStream;        // media stream -> [0] - audio track, [1] - video track
         let shareView;          // shared stream -> [0] - shared video track
         let myPeerConnection;   // RTCPeerConnection instance
+
+        // 방 삭제
+        const deleteRoom = async () => {
+            if (!confirm("정말로 이 방을 삭제하시겠습니까?")) return;
+
+            await fetch(`/room/delete?id=${roomId}`, {
+                method: "DELETE",
+                credentials: "include",
+            }).then(response => {
+                if (!response.ok) throw new Error("삭제 실패");
+            })
+
+            window.location.href = "/"
+        };
 
         // 나가기 버튼 클릭 시
         const handleExit = async () => {
