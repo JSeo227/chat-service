@@ -121,6 +121,19 @@ public class RoomController {
             return "redirect:/";
     }
 
+    @GetMapping("/room/{id}/list")
+    @ResponseBody
+    public List<String> membersByRoom(@PathVariable Long id) {
+        Room room = roomService.findRoomById(id);
+        List<MemberForm> result = roomService.getMembersByRoom(room).stream()
+                .map(MemberForm::new)
+                .toList();
+        List<String> names = result.stream()
+                .map(MemberForm::getName)
+                .toList();
+        return names;
+    }
+
     @PostMapping("/room/exit/{id}")
     public String exit(@PathVariable Long id) {
         Room room = roomService.findRoomById(id);
@@ -138,19 +151,6 @@ public class RoomController {
                                  @RequestParam("id") Long roomId, @RequestParam("password") String password) {
         log.info("checkPassword id = {}, password = {}", roomId, password);
         return roomService.isPasswordValid(roomId, password);
-    }
-
-    @GetMapping("/room/{id}/list")
-    @ResponseBody
-    public List<String> membersByRoom(@PathVariable Long id) {
-        Room room = roomService.findRoomById(id);
-        List<MemberForm> result = roomService.getMembersByRoom(room).stream()
-                .map(MemberForm::new)
-                .toList();
-        List<String> names = result.stream()
-                .map(MemberForm::getName)
-                .toList();
-        return names;
     }
 
 }
