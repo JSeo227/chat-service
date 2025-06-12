@@ -7,7 +7,7 @@ import com.example.chat.chat_service.domain.MemberRoom;
 import com.example.chat.chat_service.domain.room.Room;
 import com.example.chat.chat_service.domain.room.RoomType;
 import com.example.chat.chat_service.domain.room.TextRoom;
-import com.example.chat.chat_service.global.session.ClientSession;
+import com.example.chat.chat_service.controller.dto.SessionForm;
 import com.example.chat.chat_service.service.MemberService;
 import com.example.chat.chat_service.service.RoomService;
 import com.example.chat.chat_service.global.session.MemberSession;
@@ -49,10 +49,10 @@ public class RoomController {
                         .build())
                 .toList();
 
-        ClientSession session = new ClientSession(
-                memberSession.getMemberId(),
-                memberSession.getName()
-        );
+        SessionForm session = SessionForm.builder()
+                .memberId(memberSession.getMemberId())
+                .name(memberSession.getName())
+                .build();
 
         model.addAttribute("rooms", roomForms);
         model.addAttribute("memberSession", session);

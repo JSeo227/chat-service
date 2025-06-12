@@ -2,17 +2,13 @@ package com.example.chat.chat_service.controller.dto;
 
 import com.example.chat.chat_service.domain.Member;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberForm {
-
     private Long id;
 
     @NotEmpty(message = "로그인 ID는 필수 입력 값입니다.")

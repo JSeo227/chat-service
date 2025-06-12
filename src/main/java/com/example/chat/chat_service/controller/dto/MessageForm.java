@@ -12,25 +12,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MessageForm {
-
     private Long roomId;
-
     private Long senderId; // member id
-
     private String senderName; // member name
-
     private String content; // 메시지 내용
-
     private Status status; // ENTER, TALK, LEAVE
-
-    public Message toEntity(MessageForm form) {
-        return new Message(
-                null,
-                form.getRoomId(),
-                form.getSenderId(),
-                form.getSenderName(),
-                form.getContent(),
-                form.getStatus());
-    }
-
 }
