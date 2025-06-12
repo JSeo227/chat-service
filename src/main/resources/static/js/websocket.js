@@ -70,23 +70,6 @@ const sendMessage = (event) => {
     messageInput.focus();
 };
 
-// 나가기 버튼 클릭 시 관련 로직 함수
-const handleExit = async () => {
-    const message = {
-        roomId,
-        senderId: memberId,
-    };
-
-    await stompClient.send("/app/chat/leave", {}, JSON.stringify(message));
-
-    await fetch(`/room/exit/${roomId}`, {
-        method: "POST",
-        headers: {"Content-Type": "application/x-www-form-urlencoded"},
-    });
-
-    window.location.href = "/";
-};
-
 // 메시지 UI 생성 함수
 const createMessageElement = (message) => {
     const messageElement = document.createElement("li");
@@ -130,4 +113,3 @@ window.addEventListener("beforeunload", disconnect);       // 사용자가 페�
 window.onhashchange = disconnect;                               // URL 해시(#)가 변경될 때 실행 (뒤로가기)
 
 messageForm.addEventListener("submit", sendMessage, true);
-exitButton.addEventListener("click", handleExit, false);

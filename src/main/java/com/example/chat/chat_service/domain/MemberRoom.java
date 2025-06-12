@@ -48,6 +48,4 @@ public class MemberRoom {
         return memberRoom;
     }
 
-    //==로직 메서드==//
-
 }

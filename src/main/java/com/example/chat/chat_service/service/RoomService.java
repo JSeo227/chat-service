@@ -116,6 +116,8 @@ public class RoomService {
      */
     @Transactional
     public void exitRoom(Room room, Member member) {
+        log.info("exitRoom = {}", room);
+        log.info("exitMember = {}", member);
         room.removeMember(member);
     }
 

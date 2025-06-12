@@ -8,13 +8,19 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h3 class="mb-0" th:text="${room.name} ?: ''">채팅방</h3>
-                <div>
-                    <button class="btn btn-danger btn-sm" id="delete" onclick="deleteRoom()">
-                        삭제
-                    </button>
-                    <button class="btn btn-secondary btn-sm" id="exit" onclick="handleExit()">
-                        나가기
-                    </button>
+                <div class="d-flex gap-2">
+                    <form method="post" th:action="@{/room/delete/{id}(id=${room.id})}"
+                          onsubmit="return confirm('정말로 이 방을 삭제하시겠습니까?');">
+                        <button class="btn btn-danger btn-sm" type="submit">
+                            삭제
+                        </button>
+                    </form>
+                    <form method="post" th:action="@{/room/exit/{id}(id=${room.id})}"
+                          onsubmit="return confirm('정말로 나가시겠습니까?');">
+                        <button class="btn btn-secondary btn-sm" type="submit">
+                            나가기
+                        </button>
+                    </form>
                 </div>
             </div>
 
@@ -85,38 +91,6 @@
         let shareView;          // shared stream -> [0] - shared video track
         let myPeerConnection;   // RTCPeerConnection instance
 
-        // 방 삭제
-        const deleteRoom = async () => {
-            if (!confirm("정말로 이 방을 삭제하시겠습니까?")) return;
-
-            await fetch(`/room/delete?id=${roomId}`, {
-                method: "DELETE",
-                credentials: "include",
-            }).then(response => {
-                if (!response.ok) throw new Error("삭제 실패");
-            })
-
-            window.location.href = "/"
-        };
-
-        // 나가기 버튼 클릭 시
-        const handleExit = async () => {
-            console.log("exit");
-            await fetch(`/room/exit/${roomId}`, {
-                method: "POST",
-                headers: {"Content-Type": "application/x-www-form-urlencoded"},
-            })
-
-            window.location.href = "/"
-        }
-
-        // 창 닫기
-        window.addEventListener("beforeunload", () => {
-            console.log("beforeunload");
-            navigator.sendBeacon(`/room/exit/${roomId}`);
-
-        });
-
         // 뒤로 가기
         window.addEventListener("popstate", () => {
             console.log("popstate");
@@ -125,7 +99,6 @@
     </script>
 
     <!-- Java Script -->
-
     <script type="module" th:src="@{/js/webrtc.js}"></script>
 
 </th:block>

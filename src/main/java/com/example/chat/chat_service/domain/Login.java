@@ -48,7 +48,6 @@ public class Login {
     }
 
     //==로직 메서드==//
-
     public boolean checkLoginId(String inputLoginId) {
         return loginId.equals(inputLoginId);
     }

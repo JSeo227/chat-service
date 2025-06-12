@@ -85,28 +85,10 @@ public class RoomController {
         return "redirect:/";
     }
 
-    @DeleteMapping("/room/delete")
-    public String delete(@RequestParam("id") Long roomId) {
-        Room room = roomService.findRoomById(roomId);
+    @PostMapping("/room/delete/{id}")
+    public String delete(@PathVariable Long id) {
+        Room room = roomService.findRoomById(id);
         roomService.deleteRoom(room, room.getMembers());
-        return "redirect:/";
-    }
-
-    @PutMapping("/room/{id}/edit")
-    public String edit(@ModelAttribute("room") RoomForm form, @PathVariable Long id,
-                       BindingResult result) {
-
-        if (result.hasErrors()) {
-            return "views/rooms/modifyRoomForm";
-        }
-
-        Room room = new TextRoom();
-        room.setId(id);
-        room.setName(form.getName());
-        room.setPassword(form.getPassword());
-
-        roomService.updateRoom(room);
-
         return "redirect:/";
     }
 

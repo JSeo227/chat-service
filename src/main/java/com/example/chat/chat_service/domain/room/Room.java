@@ -83,6 +83,9 @@ public abstract class Room {
 
     //채팅방 인원 -1
     public void removeMember(Member member) {
+        log.info("exitMemberRooms: {}", memberRooms);
+        log.info("exitMember: {}", member);
+
         MemberRoom memberRoom = memberRooms.stream()
                 .filter(mr -> mr.getMember().equals(member))
                 .findFirst()

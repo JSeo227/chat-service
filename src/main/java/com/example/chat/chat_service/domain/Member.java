@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Data
@@ -48,6 +49,19 @@ public class Member {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Member)) return false;
+        Member member = (Member) o;
+        return Objects.equals(id, member.id); // id로 비교
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
     //==생성 메서드==//
     public static Member createMember(Login login, String name, RoleType role) {
         Member member = new Member();
@@ -56,8 +70,4 @@ public class Member {
         member.setRole(role);
         return member;
     }
-
-    //==로직 메서드==//
-
-
 }
