@@ -4,11 +4,11 @@ import com.example.chat.chat_service.controller.dto.MessageForm;
 import com.example.chat.chat_service.domain.Member;
 import com.example.chat.chat_service.domain.chat.Status;
 import com.example.chat.chat_service.domain.room.Room;
-import com.example.chat.chat_service.global.kafka.KafkaProducer;
 import com.example.chat.chat_service.service.MemberService;
 import com.example.chat.chat_service.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.producer.KafkaProducer;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -21,8 +21,7 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 @Controller
 @RequiredArgsConstructor
 public class MessageController {
-
-    private final KafkaProducer kafkaProducer;
+    
     private final SimpMessagingTemplate messagingTemplate;
     private final RoomService roomService;
     private final MemberService memberService;
@@ -44,7 +43,6 @@ public class MessageController {
             header.getSessionAttributes().put("memberId", message.getSenderId());
         }
 
-//        kafkaProducer.sendMessage(createMessage(message));
         messagingTemplate.convertAndSend("/topic/chat/room/" + message.getRoomId(), message);
     }
 
@@ -56,7 +54,6 @@ public class MessageController {
         log.info("send message = {}", message);
 
         if (message.getStatus() == Status.TALK) {
-//            kafkaProducer.sendMessage(createMessage(message));
             messagingTemplate.convertAndSend("/topic/chat/room/" + message.getRoomId(), message);
         }
     }
@@ -103,7 +100,6 @@ public class MessageController {
 
         log.info("leave message = {}", message);
 
-//        kafkaProducer.sendMessage(createMessage(message));
         messagingTemplate.convertAndSend("/topic/chat/room/" + roomId, message);
     }
 }
