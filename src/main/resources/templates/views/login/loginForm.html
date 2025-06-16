@@ -21,7 +21,7 @@
                 <p class="field-error" th:errors="*{password}"></p>
             </div>
             <div class="form-check mb-3">
-                <input class="form-check-input" id="rememberId" name="rememberId" type="checkbox">
+                <input class="form-check-input" id="rememberId" th:field="*{checked}" type="checkbox">
                 <label for="rememberId" class="form-check-label">아이디 저장</label>
             </div>
             <div class="d-grid">
@@ -33,5 +33,22 @@
         </form>
     </div>
 </div>
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', () => {
+        const loginIdInput = document.getElementById("loginId");
+        const rememberCheckbox = document.getElementById("rememberId");
+
+        const { loginId, checked } = JSON.parse(localStorage.getItem("memberSession"));
+
+        if (checked) {
+            rememberCheckbox.checked = true;
+            loginIdInput.value = loginId;
+        }
+        else {
+            rememberCheckbox.checked = false;
+            loginIdInput.value = "";
+        }
+    });
+</script>
 </body>
 </html>

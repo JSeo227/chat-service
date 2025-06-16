@@ -7,5 +7,7 @@ import lombok.Data;
 @Builder
 public class SessionForm {
     private Long memberId;
+    private String loginId;
+    private Boolean checked;
     private String name;
 }

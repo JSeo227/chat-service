@@ -51,6 +51,8 @@ public class RoomController {
 
         SessionForm session = SessionForm.builder()
                 .memberId(memberSession.getMemberId())
+                .loginId(memberSession.getLoginId())
+                .checked(memberSession.getChecked())
                 .name(memberSession.getName())
                 .build();
 

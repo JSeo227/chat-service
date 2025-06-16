@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -32,8 +34,7 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String login(@Valid @ModelAttribute("login") LoginForm form, BindingResult result,
-                        HttpServletRequest request, Model model) {
+    public String login(@Valid @ModelAttribute("login") LoginForm form, BindingResult result) {
 
         log.info("login : {}", form);
 
@@ -59,12 +60,17 @@ public class LoginController {
         loginService.setLoginStatusTrue(form.getLoginId(), true);
 
         //세션 저장
-        MemberSession memberSession = new MemberSession(
-                existingMember.getId(),
-                form.getLoginId(),
-                existingMember.getName(),
-                true
-        );
+
+        MemberSession memberSession = MemberSession.builder()
+                .memberId(existingMember.getId())
+                .loginId(form.getLoginId())
+                .checked(form.getChecked())
+                .name(existingMember.getName())
+                .isLogin(true)
+                .loginAt(LocalDateTime.now())
+                .build();
+
+        log.info("loginController - memberSession : {}", memberSession);
 
         SessionManager.setMemberSession(memberSession);
 
