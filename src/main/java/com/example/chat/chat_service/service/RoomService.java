@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -42,14 +43,11 @@ public class RoomService {
     }
 
     /**
-     * 채팅방 삭제 + 회원 홈 화면 이동
+     * 채팅방 삭제
      */
     @Transactional
-    public void deleteRoom(Room room, List<Member> members) {
-        for (Member member : members) {
-            room.removeMember(member);
-        }
-        em.flush();
+    public void deleteRoom(Room room, Member member) {
+        room.removeMember(member);
         roomRepository.delete(room);
     }
 

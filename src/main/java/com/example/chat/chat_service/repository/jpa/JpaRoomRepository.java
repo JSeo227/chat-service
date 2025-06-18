@@ -31,11 +31,9 @@ public class JpaRoomRepository implements RoomRepository {
 
     @Override
     public void delete(Room room) {
-        Long roomId = room.getId();
-        em.createQuery("delete from Room r where r.id = :roomId")
-                .setParameter("roomId", roomId)
-                .executeUpdate();
+        em.remove(room);
     }
+
 
     @Override
     public Optional<Room> findById(Long id) {

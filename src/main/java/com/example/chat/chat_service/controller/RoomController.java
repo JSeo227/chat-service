@@ -90,7 +90,10 @@ public class RoomController {
     @PostMapping("/room/delete/{id}")
     public String delete(@PathVariable Long id) {
         Room room = roomService.findRoomById(id);
-        roomService.deleteRoom(room, room.getMembers());
+        List<Member> members = room.getMembers();
+        for (Member member : members) {
+            roomService.deleteRoom(room, member);
+        }
         return "redirect:/";
     }
 
