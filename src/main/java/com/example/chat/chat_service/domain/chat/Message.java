@@ -4,11 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.mongodb.core.index.CompoundIndex;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-@CompoundIndex(name = "idx_room_sender", def = "{'roomId': 1, 'senderId': 1}")
-@Document(collection = "messages")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
