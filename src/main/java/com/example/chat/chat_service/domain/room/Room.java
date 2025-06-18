@@ -27,8 +27,6 @@ public abstract class Room {
 
     private String password; //비밀번호
 
-    @Max(99)
-    @Min(1)
     private Integer max; //방 최대 인원 수 (일반 채팅만)
 
     @Enumerated(EnumType.STRING)

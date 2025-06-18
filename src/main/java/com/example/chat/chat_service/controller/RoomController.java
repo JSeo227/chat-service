@@ -12,6 +12,7 @@ import com.example.chat.chat_service.service.MemberService;
 import com.example.chat.chat_service.service.RoomService;
 import com.example.chat.chat_service.global.session.MemberSession;
 import com.example.chat.chat_service.global.session.SessionManager;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -69,7 +70,10 @@ public class RoomController {
     }
 
     @PostMapping("/room/create")
-    public String create(@ModelAttribute("room") RoomForm form, BindingResult result) {
+    public String create(@Valid @ModelAttribute("room") RoomForm form, BindingResult result) {
+
+        log.info("Create room: {}", form);
+        log.info("Result : {}", result);
 
         if (result.hasErrors()) {
             return "views/rooms/createRoomForm";
@@ -80,7 +84,7 @@ public class RoomController {
         room.setPassword(form.getPassword());
         room.setMax(form.getMax());
         room.setType(form.getType());
-        
+
         roomService.createRoom(room);
 
         return "redirect:/";

@@ -36,8 +36,6 @@ public class LoginController {
     @PostMapping("/login")
     public String login(@Valid @ModelAttribute("login") LoginForm form, BindingResult result) {
 
-        log.info("login : {}", form);
-
         if (result.hasErrors()) {
             return "views/login/loginForm";
         }
@@ -60,7 +58,6 @@ public class LoginController {
         loginService.setLoginStatusTrue(form.getLoginId(), true);
 
         //세션 저장
-
         MemberSession memberSession = MemberSession.builder()
                 .memberId(existingMember.getId())
                 .loginId(form.getLoginId())
@@ -69,8 +66,6 @@ public class LoginController {
                 .isLogin(true)
                 .loginAt(LocalDateTime.now())
                 .build();
-
-        log.info("loginController - memberSession : {}", memberSession);
 
         SessionManager.setMemberSession(memberSession);
 

@@ -13,7 +13,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="name" class="form-label">Room Name:</label>
-                    <input th:field="*{name}" class="form-control" id="name" name="name" type="text" required>
+                    <input th:field="*{name}" class="form-control" id="name" name="name" type="text" th:errorclass="field-error">
                     <p class="field-error" th:errors="*{name}"></p>
                 </div>
                 <div class="mb-3">
@@ -22,21 +22,22 @@
                 </div>
                 <div class="mb-3">
                     <label for="max" class="form-label">Member Max Count:</label>
-                    <input th:field="*{max}" class="form-control" id="max" name="max" type="text" required>
+                    <input th:field="*{max}" class="form-control" id="max" name="max" type="text" th:errorclass="field-error">
                     <p class="field-error" th:errors="*{max}"></p>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Type:</label>
                     <div class="d-flex gap-2">
                         <div class="form-check">
-                            <input type="radio" th:field="*{type}" value="TXT" class="form-check-input" id="typeText">
+                            <input type="radio" th:field="*{type}" value="TXT" class="form-check-input" id="typeText" th:errorclass="field-error">
                             <label class="form-check-label" for="typeText">Text</label>
                         </div>
                         <div class="form-check">
-                            <input type="radio" th:field="*{type}" value="VID" class="form-check-input" id="typeVideo">
+                            <input type="radio" th:field="*{type}" value="VID" class="form-check-input" id="typeVideo" th:errorclass="field-error">
                             <label class="form-check-label" for="typeVideo">Video</label>
                         </div>
                     </div>
+                    <p class="field-error" th:if="${#fields.hasErrors('type')}" th:errors="*{type}"></p>
                 </div>
                 <div id="videoNotice" class="text-danger mb-3" style="display: none;">
                     화상채팅은 2명이 최대입니다.
