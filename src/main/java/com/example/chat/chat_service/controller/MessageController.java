@@ -8,7 +8,6 @@ import com.example.chat.chat_service.service.MemberService;
 import com.example.chat.chat_service.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.producer.KafkaProducer;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -87,8 +86,6 @@ public class MessageController {
     private void handleLeave(Long roomId, Long memberId) {
         Room room = roomService.findRoomById(roomId);
         Member member = memberService.findById(memberId);
-
-        roomService.exitRoom(room, member);
 
         MessageForm message = MessageForm.builder()
                 .roomId(roomId)

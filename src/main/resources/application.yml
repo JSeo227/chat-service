@@ -16,31 +16,10 @@ spring:
         show_sql: true
         format_sql: true
 
-  kafka:
-    bootstrap-servers: localhost:9092
-    consumer:
-      # consumer가 속할 그룹
-      group-id: chat-group
-      # 처음부터 읽기
-      auto-offset-reset: earliest
-      # kafka consumer key 역직렬화 방식
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      # kafka consumer value 역직렬화 방식
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-    producer:
-      # kafka producer key 역직렬화 방식
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      # kafka producer key 역직렬화 방식
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
-
-#  data:
-#    mongodb:
-#      uri: mongodb+srv://tjwnstjr27:sjs820@cluster.boyh9ls.mongodb.net/
-
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
-    cache: false  # 개발 중에는 캐시를 비활성화하는 것이 좋습니다.
+    cache: false
 
 server:
   # https 포트 번호: 8443

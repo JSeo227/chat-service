@@ -266,14 +266,14 @@ audioToggle.addEventListener("click", () => {
 
 // 버튼 텍스트 및 색상 업데이트 함수
 const toggleState = (button, labelOn, labelOff) => {
-    const isOff = button.classList.contains("btn-outline-warning");
+    const isOff = button.classList.contains("btn-outline-danger");
     if (isOff) {
-        button.classList.remove("btn-outline-warning");
+        button.classList.remove("btn-outline-danger");
         button.classList.add("btn-outline-success");
         button.textContent = labelOn;
     } else {
         button.classList.remove("btn-outline-success");
-        button.classList.add("btn-outline-warning");
+        button.classList.add("btn-outline-danger");
         button.textContent = labelOff;
     }
 }
