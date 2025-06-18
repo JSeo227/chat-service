@@ -29,7 +29,6 @@
                     <div class="btn-group mb-3" role="group">
                         <button type="button" id="videoToggle" class="btn btn-outline-success">Video On</button>
                         <button type="button" id="audioToggle" class="btn btn-outline-success">Audio On</button>
-                        <button type="button" id="shareToggle" class="btn btn-outline-success">Share On</button>
                     </div>
                 </div>
             </div>
@@ -42,16 +41,6 @@
                             </div>
                             <div class="ratio ratio-4x3">
                                 <video id="local_video" autoplay playsinline muted style="width: 100%; height: 100%; object-fit: cover;"></video>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 mb-3" style="display: none;">
-                        <div class="card h-100">
-                            <div class="card-header text-center">
-                                내 공유 화면 (Shared)
-                            </div>
-                            <div class="ratio ratio-4x3">
-                                <video id="share_video" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
                             </div>
                         </div>
                     </div>
@@ -75,20 +64,15 @@
         // UI Elements
         const videoToggle = document.getElementById("videoToggle");
         const audioToggle = document.getElementById("audioToggle");
-        const shareToggle = document.getElementById("shareToggle");
 
         const localVideo = document.getElementById("local_video");
         const remoteVideo = document.getElementById("remote_video");
-        const shareVideo = document.getElementById("share_video");
-
-        const exitButton = document.getElementById("exit");
 
         // Room Info
         const roomId = /*[[${room.id}]]*/ null;
 
         // WebRTC 변수
         let localStream;        // media stream -> [0] - audio track, [1] - video track
-        let shareView;          // shared stream -> [0] - shared video track
         let myPeerConnection;   // RTCPeerConnection instance
 
         // 뒤로 가기

@@ -1,4 +1,3 @@
-import { ScreenShareHandler } from "./rtc/screen.js";
 import { getMedia } from "./rtc/media.js";
 
 // Member Info
@@ -243,47 +242,6 @@ const sendToServer = (signal) => {
     console.log(message);
     socket.send(message);
 }
-
-// 화면 공유 시작
-const startScreenShare = async () => {
-    // 화면 공유 시작 & stream 생성
-    const screenStream = await ScreenShareHandler.start();
-
-    if (!screenStream) return;
-
-    // 모든 전송 트랙 중 video 트랙을 화면 공유 트랙으로 교체
-    const videoTrack = screenStream.getVideoTracks()[0];
-    myPeerConnection.getSenders().forEach(sender => {
-        if (sender.track.kind === "video") {
-            sender.replaceTrack(videoTrack);
-        }
-    });
-
-    // 공유 화면이 수동 종료될 경우, 기존 웹캠 영상으로 자동 복구
-    videoTrack.addEventListener("ended", () => {
-        const camTrack = localStream.getVideoTracks()[0];
-        myPeerConnection.getSenders().forEach(sender => {
-            if (sender.track.kind === "video") {
-                sender.replaceTrack(camTrack);
-            }
-        });
-    });
-}
-
-// 화면 공유 중지
-const stopScreenShare = () => {
-    // 화면 공유 중지
-    ScreenShareHandler.stop();
-
-    // 공유 트랙을 웹캠 비디오 트랙으로 복구
-    const camTrack = localStream.getVideoTracks()[0];
-    myPeerConnection.getSenders().forEach(sender => {
-        if (sender.track.kind === "video") {
-            sender.replaceTrack(camTrack);
-        }
-    });
-}
-
 // 이벤트 핸들링
 document.addEventListener("DOMContentLoaded", connect);     // DOM만 준비되면 바로 실행
 window.addEventListener("beforeunload", disconnect);        // 사용자가 페이지를 닫거나 새로고침시 실행
@@ -304,32 +262,6 @@ audioToggle.addEventListener("click", () => {
     localVideo.muted = !isMuted;
     toggleState(audioToggle,"Audio On", "Audio Off");
     console.log(`Audio ${isMuted ? "On" : "Off"}`);
-});
-
-// 화면 공유 토글 핸들러
-let isSharing = false;
-shareToggle.addEventListener("click", async () => {
-    const localWrapper = localVideo.closest(".col-md-6.mb-3");
-    const shareWrapper = shareVideo.closest(".col-md-6.mb-3");
-
-    if (!isSharing) {
-        await startScreenShare();
-        toggleState(shareToggle, "Share On", "Share Off");
-
-        // 공유 화면 card 표시, 내 화면 card 숨김
-        shareWrapper.style.display = "block";
-        localWrapper.style.display = "none";
-        console.log("Screen Sharing Started");
-    } else {
-        stopScreenShare();
-        toggleState(shareToggle, "Share On", "Share Off");
-
-        // 내 화면 card 표시, 공유 화면 card 숨김
-        shareWrapper.style.display = "none";
-        localWrapper.style.display = "block";
-        console.log("Screen Sharing Stopped");
-    }
-    isSharing = !isSharing;
 });
 
 // 버튼 텍스트 및 색상 업데이트 함수
