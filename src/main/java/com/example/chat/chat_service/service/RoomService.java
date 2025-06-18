@@ -101,8 +101,6 @@ public class RoomService {
         // 중복 입장 체크 추가
         if (!isMemberInRoom(roomId, memberRoom.getMember().getId())) {
             Room room = roomRepository.findById(roomId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 방"));
-            log.info("enterRoom = {}", room);
-            log.info("enterMemberRoom = {}", memberRoom);
             room.addMember(memberRoom);
         }
     }
@@ -114,8 +112,6 @@ public class RoomService {
      */
     @Transactional
     public void exitRoom(Room room, Member member) {
-        log.info("exitRoom = {}", room);
-        log.info("exitMember = {}", member);
         room.removeMember(member);
     }
 

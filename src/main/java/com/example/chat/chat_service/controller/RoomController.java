@@ -80,8 +80,7 @@ public class RoomController {
         room.setPassword(form.getPassword());
         room.setMax(form.getMax());
         room.setType(form.getType());
-
-        log.info("create room = {}", room);
+        
         roomService.createRoom(room);
 
         return "redirect:/";
