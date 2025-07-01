@@ -14,4 +14,5 @@ public class TextRoom extends Room {
     public static Room createTextRoom(String name, String password, Integer max) {
         return createRoom(name, password, max, RoomType.TXT);
     }
+
 }

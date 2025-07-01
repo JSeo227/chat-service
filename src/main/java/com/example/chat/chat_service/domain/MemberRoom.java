@@ -2,14 +2,19 @@ package com.example.chat.chat_service.domain;
 
 import com.example.chat.chat_service.domain.room.Room;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class MemberRoom {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,6 +38,30 @@ public class MemberRoom {
     @PrePersist
     public void prePersist() {
         enteredDate = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        exitedDate = LocalDateTime.now();
+    }
+
+    @Override
+    public String toString() {
+        return "MemberRoom{" +
+                "id=" + id +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MemberRoom that)) return false;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 
     public void exit() {

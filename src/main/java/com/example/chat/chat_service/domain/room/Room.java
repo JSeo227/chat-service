@@ -3,13 +3,12 @@ package com.example.chat.chat_service.domain.room;
 import com.example.chat.chat_service.domain.Member;
 import com.example.chat.chat_service.domain.MemberRoom;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Entity
@@ -18,8 +17,7 @@ import java.util.List;
 @Data
 public abstract class Room {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "room_id")
     private Long id; //채팅방 아이디
 
@@ -38,6 +36,27 @@ public abstract class Room {
 
     @Transient
     private Integer currentMembers; //현재 방 인원 수
+
+    @Override
+    public String toString() {
+        return "Room{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", type=" + type +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Room that)) return false;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 
     //==연관관계 메서드==//
     public void addMemberRoom(MemberRoom memberRoom) {
