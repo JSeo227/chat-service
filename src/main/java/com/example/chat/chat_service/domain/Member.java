@@ -1,5 +1,6 @@
 package com.example.chat.chat_service.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,8 +30,10 @@ public class Member {
     @Enumerated(EnumType.STRING) //ADMIN, MEMBER
     private RoleType role; //역할
 
+    @JsonIgnore
     private LocalDateTime createdDate; //가입일
 
+    @JsonIgnore
     private LocalDateTime updatedDate; //수정일
 
     // PrePersist와 PreUpdate를 사용하여 날짜를 자동으로 설정

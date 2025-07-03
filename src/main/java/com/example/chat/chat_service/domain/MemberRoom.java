@@ -1,6 +1,7 @@
 package com.example.chat.chat_service.domain;
 
 import com.example.chat.chat_service.domain.room.Room;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,8 +32,10 @@ public class MemberRoom {
 
     private Boolean isInRoom; // 방에 있는가
 
+    @JsonIgnore
     private LocalDateTime enteredDate; // 입장 시간
 
+    @JsonIgnore
     private LocalDateTime exitedDate; // 퇴장 시간
 
     @PrePersist
