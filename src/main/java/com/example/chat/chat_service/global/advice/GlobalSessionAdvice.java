@@ -1,6 +1,6 @@
 package com.example.chat.chat_service.global.advice;
 
-import com.example.chat.chat_service.controller.dto.MemberForm;
+import com.example.chat.chat_service.controller.dto.MemberDto;
 import com.example.chat.chat_service.global.session.MemberSession;
 import com.example.chat.chat_service.global.session.SessionManager;
 import lombok.extern.slf4j.Slf4j;
@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 public class GlobalSessionAdvice {
 
     @ModelAttribute("memberSession")
-    public MemberForm member() {
+    public MemberDto member() {
 
         try {
             MemberSession memberSession = SessionManager.getMemberSession();
 
-            return MemberForm.builder()
+            return MemberDto.builder()
                     .id(memberSession.getMemberId())
                     .loginId(memberSession.getLoginId())
                     .password(memberSession.getName())

@@ -1,13 +1,13 @@
 package com.example.chat.chat_service.controller;
 
-import com.example.chat.chat_service.controller.dto.MemberForm;
-import com.example.chat.chat_service.controller.dto.RoomForm;
+import com.example.chat.chat_service.controller.dto.MemberDto;
+import com.example.chat.chat_service.controller.dto.RoomDto;
 import com.example.chat.chat_service.domain.Member;
 import com.example.chat.chat_service.domain.MemberRoom;
 import com.example.chat.chat_service.domain.room.Room;
 import com.example.chat.chat_service.domain.room.RoomType;
 import com.example.chat.chat_service.domain.room.TextRoom;
-import com.example.chat.chat_service.controller.dto.SessionForm;
+import com.example.chat.chat_service.controller.dto.SessionDto;
 import com.example.chat.chat_service.service.MemberService;
 import com.example.chat.chat_service.service.RoomService;
 import com.example.chat.chat_service.global.session.MemberSession;
@@ -39,8 +39,8 @@ public class RoomController {
             room.setCurrentMembers(currentMembers);
         });
 
-        List<RoomForm> roomForms = rooms.stream()
-                .map(room -> RoomForm.builder()
+        List<RoomDto> roomDtos = rooms.stream()
+                .map(room -> RoomDto.builder()
                         .id(room.getId())
                         .name(room.getName())
                         .password(room.getPassword())
@@ -50,14 +50,14 @@ public class RoomController {
                         .build())
                 .toList();
 
-        SessionForm session = SessionForm.builder()
+        SessionDto session = SessionDto.builder()
                 .memberId(memberSession.getMemberId())
                 .loginId(memberSession.getLoginId())
                 .checked(memberSession.getChecked())
                 .name(memberSession.getName())
                 .build();
 
-        model.addAttribute("rooms", roomForms);
+        model.addAttribute("rooms", roomDtos);
         model.addAttribute("memberSession", session);
 
         return "views/rooms/roomListForm";
@@ -65,12 +65,12 @@ public class RoomController {
 
     @GetMapping("/room/create")
     public String createRoom(Model model) {
-        model.addAttribute("room", RoomForm.builder().build());
+        model.addAttribute("room", RoomDto.builder().build());
         return "views/rooms/createRoomForm";
     }
 
     @PostMapping("/room/create")
-    public String create(@Valid @ModelAttribute("room") RoomForm form, BindingResult result) {
+    public String create(@Valid @ModelAttribute("room") RoomDto form, BindingResult result) {
 
         log.info("Create room: {}", form);
         log.info("Result : {}", result);
@@ -107,7 +107,7 @@ public class RoomController {
 
         Room room = roomService.findRoomById(id);
 
-        RoomForm form = RoomForm.builder()
+        RoomDto form = RoomDto.builder()
                 .id(room.getId())
                 .name(room.getName())
                 .password(room.getPassword())
@@ -133,11 +133,11 @@ public class RoomController {
     @ResponseBody
     public List<String> membersByRoom(@PathVariable Long id) {
         Room room = roomService.findRoomById(id);
-        List<MemberForm> result = roomService.getMembersByRoom(room).stream()
-                .map(MemberForm::new)
+        List<MemberDto> result = roomService.getMembersByRoom(room).stream()
+                .map(MemberDto::new)
                 .toList();
         List<String> names = result.stream()
-                .map(MemberForm::getName)
+                .map(MemberDto::getName)
                 .toList();
         return names;
     }
@@ -155,7 +155,7 @@ public class RoomController {
 
     @PostMapping("/room/check")
     @ResponseBody
-    public Boolean checkPassword(@ModelAttribute("room") RoomForm form,
+    public Boolean checkPassword(@ModelAttribute("room") RoomDto form,
                                  @RequestParam("id") Long roomId, @RequestParam("password") String password) {
         log.info("checkPassword id = {}, password = {}", roomId, password);
         return roomService.isPasswordValid(roomId, password);

@@ -1,6 +1,6 @@
 package com.example.chat.chat_service.controller;
 
-import com.example.chat.chat_service.controller.dto.LoginForm;
+import com.example.chat.chat_service.controller.dto.LoginDto;
 import com.example.chat.chat_service.domain.Member;
 import com.example.chat.chat_service.service.LoginService;
 import com.example.chat.chat_service.service.MemberService;
@@ -12,7 +12,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -29,12 +28,12 @@ public class LoginController {
     private final MemberService memberService;
 
     @GetMapping("/login")
-    public String loginForm(@ModelAttribute("login") LoginForm form) {
+    public String loginForm(@ModelAttribute("login") LoginDto form) {
         return "views/login/loginForm";
     }
 
     @PostMapping("/login")
-    public String login(@Valid @ModelAttribute("login") LoginForm form, BindingResult result) {
+    public String login(@Valid @ModelAttribute("login") LoginDto form, BindingResult result) {
 
         if (result.hasErrors()) {
             return "views/login/loginForm";

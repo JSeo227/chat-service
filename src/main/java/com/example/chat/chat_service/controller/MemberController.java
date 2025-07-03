@@ -1,6 +1,6 @@
 package com.example.chat.chat_service.controller;
 
-import com.example.chat.chat_service.controller.dto.MemberForm;
+import com.example.chat.chat_service.controller.dto.MemberDto;
 import com.example.chat.chat_service.domain.Login;
 import com.example.chat.chat_service.domain.Member;
 import com.example.chat.chat_service.service.MemberService;
@@ -19,12 +19,12 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/members/new")
-    public String createForm(@ModelAttribute("member") MemberForm form) {
+    public String createForm(@ModelAttribute("member") MemberDto form) {
         return "views/members/createMemberForm";
     }
 
     @PostMapping("/members/new")
-    public String create(@Valid @ModelAttribute("member") MemberForm form, BindingResult result) {
+    public String create(@Valid @ModelAttribute("member") MemberDto form, BindingResult result) {
 
         if (result.hasErrors()) {
             return "views/members/createMemberForm";

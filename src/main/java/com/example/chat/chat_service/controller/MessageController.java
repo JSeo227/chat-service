@@ -1,6 +1,6 @@
 package com.example.chat.chat_service.controller;
 
-import com.example.chat.chat_service.controller.dto.MessageForm;
+import com.example.chat.chat_service.controller.dto.MessageDto;
 import com.example.chat.chat_service.domain.Member;
 import com.example.chat.chat_service.domain.chat.Status;
 import com.example.chat.chat_service.domain.room.Room;
@@ -32,7 +32,7 @@ public class MessageController {
      * SimpMessageHeaderAccessor를 사용해 직접 session에 값을 저장해야함
      */
     @MessageMapping("/chat/enter")
-    public void enter(@Payload MessageForm message, SimpMessageHeaderAccessor header) {
+    public void enter(@Payload MessageDto message, SimpMessageHeaderAccessor header) {
         log.info("enter message = {}", message);
         if (message.getStatus() == Status.ENTER) {
             message.setContent(message.getSenderName() + "님이 입장하였습니다.");
@@ -49,7 +49,7 @@ public class MessageController {
      * 채팅 메시지 전송 처리
      */
     @MessageMapping("/chat/send")
-    public void sendMessage(@Payload MessageForm message) {
+    public void sendMessage(@Payload MessageDto message) {
         log.info("send message = {}", message);
 
         if (message.getStatus() == Status.TALK) {
@@ -61,7 +61,7 @@ public class MessageController {
      * 채팅방 퇴장 처리 (나가기 버튼)
      */
     @MessageMapping("/chat/leave")
-    public void leave(@Payload MessageForm message) {
+    public void leave(@Payload MessageDto message) {
         Long roomId = message.getRoomId();
         Long memberId = message.getSenderId();
 
@@ -87,7 +87,7 @@ public class MessageController {
         Room room = roomService.findRoomById(roomId);
         Member member = memberService.findById(memberId);
 
-        MessageForm message = MessageForm.builder()
+        MessageDto message = MessageDto.builder()
                 .roomId(roomId)
                 .senderId(memberId)
                 .senderName(member.getName())
