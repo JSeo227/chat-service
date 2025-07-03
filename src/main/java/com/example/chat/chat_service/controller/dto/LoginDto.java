@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginForm {
+public class LoginDto {
     @NotEmpty(message = "로그인 ID는 필수 입력 값입니다.")
     private String loginId;
 

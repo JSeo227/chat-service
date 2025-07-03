@@ -8,7 +8,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemberForm {
+public class MemberDto {
     private Long id;
 
     @NotEmpty(message = "로그인 ID는 필수 입력 값입니다.")
@@ -20,7 +20,7 @@ public class MemberForm {
     @NotEmpty(message = "이름은 필수 입력 값입니다.")
     private String name;
 
-    public MemberForm(Member member) {
+    public MemberDto(Member member) {
         this.id = member.getId();
         this.loginId = member.getLogin().getLoginId();
         this.password = member.getLogin().getPassword();

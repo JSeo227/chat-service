@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoomForm {
+public class RoomDto {
     private Long id;
 
     @NotEmpty(message = "채팅방 이름은 필수 입력 값입니다.")

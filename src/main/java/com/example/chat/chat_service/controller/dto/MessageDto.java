@@ -1,6 +1,5 @@
 package com.example.chat.chat_service.controller.dto;
 
-import com.example.chat.chat_service.domain.chat.Message;
 import com.example.chat.chat_service.domain.chat.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MessageForm {
+public class MessageDto {
     private Long roomId;
     private Long senderId; // member id
     private String senderName; // member name
