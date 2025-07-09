@@ -14,7 +14,6 @@ import org.springframework.web.socket.server.standard.ServletServerContainerFact
 @Configuration
 @EnableWebSocket
 @RequiredArgsConstructor
-@Profile("!test")
 public class WebRtcConfig implements WebSocketConfigurer {
 
     private final SignalHandler signalHandler;
