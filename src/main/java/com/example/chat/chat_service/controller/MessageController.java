@@ -45,7 +45,7 @@ public class MessageController {
             header.getSessionAttributes().put("roomId", message.getRoomId());
             header.getSessionAttributes().put("memberId", message.getSenderId());
         }
-//        producer.send(new Message(message));
+        producer.send(new Message(message));
         messagingTemplate.convertAndSend("/topic/chat/room/" + message.getRoomId(), message);
     }
 
@@ -57,7 +57,7 @@ public class MessageController {
         log.info("send message = {}", message);
 
         if (message.getStatus() == Status.TALK) {
-//            producer.send(new Message(message));
+            producer.send(new Message(message));
             messagingTemplate.convertAndSend("/topic/chat/room/" + message.getRoomId(), message);
         }
     }
@@ -102,7 +102,7 @@ public class MessageController {
 
         log.info("leave message = {}", message);
 
-//        producer.send(new Message(message));
+        producer.send(new Message(message));
         messagingTemplate.convertAndSend("/topic/chat/room/" + roomId, message);
     }
 }

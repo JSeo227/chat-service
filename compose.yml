@@ -1,7 +1,7 @@
 services:
   # === Web Application ===
   spring:
-    container_name: chat-service2
+    container_name: spring
     build: .
     ports:
       - "8443:8443"
@@ -15,7 +15,7 @@ services:
 
   # === Database: MySQL ===
   mysql:
-    container_name: chat-mysql2
+    container_name: mysql
     image: mysql
     restart: always
     environment:
@@ -32,7 +32,7 @@ services:
 
   # === Message Broker: Kafka ===
   kafka:
-    container_name: kafka2
+    container_name: kafka
     image: wurstmeister/kafka
     ports:
       - "9092:9092"
@@ -48,7 +48,7 @@ services:
 
   # === Message Broker: Zookeeper ===
   zookeeper:
-    container_name: zookeeper2
+    container_name: zookeeper
     image: wurstmeister/zookeeper
     ports:
       - "2181:2181"
