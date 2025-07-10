@@ -4,7 +4,7 @@ services:
     container_name: chat-service
     build: .
     ports:
-      - 8443:8443
+      - "8443:8443"
     volumes:
       - ./ssl:/app/ssl
     depends_on:
@@ -22,7 +22,7 @@ services:
     volumes:
       - ./mysql_data:/var/lib/mysql
     ports:
-      - 3306:3306
+      - "3306:3306"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping"]
       interval: 5s
