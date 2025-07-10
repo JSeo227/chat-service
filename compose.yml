@@ -1,7 +1,7 @@
 services:
   # === Web Application ===
   spring:
-    container_name: chat-service
+    container_name: chat-service2
     build: .
     ports:
       - 8443:8443
@@ -15,7 +15,7 @@ services:
 
   # === Database: MySQL ===
   mysql:
-    container_name: chat-mysql
+    container_name: chat-mysql2
     image: mysql
     restart: always
     environment:
