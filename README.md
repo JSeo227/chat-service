@@ -17,8 +17,9 @@
 
 | 영역        | 사용 기술                  |
 |-----------|------------------------|
-| 백엔드       | Spring Boot, JPA, MySQL |
+| 백엔드       | Spring Boot, JPA |
 | 프론트엔드     | Thymeleaf              |
+| 데이터베이스     | MySQL              |
 | 통신        | WebSocket, WebRTC      |
 | 개발 도구     | IntelliJ, Postman      |
 | 인프라 및 배포  | Docker                 |   
