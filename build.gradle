@@ -30,7 +30,8 @@ dependencies {
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect' 			// Thymeleaf Layout
 	implementation 'org.springframework.boot:spring-boot-starter-validation'	// Validation
 	implementation 'org.springframework.boot:spring-boot-starter-web'			// Web
-	implementation 'org.springframework.boot:spring-boot-starter-websocket'		// Web Socket
+	implementation 'org.springframework.boot:spring-boot-starter-websocket' 	// Web Socket
+	implementation 'org.springframework.kafka:spring-kafka'						// Kafka
 
 	// Lombok
 	compileOnly 'org.projectlombok:lombok'
@@ -41,7 +42,12 @@ dependencies {
 
 	// Database (H2, MySQL)
 	runtimeOnly 'com.h2database:h2'
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'	// MongoDB
 	runtimeOnly 'com.mysql:mysql-connector-j'
+
+	// MongoDb Reactive
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
+	testImplementation 'io.projectreactor:reactor-test'
 
 	// Spring Boot Test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -50,6 +56,9 @@ dependencies {
 	// Lombok Test
 	testCompileOnly 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
+
+	// Kafka Test
+	testImplementation 'org.springframework.kafka:spring-kafka-test'
 
 	// QueryDSL
 	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
