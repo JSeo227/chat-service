@@ -26,7 +26,7 @@ public class RoomDto {
 
     @NotNull(message = "채팅방 최대인원은 필수 입력 값입니다.")  // <-- 수정
     @Max(value = 99, message = "화상채팅이 아닌, 일반채팅의 최대 인원은 99명 이하이어야 합니다.")
-    @Min(value = 2, message = "최대 인원은 2명 이상이어야 합니다.")
+    @Min(value = 2, message = "최소 인원은 2명 이상이어야 합니다.")
     private Integer max;
 
     @NotNull(message = "채팅방 타입은 필수 입력 값입니다.")  // <-- 수정
