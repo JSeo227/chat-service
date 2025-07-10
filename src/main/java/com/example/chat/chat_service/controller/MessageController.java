@@ -2,8 +2,10 @@ package com.example.chat.chat_service.controller;
 
 import com.example.chat.chat_service.controller.dto.MessageDto;
 import com.example.chat.chat_service.domain.Member;
+import com.example.chat.chat_service.domain.chat.Message;
 import com.example.chat.chat_service.domain.chat.Status;
 import com.example.chat.chat_service.domain.room.Room;
+import com.example.chat.chat_service.global.kafka.KafkaProducer;
 import com.example.chat.chat_service.service.MemberService;
 import com.example.chat.chat_service.service.RoomService;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,8 @@ public class MessageController {
     private final RoomService roomService;
     private final MemberService memberService;
 
+    private final KafkaProducer producer;
+
     /**
      * 채팅방 입장 처리
      * 클라이언트가 /chat/enter로 메시지 전송 시 호출
@@ -41,7 +45,7 @@ public class MessageController {
             header.getSessionAttributes().put("roomId", message.getRoomId());
             header.getSessionAttributes().put("memberId", message.getSenderId());
         }
-
+//        producer.send(new Message(message));
         messagingTemplate.convertAndSend("/topic/chat/room/" + message.getRoomId(), message);
     }
 
@@ -53,6 +57,7 @@ public class MessageController {
         log.info("send message = {}", message);
 
         if (message.getStatus() == Status.TALK) {
+//            producer.send(new Message(message));
             messagingTemplate.convertAndSend("/topic/chat/room/" + message.getRoomId(), message);
         }
     }
@@ -97,6 +102,7 @@ public class MessageController {
 
         log.info("leave message = {}", message);
 
+//        producer.send(new Message(message));
         messagingTemplate.convertAndSend("/topic/chat/room/" + roomId, message);
     }
 }
