@@ -60,7 +60,6 @@ public class MessageController {
             }
 
         }
-        producer.send(new Message(message));
         messagingTemplate.convertAndSend("/topic/chat/room/" + message.getRoomId(), message);
     }
 
@@ -117,7 +116,6 @@ public class MessageController {
 
         log.info("leave message = {}", message);
 
-        producer.send(new Message(message));
         messagingTemplate.convertAndSend("/topic/chat/room/" + roomId, message);
     }
 }
