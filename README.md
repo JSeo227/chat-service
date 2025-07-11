@@ -22,7 +22,7 @@
 | 프론트엔드    | Thymeleaf                   |
 | 데이터베이스   | MySQL(회원/채팅방), MongoDB(메시지) |
 | 통신       | WebSocket, WebRTC           |
-| 메시지 브로커  | Apache Kafka                |
+| 메시지 브로커  | Zookeeper, Kafka |
 | 개발 도구    | IntelliJ, Postman           |
 | 인프라 및 배포 | Docker                      |   
 
