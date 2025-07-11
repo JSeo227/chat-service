@@ -16,15 +16,14 @@
 
 ## 2. 기술 스택
 
-| 영역       | 사용 기술                       |
+| 영역 | 사용 기술 |
 |----------|-----------------------------|
-| 백엔드      | Spring Boot, JPA            |
-| 프론트엔드    | Thymeleaf                   |
-| 데이터베이스   | MySQL(회원/채팅방), MongoDB(메시지) |
-| 통신       | WebSocket, WebRTC           |
-| 메시지 브로커  | Zookeeper, Kafka |
-| 개발 도구    | IntelliJ, Postman           |
-| 인프라 및 배포 | Docker                      |   
+| 백엔드 | Spring Boot, JPA |
+| 프론트엔드 | Thymeleaf |
+| 데이터베이스 | MySQL(회원/채팅방), MongoDB(메시지) |
+| 통신 | WebSocket, WebRTC |
+| 메시지 브로커 | Zookeeper, Kafka |
+| 개발 및 운영 환경 | IntelliJ, Postman, Docker |
 
 ---
 
