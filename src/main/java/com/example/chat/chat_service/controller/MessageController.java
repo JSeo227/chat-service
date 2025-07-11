@@ -6,6 +6,7 @@ import com.example.chat.chat_service.domain.chat.Message;
 import com.example.chat.chat_service.domain.chat.Status;
 import com.example.chat.chat_service.domain.room.Room;
 import com.example.chat.chat_service.global.kafka.KafkaProducer;
+import com.example.chat.chat_service.repository.MessageRepository;
 import com.example.chat.chat_service.service.MemberService;
 import com.example.chat.chat_service.service.RoomService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,12 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
+
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -28,6 +34,8 @@ public class MessageController {
     private final MemberService memberService;
 
     private final KafkaProducer producer;
+
+    private final MessageRepository messageRepository;
 
     /**
      * 채팅방 입장 처리
@@ -44,6 +52,13 @@ public class MessageController {
             // WebSocket Session에 데이터 저장
             header.getSessionAttributes().put("roomId", message.getRoomId());
             header.getSessionAttributes().put("memberId", message.getSenderId());
+
+            List<Message> logs = messageRepository.findByRoomIdOrderByCreatedAtAsc(message.getRoomId());
+
+            for (Message log : logs) {
+                messagingTemplate.convertAndSend("/topic/chat/room/" + message.getRoomId(), log);
+            }
+
         }
         producer.send(new Message(message));
         messagingTemplate.convertAndSend("/topic/chat/room/" + message.getRoomId(), message);

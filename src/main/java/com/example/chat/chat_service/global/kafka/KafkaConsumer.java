@@ -18,7 +18,7 @@ public class KafkaConsumer {
 
     @KafkaListener(topics = "chat", groupId = "chat-group")
     public void listen(Message message) {
-//        messageRepository.save(message);
+        messageRepository.save(message);
         log.info("Kafka Consumer Message : {}", message);
     }
 }

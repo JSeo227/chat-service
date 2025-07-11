@@ -6,6 +6,7 @@ import com.example.chat.chat_service.domain.room.Room;
 import com.example.chat.chat_service.domain.room.RoomType;
 import com.example.chat.chat_service.domain.room.TextRoom;
 import com.example.chat.chat_service.domain.room.VideoRoom;
+import com.example.chat.chat_service.repository.MessageRepository;
 import com.example.chat.chat_service.repository.RoomRepository;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class RoomService {
 
     private final EntityManager em;
     private final RoomRepository roomRepository;
+    private final MessageRepository messageRepository;
 
     /**
      * 채팅방 생성
@@ -49,6 +51,7 @@ public class RoomService {
     public void deleteRoom(Room room, Member member) {
         room.removeMember(member);
         roomRepository.delete(room);
+        messageRepository.deleteByRoomId(room.getId());
     }
 
     /**
