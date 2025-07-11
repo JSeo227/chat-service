@@ -34,7 +34,6 @@ public class MessageController {
     private final MemberService memberService;
 
     private final KafkaProducer producer;
-
     private final MessageRepository messageRepository;
 
     /**
@@ -86,6 +85,7 @@ public class MessageController {
 
         handleLeave(roomId, memberId);
     }
+
     /**
      * 채팅방 퇴장 처리 (창 닫기, 뒤로가기 등)
      * HttpServletRequest를 통해 현재 세션의 회원정보와 참여중인 방 ID를 조회하여 퇴장 처리
