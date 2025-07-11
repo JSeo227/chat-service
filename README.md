@@ -42,7 +42,7 @@
 아래 명령어로 Docker 기반 전체 서비스를 실행하세요:
 
 ```bash
-docker-compose up --build
+docker compose up -d --build
 ```
 
 ### 2️⃣ 웹 접속
