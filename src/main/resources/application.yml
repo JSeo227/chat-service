@@ -5,6 +5,10 @@ spring:
     username: root
     password: 1234
 
+  data:
+    mongodb:
+      uri: mongodb://root:1234@mongo:27017/chat_service?authSource=admin
+
   jpa:
     hibernate:
       # create: 애플리케이션 시작 시 기존 테이블을 모두 삭제하고 새로 생성. 데이터 초기화됨.
