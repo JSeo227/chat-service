@@ -12,6 +12,8 @@ services:
         condition: service_healthy
       kafka:
         condition: service_started
+      mongo:
+        condition: service_healthy
 
   # === Database: MySQL ===
   mysql:
@@ -58,3 +60,32 @@ services:
       retries: 10
 
   # === Database: MongoDB ===
+  mongo:
+    container_name: mongo
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: 1234
+      MONGO_INITDB_DATABASE: chat_service
+    volumes:
+      - ./mongo_data:/data/db
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+
+  # === MongoDB Admin UI ===
+  mongo-express:
+    container_name: mongo-express
+    image: mongo-express
+    restart: always
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: 1234
+      ME_CONFIG_MONGODB_URL: mongodb://root:1234@mongo:27017/chat_service?authSource=admin
+      ME_CONFIG_BASICAUTH: false
+    ports:
+      - "8081:8081"
