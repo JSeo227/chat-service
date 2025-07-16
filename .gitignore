@@ -37,6 +37,6 @@ out/
 .vscode/
 
 ### Docker Volume ###
-./kafka_data/
-./mongo_data/
-./mysql_data/
+/kafka_data/
+/mongo_data/
+/mysql_data/
