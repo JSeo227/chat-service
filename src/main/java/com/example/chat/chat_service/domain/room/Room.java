@@ -4,19 +4,20 @@ import com.example.chat.chat_service.domain.Member;
 import com.example.chat.chat_service.domain.MemberRoom;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
+@Slf4j
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "room_type")
 @Data
 public abstract class Room {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "room_id")
     private Long id; //채팅방 아이디
 
@@ -36,6 +37,27 @@ public abstract class Room {
     @Transient
     private Integer currentMembers; //현재 방 인원 수
 
+    @Override
+    public String toString() {
+        return "Room{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", type=" + type +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Room that)) return false;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+
     //==연관관계 메서드==//
     public void addMemberRoom(MemberRoom memberRoom) {
         memberRooms.add(memberRoom);
@@ -44,14 +66,20 @@ public abstract class Room {
 
     //==생성 메서드==//
     public static Room createRoom(String name, String password, Integer max, RoomType type, MemberRoom... memberRooms) {
-        Room room = new TextRoom();
+        Room room = switch (type) {
+            case TXT -> new TextRoom();
+            case VID -> new VideoRoom();
+            default -> throw new IllegalArgumentException("지원하지 않는 RoomType: " + type);
+        };
         room.setName(name);
         room.setPassword(password);
         room.setMax(max);
         room.setType(type);
+
         for (MemberRoom memberRoom : memberRooms) {
             room.addMemberRoom(memberRoom);
         }
+
         return room;
     }
 
@@ -61,14 +89,11 @@ public abstract class Room {
     public List<Member> getMembers() {
         return memberRooms.stream()
                 .map(MemberRoom::getMember)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     //채팅방 인원 +1
     public void addMember(MemberRoom memberRoom) {
-        if (isFull()) {
-            throw new IllegalStateException("채팅방이 가득 찼습니다.");
-        }
         memberRooms.add(memberRoom);
         memberRoom.setRoom(this);
     }
@@ -81,13 +106,8 @@ public abstract class Room {
                 .orElseThrow(() -> new IllegalArgumentException("회원이 이 채팅방에 없습니다."));
 
         memberRoom.exit();
-        memberRoom.setIsInRoom(false); //이거 고민중
-        memberRooms.remove(memberRoom);
-    }
-
-    //채팅방 정원 여부
-    public boolean isFull() {
-        return memberRooms.size() >= getMax();
+//        memberRoom.setIsInRoom(false); // 소프트 삭제 <- 이거 고민중
+        memberRooms.remove(memberRoom); // 하드 삭제
     }
 
     //채팅방 비밀번호 조회

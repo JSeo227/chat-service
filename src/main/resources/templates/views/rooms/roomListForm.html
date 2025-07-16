@@ -4,7 +4,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/main}">
 <th:block layout:fragment="content">
-    <div class="container mt-5">
+    <div class="container mt-5" style="max-width: 1000px; min-height: 800px">
         <div class="card mb-4">
             <div class="card-header">
                 <i class="fas fa-comments me-1"></i>채팅방:
@@ -12,35 +12,85 @@
                 <button type="button" class="btn btn-primary btn-sm float-end ms-2"
                     th:onclick="|location.href='@{/room/create}'|">방 만들기</button>
             </div>
-            <div class="card-body">
+            <div class="card-body" style="max-width: 1000px; min-height: 600px">
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover align-middle text-center">
                         <thead class="table-light">
-                        <tr>
-                            <th>방 번호</th>
-                            <th>방 이름</th>
-                            <th>방 인원수</th>
-                            <th>방 종류</th>
-                            <th>방 삭제</th>
-                        </tr>
+                            <tr>
+                                <th>방 번호</th>
+                                <th>방 이름</th>
+                                <th>방 인원수</th>
+                                <th>방 종류</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="rooms : ${rooms}" th:onclick="|window.location='@{/room/{id}(id=${rooms.id})}'|" style="cursor: pointer;">
-                            <td th:text="${rooms.id}"></td>
-                            <td th:text="${rooms.name}"></td>
-                            <td th:text="${rooms.currentMembers} + '/' + ${rooms.max}"></td>
-                            <td th:text="${rooms.type}"></td>
-                            <td>
-                                <a>방 삭제</a>
-                            </td>
-                        </tr>
-
+                            <tr th:each="room : ${rooms}" th:onclick="|checkPassword('${room.id}')|" style="cursor: pointer;">
+                                <td th:text="${room.id}"></td>
+                                <td th:text="${room.name}"></td>
+                                <td th:text="${room.currentMembers} + '/' + ${room.max}"></td>
+                                <td th:text="${room.type}"></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
+
+    <script th:inline="javascript">
+        // Thymeleaf 변수를 전역 JS 변수로 선언
+        const memberSession = /*[[${memberSession}]]*/ null;
+        const rooms = /*[[${rooms}]]*/ [];
+
+        // localStorage 세션 저장 로직
+        localStorage.setItem('memberSession', JSON.stringify(memberSession));
+
+        // password check 로직
+        const checkPassword = async (roomId) => {
+            const room = rooms.find(room => room.id === parseInt(roomId));
+
+            if (!room) {
+                alert("방 정보를 찾을 수 없습니다.");
+                return;
+            }
+
+            if (room.currentMembers >= room.max) {
+                alert("채팅방이 가득 찼습니다.")
+                return;
+            }
+
+            // 비밀번호 없는 방이면 바로 이동
+            if (!room.password) {
+                window.location.href = `/room/${room.id}`;
+                return;
+            }
+
+            const password = window.prompt("비밀번호를 입력해 주세요.", "");
+            if (!password) {
+                alert("비밀번호를 입력해주세요.");
+                return;
+            }
+
+            try {
+                const result = await fetch("/room/check", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                    body: new URLSearchParams({id: room.id, password: password}),
+                    credentials: "include",
+                }).then(response => {
+                    if (!response.ok)
+                        throw new Error("HTTP error " + response.status);
+                    return response.json()
+                });
+
+                if (result) window.location.href = `/room/${roomId}`;
+                else window.alert("비밀번호가 틀렸습니다.");
+            } catch (error) {
+                console.error("요청 중 오류 발생:", error);
+                alert("요청 중 오류가 발생했습니다.");
+            }
+        }
+    </script>
 </th:block>
 </html>
 

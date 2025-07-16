@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<th:block layout:fragment="content">
+    <div class="container mt-5" style="max-width: 1000px; min-height: 800px;">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="mb-0" th:text="${room.name} ?: ''">채팅방</h3>
+                <div class="d-flex gap-2">
+                    <form method="post" th:action="@{/room/delete/{id}(id=${room.id})}"
+                          onsubmit="return confirm('정말로 이 방을 삭제하시겠습니까?');">
+                        <button class="btn btn-danger btn-sm" type="submit">
+                            삭제
+                        </button>
+                    </form>
+                    <form method="post" th:action="@{/room/exit/{id}(id=${room.id})}"
+                          onsubmit="return confirm('정말로 나가시겠습니까?');">
+                        <button class="btn btn-secondary btn-sm" type="submit">
+                            나가기
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div id="buttons" class="row">
+                    <div class="btn-group mb-3" role="group">
+                        <button type="button" id="videoToggle" class="btn btn-outline-success">Video On</button>
+                        <button type="button" id="audioToggle" class="btn btn-outline-success">Audio On</button>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="row px-3">
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-header text-center">
+                                내 화면 (Local)
+                            </div>
+                            <div class="ratio ratio-4x3">
+                                <video id="local_video" autoplay playsinline muted style="width: 100%; height: 100%; object-fit: cover;"></video>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-header text-center">
+                                상대방 화면 (Remote)
+                            </div>
+                            <div class="ratio ratio-4x3">
+                                <video id="remote_video" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logic -->
+    <script th:inline="javascript">
+        // UI Elements
+        const videoToggle = document.getElementById("videoToggle");
+        const audioToggle = document.getElementById("audioToggle");
+
+        const localVideo = document.getElementById("local_video");
+        const remoteVideo = document.getElementById("remote_video");
+
+        // Room Info
+        const roomId = /*[[${room.id}]]*/ null;
+
+        // WebRTC 변수
+        let localStream;        // media stream -> [0] - audio track, [1] - video track
+        let myPeerConnection;   // RTCPeerConnection instance
+
+        // 뒤로 가기
+        window.addEventListener("popstate", () => {
+            console.log("popstate");
+            navigator.sendBeacon(`/room/exit/${roomId}`);
+        });
+    </script>
+
+    <!-- Java Script -->
+    <script type="module" th:src="@{/js/webrtc.js}"></script>
+
+</th:block>
+</html>

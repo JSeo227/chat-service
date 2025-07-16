@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+
+<th:block layout:fragment="content">
+    <div class="container mt-5" style="max-width: 1000px; min-height: 800px">
+        <div class="card" style="min-height: 600px; max-height: 600px">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="mb-0" th:text="${room.name} ?: ''">채팅방</h3>
+                <div class="d-flex gap-2">
+                    <form method="post" th:action="@{/room/delete/{id}(id=${room.id})}"
+                          onsubmit="return confirm('정말로 이 방을 삭제하시겠습니까?');">
+                        <button class="btn btn-danger btn-sm" type="submit">
+                            삭제
+                        </button>
+                    </form>
+                    <form method="post" th:action="@{/room/exit/{id}(id=${room.id})}"
+                          onsubmit="return confirm('정말로 나가시겠습니까?');">
+                        <button class="btn btn-secondary btn-sm" type="submit">
+                            나가기
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 좌우 나눔 -->
+            <div class="card-body">
+                <div class="row g-4">
+                    <!-- 좌측: 채팅방 인원 -->
+                    <div class="col-md-4">
+                        <h5 class="fw-bold mb-3">채팅방 인원</h5>
+                        <div id="memberList"
+                             class="border rounded p-2"
+                             style="padding: 0.5rem; max-height: 400px; overflow-y: auto;">
+                        </div>
+                    </div>
+
+                    <!-- 우측: 채팅창 -->
+                    <div class="col-md-8 d-flex flex-column">
+                        <h5 class="fw-bold mb-3">채팅 메시지</h5>
+
+                        <!-- 메시지 목록 -->
+                        <ul id="messageArea"
+                            class="list-group flex-grow-1 mb-3"
+                            style="display: flex; flex-direction: column; min-height: 400px; max-height: 400px; overflow-y: auto; padding-left: 0;">
+                        </ul>
+
+                        <!-- 메시지 입력 -->
+                        <form id="messageForm" class="d-flex gap-2">
+                            <input type="text" id="messageInput" class="form-control" placeholder="메시지를 입력하세요..." autocomplete="off" />
+                            <button type="submit" class="btn btn-primary" style="white-space: nowrap; min-width: 80px;">보내기</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logic -->
+    <script th:inline="javascript">
+        // UI Elements
+        const messageArea = document.getElementById("messageArea");
+        const messageForm = document.getElementById("messageForm");
+        const messageInput = document.getElementById("messageInput");
+
+        // Room Info
+        const roomId = /*[[${room.id}]]*/ null;
+
+        // 채팅방 인원에 회원 추가 로직
+        (async (roomId) => {
+            return await fetch(`/room/${roomId}/list`,{
+                method: "GET",
+                headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                credentials: "include",
+            });
+        })(roomId)
+            .then(response => {
+                if (!response.ok)
+                    throw new Error("HTTP error " + response.status);
+                return response.json()
+            })
+            .then(members => {
+                const memberListDiv = document.getElementById('memberList');
+                memberListDiv.innerHTML = '';
+
+                members.forEach(name => {
+                    const li = document.createElement('li');
+                    li.textContent = name;
+                    li.classList.add('dropdown-item');
+
+                    memberListDiv.appendChild(li);
+                });
+            });
+
+        // 뒤로 가기
+        window.addEventListener("popstate", () => {
+            console.log("popstate");
+            navigator.sendBeacon(`/room/exit/${roomId}`);
+        });
+    </script>
+
+    <!-- SockJs and StompJS -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
+
+    <!-- Java Script -->
+    <script th:src="@{/js/websocket.js}"></script>
+
+</th:block>
+</html>

@@ -1,14 +1,20 @@
 package com.example.chat.chat_service.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Member {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,8 +30,10 @@ public class Member {
     @Enumerated(EnumType.STRING) //ADMIN, MEMBER
     private RoleType role; //역할
 
+    @JsonIgnore
     private LocalDateTime createdDate; //가입일
 
+    @JsonIgnore
     private LocalDateTime updatedDate; //수정일
 
     // PrePersist와 PreUpdate를 사용하여 날짜를 자동으로 설정
@@ -50,6 +58,18 @@ public class Member {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Member that)) return false;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+
     //==생성 메서드==//
     public static Member createMember(Login login, String name, RoleType role) {
         Member member = new Member();
@@ -58,8 +78,4 @@ public class Member {
         member.setRole(role);
         return member;
     }
-
-    //==로직 메서드==//
-
-
 }

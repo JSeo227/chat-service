@@ -1,23 +1,22 @@
-/*
 package com.example.chat.chat_service.global.kafka;
 
-import com.example.chat.chat_service.domain.message.Message;
-import lombok.RequiredArgsConstructor;
+import com.example.chat.chat_service.domain.chat.Message;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 @Slf4j
-@Service
-@RequiredArgsConstructor
+@Component
 public class KafkaProducer {
 
-    private final KafkaTemplate<String, Message> kafkaTemplate;
+    private final KafkaTemplate<String, Message> template;
 
-    public void send(String topic, Message message) {
-        log.info("전송할 주소: {}", topic);
-        log.info("전송할 메시지: {}", message);
-        kafkaTemplate.send(topic, message);
+    public KafkaProducer(KafkaTemplate<String, Message> template) {
+        this.template = template;
+    }
+
+    public void send(Message message) {
+        log.info("Kafka Producer Message : {}", message);
+        template.send("chat", message);
     }
 }
-*/

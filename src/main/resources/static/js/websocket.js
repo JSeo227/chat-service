@@ -1,146 +1,115 @@
-
-
-//connect -> subscribe -> publish -> disconnect
-//클라이언트 연결 -> 구독 -> 발행 -> 연결 종료
-
-const usernamePage = document.querySelector('#username-page');
-const usernameForm = document.querySelector('#usernameForm');
-
-const chatPage = document.querySelector('#chat-page');
-const messageArea = document.querySelector('#messageArea');
-const messageForm = document.querySelector('#messageForm');
-const messageInput = document.querySelector('#messageInput');
-
-const connectingElement = document.querySelector('.connecting');
-
-let roomId = window.location.pathname.split('/').pop();
-let memberName = null;
+// Member Info
+const { memberId: id, name } = JSON.parse(localStorage.getItem("memberSession"));
+const memberId = id;
+const memberName = name;
 
 let stompClient = null;
 
+// WebSocket Connect
 const connect = () => {
-    const socket = new SockJS('/ws-chat');
+    const socket = new SockJS("/ws-chat");
     stompClient = Stomp.over(socket);
-
-    //메시지 수신 or 구독
-    //client.connect(headers, connectCallback, errorCallback)
     stompClient.connect({}, onConnected, onError);
-
-}
-
-const onConnected = () => {
-    // client.subscribe(destination, callback, headers = {})
-    stompClient.subscribe("/topic/chat/room/" + roomId, onMessageReceived, {});
-
-    const message = {
-        roomId: roomId,
-        senderId: roomId,
-        senderName: memberName,
-        content: memberName + "님이 입장하였습니다.",
-        status: 'ENTER'
-    }
-
-    // send(destination, headers = {}, body = '')
-    stompClient.send("/app/chat/enter", {}, JSON.stringify(message));
-
-    document.querySelector('#messageInput').value = '';
-}
-
-const onMessageReceived = (payload) => {
-    const message = JSON.parse(payload.body);
-    console.log("Message:", message);
-    console.log("Received payload:", payload);
-
-    let usernameElement = document.createElement('span');
-    let usernameText;
-
-    const messageElement = document.createElement('li');
-
-    switch (message.status) {
-        case 'ENTER':
-            console.log("Enter");
-            messageElement.classList.add('event-message');
-            usernameText = document.createTextNode(message.content);
-            usernameElement.appendChild(usernameText);
-            messageElement.appendChild(usernameElement);
-            break;
-
-        case 'LEAVE':
-            console.log("Leave");
-            messageElement.classList.add('event-message');
-            usernameText = document.createTextNode(message.content);
-            usernameElement.appendChild(usernameText);
-            messageElement.appendChild(usernameElement);
-            break;
-
-        case 'TALK':
-            console.log("Talk");
-            console.log(message.content);
-            messageElement.classList.add('chat-message');
-            usernameText = document.createTextNode(message.sender + ": " + message.content);
-            usernameElement.appendChild(usernameText);
-            messageElement.appendChild(usernameElement);
-            break;
-
-        default:
-            console.warn("Unknown message type:", message.type);
-            return;
-    }
-
-    const contentElement = document.createElement('p'); // 필요시 메시지 본문용
-    messageElement.appendChild(contentElement);
-
-    messageArea.appendChild(messageElement);
-    messageArea.scrollTop = messageArea.scrollHeight;
+    console.log("Connected from server");
 };
 
-
-const onError = () => {
-
-}
-
-const sendMessage = (event) => {
-
-    event.preventDefault(); // form submit 시 새로고침 방지
-
-    const message = {
-        roomId: roomId,
-        senderId: roomId,
-        senderName: memberName,
-        content: document.querySelector('#messageInput').value,
-        status: 'TALK'
-    }
-
-    stompClient.send("/app/chat/send", {}, JSON.stringify(message));
-
-    document.querySelector('#messageInput').value = '';
-}
-
+// WebSocket Disconnect
 const disconnect = () => {
-    if (stompClient !== null) {
+    if (stompClient && stompClient.connected) {
         stompClient.disconnect();
     }
     console.log("Disconnected from server");
-}
+};
 
-window.onload = () => {
-    connect();
-}
+const onConnected = () => {
+    stompClient.subscribe(`/topic/chat/room/${roomId}`, onMessageReceived);
 
-// window.addEventListener('beforeunload', function (e) {
-//     disconnect(); // 예: 웹소켓 연결 종료 등
-//
-//     // 아래 줄은 사용자에게 확인창을 보여주고 싶을 때만 사용
-//     // e.preventDefault(); // 최신 브라우저는 이걸 생략해도 동작
-//     // e.returnValue = ''; // 표준 방식
-// });
+    const message = {
+        roomId: roomId,
+        senderId: memberId,
+        senderName: memberName,
+        content: `${memberName}님이 입장하였습니다.`,
+        status: "ENTER"
+    };
 
+    stompClient.send("/app/chat/enter", {}, JSON.stringify(message));
 
+    document.querySelector("#messageInput").value = "";
+};
 
-window.BeforeUnloadEvent = () => {
-    disconnect();
-}
+const onMessageReceived = (payload) => {
+    const message = JSON.parse(payload.body);
+    const messageElement = createMessageElement(message);
 
-// usernameForm.addEventListener('submit', connect, true);
-messageForm.addEventListener('submit', sendMessage, true);
-// true -> capturing, false -> bubbling
+    messageArea.appendChild(messageElement);
+    messageArea.scrollTop = messageArea.scrollHeight; // 메시지 입력시 스크롤 이동
+};
+
+const onError = (error) => {
+    console.error("WebSocket connection failed:", error);
+    alert("서버 연결에 실패했습니다.");
+};
+
+// 메시지 전달 함수
+const sendMessage = (event) => {
+    event.preventDefault(); // 데이터를 서버에 전송시 새로고침 제어
+
+    const content = messageInput.value.trim();
+    if (!content) return;
+
+    const message = {
+        roomId,
+        senderId: memberId,
+        senderName: memberName,
+        content,
+        status: "TALK",
+    };
+
+    stompClient.send("/app/chat/send", {}, JSON.stringify(message));
+    messageInput.value = "";
+    messageInput.focus();
+};
+
+// 메시지 UI 생성 함수
+const createMessageElement = (message) => {
+    const messageElement = document.createElement("li");
+    const usernameElement = document.createElement("span");
+
+    if (message.senderId === memberId) {
+        messageElement.classList.add("mine");
+    } else {
+        messageElement.classList.add("theirs");
+    }
+
+    const messageHandlers = {
+        ENTER: () => {
+            messageElement.classList.add("event-message");
+            usernameElement.textContent = message.content;
+        },
+        LEAVE: () => {
+            messageElement.classList.add("event-message");
+            usernameElement.textContent = message.content;
+        },
+        TALK: () => {
+            messageElement.classList.add("chat-message");
+            usernameElement.textContent = `${message.senderName}: ${message.content}`;
+        },
+        DEFAULT: () => {
+            console.warn("Unknown message status:", message.status);
+            usernameElement.textContent = message.content;
+        }
+    };
+
+    const handler = messageHandlers[message.status] || messageHandlers.DEFAULT;
+    handler();
+
+    messageElement.appendChild(usernameElement);
+    return messageElement;
+};
+
+// 이벤트 핸들링
+window.onload = connect;                                        // 모든 리소스가 로딩된 후 실행 -> 텍스트기반이라서 무거운 리소스가 없음
+window.addEventListener("beforeunload", disconnect);       // 사용자가 페이지를 닫거나 새로고침시 실행
+window.onhashchange = disconnect;                               // URL 해시(#)가 변경될 때 실행 (뒤로가기)
+
+messageForm.addEventListener("submit", sendMessage, true);

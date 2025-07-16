@@ -16,7 +16,7 @@ public class LoginInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         try {
-            MemberSession memberSession = SessionManager.getMemberSession(request);
+            MemberSession memberSession = SessionManager.getMemberSession();
             log.info("MemberSession is NOT null:{}", memberSession);
         } catch (Exception e) { //세션이 없으면
             log.info("MemberSession is null");

@@ -18,28 +18,46 @@ public class LoginService {
     private final LoginRepository loginRepository;
     private final MemberRepository memberRepository;
 
+    /**
+     * 회원가입
+     * @param login
+     * @return
+     */
     @Transactional
     public Login create(Login login) {
         return Login.createLogin(login.getLoginId(), login.getPassword(), true);
     }
 
+
+    /**
+     * 로그인 성공 유무
+     * @param loginId
+     * @param status
+     */
     @Transactional
     public void setLoginStatusTrue(String loginId, boolean status) {
-        Member member = memberRepository.findByLoginId(loginId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다."));
-        member.getLogin().setIsLogin(status); // 변경 감지됨
+        Member member = memberRepository.findByLoginId(loginId).orElse(null);
+        if (member != null) {
+            member.getLogin().setIsLogin(status);
+        }
     }
 
-    //아이디 조회
+    /**
+     * 아이디 조회
+     * @param loginId
+     * @return
+     */
     public Boolean isLoginId(String loginId) {
-        return loginRepository.findByLoginId(loginId);
+        return loginRepository.findById(loginId).isPresent();
     }
 
-    //비밀번호 조회
+    /**
+     * 비밀번호 조회
+     * @param password
+     * @return
+     */
     public Boolean isPassword(String password) {
-        return loginRepository.findByPassword(password);
+        return loginRepository.findByPassword(password).isPresent();
     }
-
-
 
 }

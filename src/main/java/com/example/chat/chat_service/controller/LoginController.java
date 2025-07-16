@@ -1,6 +1,6 @@
 package com.example.chat.chat_service.controller;
 
-import com.example.chat.chat_service.controller.dto.LoginForm;
+import com.example.chat.chat_service.controller.dto.LoginDto;
 import com.example.chat.chat_service.domain.Member;
 import com.example.chat.chat_service.service.LoginService;
 import com.example.chat.chat_service.service.MemberService;
@@ -12,11 +12,12 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import java.time.LocalDateTime;
 
 @Slf4j
 @Controller
@@ -27,15 +28,12 @@ public class LoginController {
     private final MemberService memberService;
 
     @GetMapping("/login")
-    public String loginForm(@ModelAttribute("login") LoginForm form) {
+    public String loginForm(@ModelAttribute("login") LoginDto form) {
         return "views/login/loginForm";
     }
 
     @PostMapping("/login")
-    public String login(@Valid @ModelAttribute("login") LoginForm form, BindingResult result,
-                        HttpServletRequest request, Model model) {
-
-        log.info("login : {}", form);
+    public String login(@Valid @ModelAttribute("login") LoginDto form, BindingResult result) {
 
         if (result.hasErrors()) {
             return "views/login/loginForm";
@@ -59,17 +57,16 @@ public class LoginController {
         loginService.setLoginStatusTrue(form.getLoginId(), true);
 
         //세션 저장
-        MemberSession memberSession = new MemberSession(
-                existingMember.getId(),
-                form.getLoginId(),
-                form.getPassword(),
-                existingMember.getName(),
-                true
-        );
+        MemberSession memberSession = MemberSession.builder()
+                .memberId(existingMember.getId())
+                .loginId(form.getLoginId())
+                .checked(form.getChecked())
+                .name(existingMember.getName())
+                .isLogin(true)
+                .loginAt(LocalDateTime.now())
+                .build();
 
-        SessionManager.setMemberSession(request, memberSession);
-
-        model.addAttribute("memberSession", memberSession);
+        SessionManager.setMemberSession(memberSession);
 
         return "redirect:/";
     }
@@ -77,9 +74,9 @@ public class LoginController {
     @PostMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
 
-        MemberSession memberSession = SessionManager.getMemberSession(request);
+        MemberSession memberSession = SessionManager.getMemberSession();
         loginService.setLoginStatusTrue(memberSession.getLoginId(), false);
-        SessionManager.removeMemberSession(request, memberSession);
+        SessionManager.removeMemberSession(memberSession);
 
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
         response.setHeader("Pragma", "no-cache"); // HTTP 1.0

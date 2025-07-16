@@ -3,15 +3,20 @@ package com.example.chat.chat_service.service;
 import com.example.chat.chat_service.domain.Member;
 import com.example.chat.chat_service.domain.MemberRoom;
 import com.example.chat.chat_service.domain.room.Room;
+import com.example.chat.chat_service.domain.room.RoomType;
 import com.example.chat.chat_service.domain.room.TextRoom;
+import com.example.chat.chat_service.domain.room.VideoRoom;
+import com.example.chat.chat_service.repository.MessageRepository;
 import com.example.chat.chat_service.repository.RoomRepository;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
 @Slf4j
 @Service
@@ -19,17 +24,34 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RoomService {
 
+    private final EntityManager em;
     private final RoomRepository roomRepository;
+    private final MessageRepository messageRepository;
 
     /**
      * 채팅방 생성
      * @param room
-     * @return
      */
     @Transactional
-    public Room createRoom(Room room) {
-        Room newTextRoom = TextRoom.createTextRoom(room.getName(), room.getPassword(), room.getMax());
-        return roomRepository.save(newTextRoom);
+    public void createRoom(Room room) {
+        Room newRoom = null;
+
+        if (room.getType() == RoomType.TXT)
+            newRoom = TextRoom.createTextRoom(room.getName(), room.getPassword(), room.getMax());
+        else if (room.getType() == RoomType.VID)
+            newRoom = VideoRoom.createVideoRoom(room.getName(), room.getPassword());
+
+        roomRepository.save(newRoom);
+    }
+
+    /**
+     * 채팅방 삭제
+     */
+    @Transactional
+    public void deleteRoom(Room room, Member member) {
+        room.removeMember(member);
+        roomRepository.delete(room);
+        messageRepository.deleteByRoomId(room.getId());
     }
 
     /**
@@ -79,18 +101,20 @@ public class RoomService {
      */
     @Transactional
     public void enterRoom(Long roomId, MemberRoom memberRoom) {
-        Room room = roomRepository.findById(roomId).orElse(null);
-        room.addMember(memberRoom);
+        // 중복 입장 체크 추가
+        if (!isMemberInRoom(roomId, memberRoom.getMember().getId())) {
+            Room room = roomRepository.findById(roomId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 방"));
+            room.addMember(memberRoom);
+        }
     }
 
     /**
      * 채팅방에 회원 삭제
-     * @param roomId
+     * @param room
      * @param member
      */
     @Transactional
-    public void exitRoom(Long roomId, Member member) {
-        Room room = roomRepository.findById(roomId).orElse(null);
+    public void exitRoom(Room room, Member member) {
         room.removeMember(member);
     }
 
@@ -105,5 +129,17 @@ public class RoomService {
         return room.isPasswordValid(password);
     }
 
+    /**
+     * 채팅방 중복 여부 확인
+     * @param roomId
+     * @param memberId
+     * @return
+     */
+    public boolean isMemberInRoom(Long roomId, Long memberId) {
+        Room room = roomRepository.findById(roomId).orElse(null);
+        if (room == null) return false;
+        return room.getMembers().stream()
+                        .anyMatch(member -> member.getId().equals(memberId));
+    }
 
 }
