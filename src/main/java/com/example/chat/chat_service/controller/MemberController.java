@@ -3,44 +3,40 @@ package com.example.chat.chat_service.controller;
 import com.example.chat.chat_service.controller.dto.MemberDto;
 import com.example.chat.chat_service.domain.Login;
 import com.example.chat.chat_service.domain.Member;
+import com.example.chat.chat_service.global.common.ResponseApi;
 import com.example.chat.chat_service.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import static com.example.chat.chat_service.global.common.ResponseApi.*;
+
 @Slf4j
-@Controller
+@RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/member")
 public class MemberController {
 
     private final MemberService memberService;
 
-    @GetMapping("/members/new")
-    public String createForm(@ModelAttribute("member") MemberDto form) {
-        return "views/members/createMemberForm";
-    }
-
-    @PostMapping("/members/new")
-    public String create(@Valid @ModelAttribute("member") MemberDto form, BindingResult result) {
-
-        if (result.hasErrors()) {
-            return "views/members/createMemberForm";
-        }
+    @PostMapping("/join")
+    public ResponseEntity<ResponseApi<String>> join(MemberDto request) {
 
         Login login = new Login();
-        login.setLoginId(form.getLoginId());
-        login.setPassword(form.getPassword());
+        login.setLoginId(request.getLoginId());
+        login.setPassword(request.getPassword());
 
         Member member = new Member();
-        member.setName(form.getName());
+        member.setName(request.getName());
         member.setLogin(login);
 
         memberService.join(member);
 
-        return "redirect:/login";
+        return ResponseEntity.ok(success("OK!"));
     }
 
 }

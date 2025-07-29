@@ -2,6 +2,7 @@ package com.example.chat.chat_service.controller;
 
 import com.example.chat.chat_service.controller.dto.LoginDto;
 import com.example.chat.chat_service.domain.Member;
+import com.example.chat.chat_service.global.common.ResponseApi;
 import com.example.chat.chat_service.service.LoginService;
 import com.example.chat.chat_service.service.MemberService;
 import com.example.chat.chat_service.global.session.MemberSession;
@@ -11,56 +12,36 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
+import static com.example.chat.chat_service.global.common.ResponseApi.*;
+
 @Slf4j
-@Controller
+@RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/login")
 public class LoginController {
 
     private final LoginService loginService;
     private final MemberService memberService;
 
-    @GetMapping("/login")
-    public String loginForm(@ModelAttribute("login") LoginDto form) {
-        return "views/login/loginForm";
-    }
-
     @PostMapping("/login")
-    public String login(@Valid @ModelAttribute("login") LoginDto form, BindingResult result) {
+    public ResponseEntity<ResponseApi<String>> login(@RequestBody LoginDto request) {
 
-        if (result.hasErrors()) {
-            return "views/login/loginForm";
-        }
-
-        Member existingMember = memberService.findByLoginId(form.getLoginId());
-
-        if (!loginService.isLoginId(form.getLoginId())) {
-            log.info("로그인 아이디가 일치하지 않습니다.");
-            result.rejectValue("loginId", "error.loginId", "로그인 아이디가 일치하지 않습니다.");
-            return "views/login/loginForm";
-        }
-
-        if (!loginService.isPassword(form.getPassword())) {
-            log.info("비밀번호가 일치하지 않습니다.");
-            result.rejectValue("password", "error.password", "비밀번호가 일치하지 않습니다.");
-            return "views/login/loginForm";
-        }
+        Member existingMember = memberService.findByLoginId(request.getLoginId());
 
         //로그인 성공 isLogin : false -> true
-        loginService.setLoginStatusTrue(form.getLoginId(), true);
+        loginService.setLoginStatusTrue(request.getLoginId(), true);
 
         //세션 저장
         MemberSession memberSession = MemberSession.builder()
                 .memberId(existingMember.getId())
-                .loginId(form.getLoginId())
-                .checked(form.getChecked())
+                .loginId(request.getLoginId())
+                .checked(request.getChecked())
                 .name(existingMember.getName())
                 .isLogin(true)
                 .loginAt(LocalDateTime.now())
@@ -68,11 +49,11 @@ public class LoginController {
 
         SessionManager.setMemberSession(memberSession);
 
-        return "redirect:/";
+        return ResponseEntity.ok(success("OK!"));
     }
 
     @PostMapping("/logout")
-    public String logout(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<ResponseApi<String>> logout(HttpServletRequest request, HttpServletResponse response) {
 
         MemberSession memberSession = SessionManager.getMemberSession();
         loginService.setLoginStatusTrue(memberSession.getLoginId(), false);
@@ -82,7 +63,7 @@ public class LoginController {
         response.setHeader("Pragma", "no-cache"); // HTTP 1.0
         response.setHeader("Expires", "0"); // Proxies
 
-        return "redirect:/login";
+        return ResponseEntity.ok(success("OK!"));
     }
 
 }
