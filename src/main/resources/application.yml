@@ -33,6 +33,12 @@ server:
     key-store-type: PKCS12
     key-alias: spring
 
+  servlet:
+    session:
+      cookie:
+        same-site: None
+        secure: true
+
 logging:
   level:
     org.hibernate.SQL: debug

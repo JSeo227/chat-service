@@ -83,7 +83,7 @@ public class RoomController {
         return ResponseEntity.ok(success("OK!"));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}/delete")
     public ResponseEntity<ResponseApi<String>> delete(@PathVariable("id") Long id) {
         Room room = roomService.findRoomById(id);
 

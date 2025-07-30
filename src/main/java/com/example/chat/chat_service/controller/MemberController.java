@@ -24,7 +24,9 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/join")
-    public ResponseEntity<ResponseApi<String>> join(MemberDto request) {
+    public ResponseEntity<ResponseApi<String>> join(@RequestBody MemberDto request) {
+
+        log.info("join request {}", request);
 
         Login login = new Login();
         login.setLoginId(request.getLoginId());

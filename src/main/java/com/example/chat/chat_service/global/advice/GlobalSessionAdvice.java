@@ -11,21 +11,21 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 @ControllerAdvice
 public class GlobalSessionAdvice {
 
-    @ModelAttribute("memberSession")
-    public MemberDto member() {
-
-        try {
-            MemberSession memberSession = SessionManager.getMemberSession();
-
-            return MemberDto.builder()
-                    .id(memberSession.getMemberId())
-                    .loginId(memberSession.getLoginId())
-                    .password(memberSession.getName())
-                    .name(memberSession.getName())
-                    .build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+//    @ModelAttribute("memberSession")
+//    public MemberDto member() {
+//
+//        try {
+//            MemberSession memberSession = SessionManager.getMemberSession();
+//
+//            return MemberDto.builder()
+//                    .id(memberSession.getMemberId())
+//                    .loginId(memberSession.getLoginId())
+//                    .password(memberSession.getName())
+//                    .name(memberSession.getName())
+//                    .build();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
 }

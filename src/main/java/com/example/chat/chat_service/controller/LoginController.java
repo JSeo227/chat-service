@@ -1,6 +1,8 @@
 package com.example.chat.chat_service.controller;
 
+import com.example.chat.chat_service.controller.dto.JoinDto;
 import com.example.chat.chat_service.controller.dto.LoginDto;
+import com.example.chat.chat_service.domain.Login;
 import com.example.chat.chat_service.domain.Member;
 import com.example.chat.chat_service.global.common.ResponseApi;
 import com.example.chat.chat_service.service.LoginService;
@@ -30,14 +32,21 @@ public class LoginController {
     private final MemberService memberService;
 
     @PostMapping("/login")
-    public ResponseEntity<ResponseApi<String>> login(@RequestBody LoginDto request) {
+    public ResponseEntity<ResponseApi<MemberSession>> login(@RequestBody LoginDto request) {
 
+        // 사용자 존재 유무 확인 로직
         Member existingMember = memberService.findByLoginId(request.getLoginId());
+        if (existingMember == null) {
+            return ResponseEntity.badRequest().body(error("존재하지 않는 회원입니다."));
+        }
 
-        //로그인 성공 isLogin : false -> true
-        loginService.setLoginStatusTrue(request.getLoginId(), true);
+        // 비밀번호 일치 확인 로직
+        Login login = existingMember.getLogin();
+        if (!login.getPassword().equals(request.getPassword())) {
+            return ResponseEntity.badRequest().body(error("비밀번호가 일치하지 않습니다."));
+        }
 
-        //세션 저장
+        //세션 저장 로직
         MemberSession memberSession = MemberSession.builder()
                 .memberId(existingMember.getId())
                 .loginId(request.getLoginId())
@@ -47,9 +56,11 @@ public class LoginController {
                 .loginAt(LocalDateTime.now())
                 .build();
 
+        log.info("memberSession {}", memberSession);
+
         SessionManager.setMemberSession(memberSession);
 
-        return ResponseEntity.ok(success("OK!"));
+        return ResponseEntity.ok(success(memberSession));
     }
 
     @PostMapping("/logout")
