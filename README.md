@@ -21,7 +21,7 @@
 | **백엔드** | Spring Boot, JPA |
 | **프론트엔드** | Thymeleaf |
 | **통신** | WebSocket, WebRTC |
-| **메시지 브로커** | Zookeeper, Kafka |
+| **이벤트 브로커** | Zookeeper, Kafka |
 | **데이터베이스** | MySQL(회원/채팅방), MongoDB(메시지) |
 | **개발 환경** | IntelliJ, Postman, Docker |
 
