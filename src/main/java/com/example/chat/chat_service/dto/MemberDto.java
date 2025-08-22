@@ -1,4 +1,4 @@
-package com.example.chat.chat_service.controller.dto;
+package com.example.chat.chat_service.dto;
 
 import com.example.chat.chat_service.domain.Member;
 import jakarta.validation.constraints.NotEmpty;

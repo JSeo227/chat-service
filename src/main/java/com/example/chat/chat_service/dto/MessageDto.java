@@ -1,4 +1,4 @@
-package com.example.chat.chat_service.controller.dto;
+package com.example.chat.chat_service.dto;
 
 import com.example.chat.chat_service.domain.chat.Status;
 import lombok.AllArgsConstructor;
@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MessageDto {
+    private String destination;
     private Long roomId;
     private Long senderId; // member id
     private String senderName; // member name

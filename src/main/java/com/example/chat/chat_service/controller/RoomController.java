@@ -1,13 +1,13 @@
 package com.example.chat.chat_service.controller;
 
-import com.example.chat.chat_service.controller.dto.MemberDto;
-import com.example.chat.chat_service.controller.dto.RoomDto;
+import com.example.chat.chat_service.dto.MemberDto;
+import com.example.chat.chat_service.dto.RoomDto;
 import com.example.chat.chat_service.domain.Member;
 import com.example.chat.chat_service.domain.MemberRoom;
 import com.example.chat.chat_service.domain.room.Room;
 import com.example.chat.chat_service.domain.room.RoomType;
 import com.example.chat.chat_service.domain.room.TextRoom;
-import com.example.chat.chat_service.controller.dto.SessionDto;
+import com.example.chat.chat_service.dto.SessionDto;
 import com.example.chat.chat_service.service.MemberService;
 import com.example.chat.chat_service.service.RoomService;
 import com.example.chat.chat_service.global.session.MemberSession;

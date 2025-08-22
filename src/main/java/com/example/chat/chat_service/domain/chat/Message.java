@@ -1,6 +1,6 @@
 package com.example.chat.chat_service.domain.chat;
 
-import com.example.chat.chat_service.controller.dto.MessageDto;
+import com.example.chat.chat_service.dto.MessageDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,6 +18,7 @@ public class Message {
     @Id
     private String id;
 
+    private String destination;
     private Long roomId;
     private Long senderId; // member id
     private String senderName; // member name
@@ -26,6 +27,7 @@ public class Message {
     private LocalDateTime createdAt;
 
     public Message(MessageDto messageDto) {
+        this.destination = messageDto.getDestination();
         this.roomId = messageDto.getRoomId();
         this.senderId = messageDto.getSenderId();
         this.senderName = messageDto.getSenderName();

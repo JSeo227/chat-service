@@ -1,6 +1,6 @@
 package com.example.chat.chat_service.global.advice;
 
-import com.example.chat.chat_service.controller.dto.MemberDto;
+import com.example.chat.chat_service.dto.MemberDto;
 import com.example.chat.chat_service.global.session.MemberSession;
 import com.example.chat.chat_service.global.session.SessionManager;
 import lombok.extern.slf4j.Slf4j;

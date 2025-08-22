@@ -1,6 +1,6 @@
 package com.example.chat.chat_service.controller;
 
-import com.example.chat.chat_service.controller.dto.LoginDto;
+import com.example.chat.chat_service.dto.LoginDto;
 import com.example.chat.chat_service.domain.Member;
 import com.example.chat.chat_service.service.LoginService;
 import com.example.chat.chat_service.service.MemberService;

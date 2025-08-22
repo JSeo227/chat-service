@@ -1,4 +1,4 @@
-package com.example.chat.chat_service.controller.dto;
+package com.example.chat.chat_service.dto;
 
 import lombok.Data;
 

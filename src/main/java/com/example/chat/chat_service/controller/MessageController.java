@@ -1,6 +1,6 @@
 package com.example.chat.chat_service.controller;
 
-import com.example.chat.chat_service.controller.dto.MessageDto;
+import com.example.chat.chat_service.dto.MessageDto;
 import com.example.chat.chat_service.domain.Member;
 import com.example.chat.chat_service.domain.chat.Message;
 import com.example.chat.chat_service.domain.chat.Status;
@@ -17,9 +17,6 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import java.util.List;
@@ -59,7 +56,8 @@ public class MessageController {
             }
 
         }
-        messagingTemplate.convertAndSend("/topic/chat/room/" + message.getRoomId(), message);
+        message.setDestination("/topic/chat/room/" + message.getRoomId());
+        producer.send(new Message(message));
     }
 
     /**
@@ -70,8 +68,8 @@ public class MessageController {
         log.info("send message = {}", message);
 
         if (message.getStatus() == Status.TALK) {
+            message.setDestination("/topic/chat/room/" + message.getRoomId());
             producer.send(new Message(message));
-            messagingTemplate.convertAndSend("/topic/chat/room/" + message.getRoomId(), message);
         }
     }
 
@@ -116,6 +114,7 @@ public class MessageController {
 
         log.info("leave message = {}", message);
 
-        messagingTemplate.convertAndSend("/topic/chat/room/" + roomId, message);
+        message.setDestination("/topic/chat/room/" + roomId);
+        producer.send(new Message(message));
     }
 }
